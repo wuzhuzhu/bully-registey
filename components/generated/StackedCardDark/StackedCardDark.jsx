@@ -168,16 +168,8 @@ export const StackedCardDark = ({
                 </div>
                 {style === "bully" && (
                   <div
-                    className={`relative flex w-full flex-[0_0_auto] items-center gap-[10px] self-stretch overflow-x-scroll ${supportingTextClassName}`}
+                    className={`no-scrollbar relative flex w-full flex-[0_0_auto] items-center gap-[10px] self-stretch overflow-x-scroll ${supportingTextClassName}`}
                   >
-                    <AssistiveChipDark
-                      className="!flex-[0_0_auto]"
-                      configuration="label-icon"
-                      labelText={assistiveChipDarkLabelText}
-                      override={assistiveChipDark}
-                      stateProp="enabled"
-                      style="outlined"
-                    />
                     <AssistiveChipDark
                       className="!flex-[0_0_auto]"
                       configuration="label-icon"

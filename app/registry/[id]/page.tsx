@@ -1,4 +1,6 @@
 import React from "react";
+import Image from "next/image";
+
 import { AssistiveChipDark } from "@/components/generated/AssistiveChipDark";
 import { FamilyAvatar } from "@/components/generated/FamilyAvatar";
 import { IconsLocalTaxi } from "@/components/generated/IconsLocalTaxi";
@@ -11,11 +13,15 @@ import { IconsTranslate24Px } from "@/components/icons/IconsTranslate24Px";
 
 const RegistryDetailPage = () => {
     return (
+        // TODO: find out why: when add flex class back to the div, the page will be fix width
         <div className="bg-m-3sysdarksurface justify-center w-full">
             <div className="flex flex-col items-center gap-[16px] pt-[16px] pb-0 px-0 relative">
                 <div className="flex flex-col items-center relative self-stretch w-full flex-[0_0_auto]">
                     <div className="inline-flex items-center justify-center gap-[8px] relative flex-[0_0_auto]">
-                        <img className="relative w-[48px] h-[48px] object-cover" alt="Logo" src="/img/logo.png" />
+                        <Image
+                            width={48}
+                            height={48}
+                            className="relative object-cover" alt="Logo" src="/img/logo.png" />
                         <div className="inline-flex flex-col items-start flex-[0_0_auto] justify-center relative">
                             <div className="relative w-fit mt-[-1.00px] [background:linear-gradient(180deg,rgb(248,189,72)_0%,rgba(248,189,72,0.94)_62.16%,rgba(255,219.38,148.75,0.95)_100%)] [-webkit-background-clip:text] bg-clip-text [-webkit-text-fill-color:transparent] [text-fill-color:transparent] font-m3-title-medium font-[number:var(--m3-title-medium-font-weight)] text-transparent text-[length:var(--m3-title-medium-font-size)] tracking-[var(--m3-title-medium-letter-spacing)] leading-[var(--m3-title-medium-line-height)] whitespace-nowrap [font-style:var(--m3-title-medium-font-style)]">
                                 中国恶霸犬血统国际认证
@@ -38,7 +44,7 @@ const RegistryDetailPage = () => {
                                 北京虚拟犬舍俱乐部 Dizzy Camp
                             </div>
                         </div>
-                        <div className="inline-flex items-center gap-[8px] relative flex-[0_0_auto] mr-[-134.00px] overflow-x-scroll">
+                        <div className="w-full inline-flex items-center gap-[8px] relative flex-[0_0_auto] mr-[-134.00px] overflow-x-scroll">
                             <AssistiveChipDark
                                 className="!flex-[0_0_auto]"
                                 configuration="label-icon"
@@ -83,7 +89,7 @@ const RegistryDetailPage = () => {
                         }
                         style="bully"
                         subheadClassName="!mr-[-2.00px] !text-m3sysdarkon-surface"
-                        supportingTextClassName="!overflow-hidden"
+                        supportingTextClassName=""
                         text="绿巨人浩克 Hulk Smash"
                         text1="主人：欧阳锋"
                         text2="地区：北京市 朝阳区"

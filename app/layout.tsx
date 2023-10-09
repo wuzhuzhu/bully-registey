@@ -26,7 +26,7 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={cx(sfPro.variable, inter.variable)}>
+      <body className={cx(sfPro.variable, inter.variable, 'bg-m-3sysdarksurface')}>
         <main>
           {children}
         </main>
