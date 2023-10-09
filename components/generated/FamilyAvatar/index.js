@@ -1,0 +1,1 @@
+export { FamilyAvatar } from "./FamilyAvatar";

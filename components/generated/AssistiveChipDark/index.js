@@ -1,0 +1,1 @@
+export { AssistiveChipDark } from "./AssistiveChipDark";
