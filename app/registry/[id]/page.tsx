@@ -14,8 +14,8 @@ import { IconsTranslate24Px } from "@/components/icons/IconsTranslate24Px";
 const RegistryDetailPage = () => {
     return (
         // TODO: find out why: when add flex class back to the div, the page will be fix width
-        <div className="bg-m-3sysdarksurface justify-center w-full">
-            <div className="flex flex-col items-center gap-[16px] pt-[16px] pb-0 px-0 relative">
+        <div className="bg-m-3sysdarksurface justify-center w-full md:px-4">
+            <div className="flex flex-col items-center gap-[16px] pt-[16px] pb-0 px-0 relative min-h-screen">
                 <div className="flex flex-col items-center relative self-stretch w-full flex-[0_0_auto]">
                     <div className="inline-flex items-center justify-center gap-[8px] relative flex-[0_0_auto]">
                         <Image
@@ -34,7 +34,7 @@ const RegistryDetailPage = () => {
                     </div>
                 </div>
                 {/* main-content */}
-                <div className="flex flex-col items-center justify-between pt-[16px] pb-[24px] px-[16px] relative self-stretch w-full rounded-[16px_16px_0px_0px] overflow-hidden shadow-m3-elevation-dark-1 mix-blend-lighten bg-[url(/img/main-content.png)] bg-cover bg-[50%_50%]">
+                <div className="flex flex-1 flex-col items-center justify-between pt-[16px] pb-[24px] px-[16px] relative self-stretch w-full rounded-[16px_16px_0px_0px] overflow-hidden shadow-m3-elevation-dark-1 mix-blend-lighten bg-[url(/img/main-content.png)] bg-cover bg-[50%_50%]">
                     <div className="flex flex-col items-start justify-center gap-[8px] relative self-stretch w-full flex-[0_0_auto]">
                         <div className="inline-flex items-center gap-[8px] px-[4px] py-0 relative flex-[0_0_auto]">
                             <div className="relative w-[24px] h-[24px] bg-m-3sysdarkprimary rounded-[12px]">
@@ -44,7 +44,7 @@ const RegistryDetailPage = () => {
                                 北京虚拟犬舍俱乐部 Dizzy Camp
                             </div>
                         </div>
-                        <div className="w-full inline-flex items-center gap-[8px] relative flex-[0_0_auto] mr-[-134.00px] overflow-x-scroll">
+                        <div className="w-full inline-flex items-center gap-[8px] relative flex-[0_0_auto] overflow-x-scroll no-scrollbar">
                             <AssistiveChipDark
                                 className="!flex-[0_0_auto]"
                                 configuration="label-icon"
