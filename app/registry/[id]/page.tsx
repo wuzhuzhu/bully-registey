@@ -10,6 +10,8 @@ import { Icon39 } from "@/components/icons/Icon39";
 import { Icon4 } from "@/components/icons/Icon4";
 import { IconsMoreVert24Px1 } from "@/components/icons/IconsMoreVert24Px1";
 import { IconsTranslate24Px } from "@/components/icons/IconsTranslate24Px";
+import { rockSalt } from "@/app/fonts";
+import { cn } from "@/lib/utils";
 
 const RegistryDetailPage = () => {
     return (
@@ -23,18 +25,26 @@ const RegistryDetailPage = () => {
                             height={48}
                             className="relative object-cover" alt="Logo" src="/img/logo.png" />
                         <div className="inline-flex flex-col items-start flex-[0_0_auto] justify-center relative">
-                            <div className="relative w-fit mt-[-1.00px] [background:linear-gradient(180deg,rgb(248,189,72)_0%,rgba(248,189,72,0.94)_62.16%,rgba(255,219.38,148.75,0.95)_100%)] [-webkit-background-clip:text] bg-clip-text [-webkit-text-fill-color:transparent] [text-fill-color:transparent] font-m3-title-medium font-[number:var(--m3-title-medium-font-weight)] text-transparent text-[length:var(--m3-title-medium-font-size)] tracking-[var(--m3-title-medium-letter-spacing)] leading-[var(--m3-title-medium-line-height)] whitespace-nowrap [font-style:var(--m3-title-medium-font-style)]">
+                            <div className={cn(
+                                'relative w-fit font-m3-title-medium font-[number:var(--m3-title-medium-font-weight)] text-[length:var(--m3-title-medium-font-size)] tracking-[var(--m3-title-medium-letter-spacing)] leading-[var(--m3-title-medium-line-height)] whitespace-nowrap [font-style:var(--m3-title-medium-font-style)]',
+                                // gradient 
+                                'text-transparent bg-clip-text bg-gradient-to-r from-m-3sysdarkprimary via-80% via-orange-200 to-m-3sysdarkprimary inline-block'
+                            )}>
+
                                 中国恶霸犬血统国际认证
                             </div>
-                            <p className="relative w-fit [font-family:'Rock_Salt',Helvetica] font-normal text-m3sysdarkon-surface text-[10px] tracking-[0.15px] leading-[24px] whitespace-nowrap">
-                                {" "}
+                            <p className={cn(
+                                rockSalt.className,
+                                "relative w-fit font-normal text-m3sysdarkon-surface text-[2px] tracking-[0.15px] leading-[24px] whitespace-nowrap"
+                            )}>
                                 Real Fair And Professional
                             </p>
                         </div>
                     </div>
                 </div>
-                {/* main-content */}
+
                 <div className="flex flex-1 flex-col items-center justify-between pt-[16px] pb-[24px] px-[16px] relative self-stretch w-full rounded-[16px_16px_0px_0px] overflow-hidden shadow-m3-elevation-dark-1 mix-blend-lighten bg-[url(/img/main-content.png)] bg-cover bg-[50%_50%]">
+                    {/* main-content */}
                     <div className="flex flex-col items-start justify-center gap-[8px] relative self-stretch w-full flex-[0_0_auto]">
                         <div className="inline-flex items-center gap-[8px] px-[4px] py-0 relative flex-[0_0_auto]">
                             <div className="relative w-[24px] h-[24px] bg-m-3sysdarkprimary rounded-[12px]">
@@ -96,12 +106,12 @@ const RegistryDetailPage = () => {
                         titleClassName="!mr-[-2.00px] !tracking-[var(--m3-body-medium-letter-spacing)] !text-[length:var(--m3-body-medium-font-size)] ![font-style:var(--m3-body-medium-font-style)] !font-[number:var(--m3-body-medium-font-weight)] !font-m3-body-medium !leading-[var(--m3-body-medium-line-height)]"
                     />
                     <div className="flex px-0 py-[4px] self-stretch w-full flex-col items-center gap-[8px] relative flex-[0_0_auto]">
-                        <img className="relative flex-[0_0_auto]" alt="Gen" src="/img/gen-1.svg" />
+                        <Image width={64} height={64} className="relative flex-[0_0_auto]" alt="Gen" src="/img/gen-1.svg" />
                         <div className="flex items-center justify-between relative self-stretch w-full flex-[0_0_auto]">
                             <div className="flex w-[171.33px] items-center justify-center relative">
                                 <div className="inline-flex p-[4px] rounded-[16px] flex-col items-center gap-[8px] relative flex-[0_0_auto]">
-                                    <img
-                                        className="relative w-[60px] h-[60px] mt-[-3.00px] mix-blend-lighten"
+                                    <Image
+                                        width={60} height={60} className="relative w-[60px] h-[60px] mt-[-3.00px] mix-blend-lighten"
                                         alt="Avatar"
                                         src="/img/avatar-3.png"
                                     />
@@ -115,10 +125,10 @@ const RegistryDetailPage = () => {
                                     </div>
                                 </div>
                                 <div className="inline-flex p-[4px] rounded-[16px] flex-col items-center gap-[8px] relative flex-[0_0_auto]">
-                                    <img
-                                        className="relative w-[60px] h-[60px] mt-[-3.00px] mix-blend-lighten"
+                                    <Image
+                                        width={60} height={60} className="relative w-[60px] h-[60px] mt-[-3.00px] mix-blend-lighten"
                                         alt="Avatar"
-                                        src="/img/avatar-2.png"
+                                        src="/img/avatar-3.png"
                                     />
                                     <div className="inline-flex flex-col items-center relative flex-[0_0_auto]">
                                         <div className="relative w-[70px] mt-[-1.00px] font-m3-label-small font-[number:var(--m3-label-small-font-weight)] text-m3sysdarkon-surface text-[length:var(--m3-label-small-font-size)] text-center tracking-[var(--m3-label-small-letter-spacing)] leading-[var(--m3-label-small-line-height)] overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:1] [-webkit-box-orient:vertical] [font-style:var(--m3-label-small-font-style)]">
@@ -132,10 +142,10 @@ const RegistryDetailPage = () => {
                             </div>
                             <div className="flex w-[171.33px] items-center justify-center relative">
                                 <div className="inline-flex p-[4px] rounded-[16px] flex-col items-center gap-[8px] relative flex-[0_0_auto]">
-                                    <img
-                                        className="relative w-[60px] h-[60px] mt-[-3.00px] mix-blend-lighten"
+                                    <Image
+                                        width={60} height={60} className="relative w-[60px] h-[60px] mt-[-3.00px] mix-blend-lighten"
                                         alt="Avatar"
-                                        src="/img/avatar-1.png"
+                                        src="/img/avatar-3.png"
                                     />
                                     <div className="inline-flex flex-col items-center relative flex-[0_0_auto]">
                                         <div className="relative w-[70px] mt-[-1.00px] font-m3-label-small font-[number:var(--m3-label-small-font-weight)] text-m3sysdarkon-surface text-[length:var(--m3-label-small-font-size)] text-center tracking-[var(--m3-label-small-letter-spacing)] leading-[var(--m3-label-small-line-height)] overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:1] [-webkit-box-orient:vertical] [font-style:var(--m3-label-small-font-style)]">
@@ -147,10 +157,10 @@ const RegistryDetailPage = () => {
                                     </div>
                                 </div>
                                 <div className="inline-flex p-[4px] rounded-[16px] flex-col items-center gap-[8px] relative flex-[0_0_auto]">
-                                    <img
-                                        className="relative w-[60px] h-[60px] mt-[-3.00px] mix-blend-lighten"
+                                    <Image
+                                        width={60} height={60} className="relative w-[60px] h-[60px] mt-[-3.00px] mix-blend-lighten"
                                         alt="Avatar"
-                                        src="/img/avatar.png"
+                                        src="/img/avatar-3.png"
                                     />
                                     <div className="inline-flex flex-col items-center relative flex-[0_0_auto]">
                                         <div className="relative w-[70px] mt-[-1.00px] font-m3-label-small font-[number:var(--m3-label-small-font-weight)] text-m3sysdarkon-surface text-[length:var(--m3-label-small-font-size)] text-center tracking-[var(--m3-label-small-letter-spacing)] leading-[var(--m3-label-small-line-height)] overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:1] [-webkit-box-orient:vertical] [font-style:var(--m3-label-small-font-style)]">
@@ -200,7 +210,7 @@ const RegistryDetailPage = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

@@ -1,0 +1,1 @@
+export { GenderedCardDark } from "./GenderedCardDark";

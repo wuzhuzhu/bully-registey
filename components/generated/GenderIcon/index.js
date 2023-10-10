@@ -1,0 +1,1 @@
+export { GenderIcon } from "./GenderIcon";

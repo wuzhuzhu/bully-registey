@@ -1,0 +1,1 @@
+export { SearchBarDark } from "./SearchBarDark";

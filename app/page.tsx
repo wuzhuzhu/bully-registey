@@ -1,169 +1,110 @@
-import Card from "@/components/home/card";
-import { DEPLOY_URL } from "@/lib/constants";
-import { Github, Twitter } from "@/components/shared/icons";
-import WebVitals from "@/components/home/web-vitals";
-import ComponentGrid from "@/components/home/component-grid";
-import Image from "next/image";
-import { nFormatter } from "@/lib/utils";
+import React from "react";
+import { GenderedCardDark } from "@/components/generated/GenderedCardDark";
+import { HorizontalDarkWith } from "@/components/generated/HorizontalDarkWith";
+import { SearchBarDark } from "@/components/generated/SearchBarDark";
+import { SegmentedButton } from "@/components/generated/SegmentedButton";
+import { IconsMenu24Px } from "@/components/icons/IconsMenu24Px";
+import { IconsSearch24Px } from "@/components/icons/IconsSearch24Px";
 
-export default async function Home() {
-  const { stargazers_count: stars } = await fetch(
-    "https://api.github.com/repos/steven-tey/precedent",
-    {
-      ...(process.env.GITHUB_OAUTH_TOKEN && {
-        headers: {
-          Authorization: `Bearer ${process.env.GITHUB_OAUTH_TOKEN}`,
-          "Content-Type": "application/json",
-        },
-      }),
-      // data will revalidate every 24 hours
-      next: { revalidate: 86400 },
-    },
-  )
-    .then((res) => res.json())
-    .catch((e) => console.log(e));
-
-  return (
-    <>
-      <div className="z-10 w-full max-w-xl px-5 xl:px-0">
-        <a
-          href="https://twitter.com/steventey/status/1613928948915920896"
-          target="_blank"
-          rel="noreferrer"
-          className="mx-auto mb-5 flex max-w-fit animate-fade-up items-center justify-center space-x-2 overflow-hidden rounded-full bg-blue-100 px-7 py-2 transition-colors hover:bg-blue-200"
-        >
-          <Twitter className="h-5 w-5 text-[#1d9bf0]" />
-          <p className="text-sm font-semibold text-[#1d9bf0]">
-            Introducing Precedent
-          </p>
-        </a>
-        <h1
-          className="animate-fade-up bg-gradient-to-br from-black to-stone-500 bg-clip-text text-center font-display text-4xl font-bold tracking-[-0.02em] text-transparent opacity-0 drop-shadow-sm [text-wrap:balance] md:text-7xl md:leading-[5rem]"
-          style={{ animationDelay: "0.15s", animationFillMode: "forwards" }}
-        >
-          Building blocks for your Next project
-        </h1>
-        <p
-          className="mt-6 animate-fade-up text-center text-gray-500 opacity-0 [text-wrap:balance] md:text-xl"
-          style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
-        >
-          An opinionated collection of components, hooks, and utilities for your
-          Next.js project.
-        </p>
-        <div
-          className="mx-auto mt-6 flex animate-fade-up items-center justify-center space-x-5 opacity-0"
-          style={{ animationDelay: "0.3s", animationFillMode: "forwards" }}
-        >
-          <a
-            className="group flex max-w-fit items-center justify-center space-x-2 rounded-full border border-black bg-black px-5 py-2 text-sm text-white transition-colors hover:bg-white hover:text-black"
-            href={DEPLOY_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <svg
-              className="h-4 w-4 group-hover:text-black"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12 4L20 20H4L12 4Z"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <p>Deploy to Vercel</p>
-          </a>
-          <a
-            className="flex max-w-fit items-center justify-center space-x-2 rounded-full border border-gray-300 bg-white px-5 py-2 text-sm text-gray-600 shadow-md transition-colors hover:border-gray-800"
-            href="https://github.com/steven-tey/precedent"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Github />
-            <p>
-              <span className="hidden sm:inline-block">Star on</span> GitHub{" "}
-              <span className="font-semibold">{nFormatter(stars)}</span>
-            </p>
-          </a>
+const SearchPage = () => {
+    return (
+        <div className="bg-[#15130e] flex flex-row justify-center w-full">
+            <div className="bg-m-3sysdarksurface w-[390px] h-[882px]">
+                <div className="flex flex-col w-[390px] items-center gap-[16px] pt-[16px] pb-0 px-0 relative">
+                    <div className="flex flex-col items-center relative self-stretch w-full flex-[0_0_auto]">
+                        <div className="inline-flex items-center justify-center gap-[8px] relative flex-[0_0_auto]">
+                            <img className="relative w-[48px] h-[48px] object-cover" alt="Logo" src="/img/logo.png" />
+                            <div className="inline-flex flex-col items-start justify-center relative flex-[0_0_auto]">
+                                <div className="relative w-fit mt-[-1.00px] [background:linear-gradient(180deg,rgb(248,189,72)_0%,rgba(248,189,72,0.94)_62.16%,rgba(255,219.38,148.75,0.95)_100%)] [-webkit-background-clip:text] bg-clip-text [-webkit-text-fill-color:transparent] [text-fill-color:transparent] font-m3-title-medium font-[number:var(--m3-title-medium-font-weight)] text-transparent text-[length:var(--m3-title-medium-font-size)] tracking-[var(--m3-title-medium-letter-spacing)] leading-[var(--m3-title-medium-line-height)] whitespace-nowrap [font-style:var(--m3-title-medium-font-style)]">
+                                    中国恶霸犬血统国际认证
+                                </div>
+                                <p className="relative w-fit [font-family:'Rock_Salt',Helvetica] font-normal text-m3sysdarkon-surface text-[10px] tracking-[0.15px] leading-[24px] whitespace-nowrap">
+                                    {" "}
+                                    Real Fair And Professional
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex flex-col h-[802px] items-center justify-between pt-[16px] pb-[20px] px-[16px] relative self-stretch w-full rounded-[16px_16px_0px_0px] overflow-hidden shadow-m3-elevation-dark-1 mix-blend-lighten bg-[url(/img/main-content.png)] bg-cover bg-[50%_50%]">
+                        {/* main-content */}
+                        <div className="relative w-[360px] h-[584px] ml-[-1.00px] mr-[-1.00px]">
+                            <SegmentedButton
+                                buildingBlocksLabelText="宠物名"
+                                className="!absolute !left-[76px] !top-0"
+                                density="zero"
+                                segments="two_1"
+                                stateDisabledWrapperLabelText="芯片号"
+                            />
+                            <SearchBarDark
+                                className="!left-0 !absolute !top-[72px]"
+                                iconButtonDarkIcon={<IconsMenu24Px className="!relative !w-[24px] !h-[24px]" color="#BFC8CB" />}
+                                override={<IconsSearch24Px className="!relative !w-[24px] !h-[24px]" color="#BFC8CB" />}
+                                placeholderText="绿巨人"
+                                showAvatar
+                                stateProp="enabled"
+                                userImagesUserText="名"
+                            />
+                            <div className="inline-flex flex-col items-center gap-[8px] absolute top-[152px] left-0">
+                                <GenderedCardDark
+                                    mediaClassName="bg-[url(/img/media-3.png)]"
+                                    style="filled"
+                                    subheadClassName="!whitespace-nowrap ![text-align:unset] !w-fit"
+                                    text="绿巨人 Hulk Smash"
+                                    text1="CBR No.: 1231231233"
+                                />
+                                <GenderedCardDark
+                                    genderIconGender="female"
+                                    mediaClassName="bg-[url(/img/media-3.png)]"
+                                    style="filled"
+                                    subheadClassName="!whitespace-nowrap ![text-align:unset] !w-fit"
+                                    text="勇猛小旋风 Brave Tornado"
+                                    text1="CBR No.: 1231231234"
+                                />
+                                <GenderedCardDark
+                                    genderIconGender="female"
+                                    mediaClassName="bg-[url(/img/media.png)]"
+                                    style="filled"
+                                    subheadClassName="!whitespace-nowrap ![text-align:unset] !w-fit"
+                                    text="钟无艳 Ms. Zhong"
+                                    text1="CBR No.: 1231231254"
+                                />
+                                <GenderedCardDark
+                                    genderIconGender="male"
+                                    mediaClassName="bg-[url(/img/media.png)]"
+                                    style="filled"
+                                    subheadClassName="!whitespace-nowrap ![text-align:unset] !w-fit"
+                                    text="将太无二 No.1"
+                                    text1="CBR No.: 19823984"
+                                />
+                                <GenderedCardDark
+                                    genderIconGender="male"
+                                    mediaClassName="bg-[url(/img/media.png)]"
+                                    style="filled"
+                                    subheadClassName="!whitespace-nowrap ![text-align:unset] !w-fit"
+                                    text="Dash Only English Name"
+                                    text1="CBR No.: 1231211233"
+                                />
+                            </div>
+                        </div>
+                        <div className="inline-flex flex-col items-center relative flex-[0_0_auto]">
+                            <img className="relative flex-[0_0_auto]" alt="Partners" src="/img/partners.svg" />
+                            <HorizontalDarkWith
+                                className="!flex-[0_0_auto]"
+                                divider="/img/divider.svg"
+                                text={
+                                    <>
+                                        中国恶霸犬注册协会
+                                        <br />
+                                        2023 版权所有（自定义配置）
+                                    </>
+                                }
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div className="my-10 grid w-full max-w-screen-xl animate-fade-up grid-cols-1 gap-5 px-5 md:grid-cols-3 xl:px-0">
-        {features.map(({ title, description, demo, large }) => (
-          <Card
-            key={title}
-            title={title}
-            description={description}
-            demo={
-              title === "Beautiful, reusable components" ? (
-                <ComponentGrid />
-              ) : (
-                demo
-              )
-            }
-            large={large}
-          />
-        ))}
-      </div>
-    </>
-  );
-}
+    );
+};
 
-const features = [
-  {
-    title: "Beautiful, reusable components",
-    description:
-      "Pre-built beautiful, a11y-first components, powered by [Tailwind CSS](https://tailwindcss.com/), [Radix UI](https://www.radix-ui.com/), and [Framer Motion](https://framer.com/motion)",
-    large: true,
-  },
-  {
-    title: "Performance first",
-    description:
-      "Built on [Next.js](https://nextjs.org/) primitives like `@next/font` and `next/image` for stellar performance.",
-    demo: <WebVitals />,
-  },
-  {
-    title: "One-click Deploy",
-    description:
-      "Jumpstart your next project by deploying Precedent to [Vercel](https://vercel.com/) in one click.",
-    demo: (
-      <a href={DEPLOY_URL}>
-        <Image
-          src="https://vercel.com/button"
-          alt="Deploy with Vercel"
-          width={120}
-          height={30}
-          unoptimized
-        />
-      </a>
-    ),
-  },
-  {
-    title: "Built-in Auth + Database",
-    description:
-      "Precedent comes with authentication and database via [Auth.js](https://authjs.dev/) + [Prisma](https://prisma.io/)",
-    demo: (
-      <div className="flex items-center justify-center space-x-20">
-        <Image alt="Auth.js logo" src="/authjs.webp" width={50} height={50} />
-        <Image alt="Prisma logo" src="/prisma.svg" width={50} height={50} />
-      </div>
-    ),
-  },
-  {
-    title: "Hooks, utilities, and more",
-    description:
-      "Precedent offers a collection of hooks, utilities, and `@vercel/og`",
-    demo: (
-      <div className="grid grid-flow-col grid-rows-3 gap-10 p-10">
-        <span className="font-mono font-semibold">useIntersectionObserver</span>
-        <span className="font-mono font-semibold">useLocalStorage</span>
-        <span className="font-mono font-semibold">useScroll</span>
-        <span className="font-mono font-semibold">nFormatter</span>
-        <span className="font-mono font-semibold">capitalize</span>
-        <span className="font-mono font-semibold">truncate</span>
-      </div>
-    ),
-  },
-];
+export default SearchPage;
