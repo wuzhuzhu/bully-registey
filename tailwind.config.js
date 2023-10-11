@@ -2,17 +2,28 @@
 const plugin = require("tailwindcss/plugin");
 
 module.exports = {
+  darkMode: ["class"],
   content: ["./app/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
   future: {
     hoverOnlyWhenSupported: true,
   },
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
       fontFamily: {
         display: ["var(--font-sf)", "system-ui", "sans-serif"],
         default: ["var(--font-inter)", "system-ui", "sans-serif"],
       },
       animation: {
+        // shadcn
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
         // Fade up and down
         "fade-up": "fade-up 0.5s",
         "fade-down": "fade-down 0.5s",
@@ -21,6 +32,15 @@ module.exports = {
         "slide-down-fade": "slide-down-fade 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
       },
       keyframes: {
+        // shadcn
+        "accordion-down": {
+          from: { height: 0 },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: 0 },
+        },
         // Fade up and down
         "fade-up": {
           "0%": {
@@ -60,6 +80,41 @@ module.exports = {
       },
       // anima generated
       colors: {
+        // shadcn
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        // shadcn ends
         "m-3black": "var(--m-3black)",
         "m-3referrorerror-0": "var(--m-3referrorerror-0)",
         "m-3referrorerror-10": "var(--m-3referrorerror-10)",
@@ -973,6 +1028,11 @@ module.exports = {
         "m3syslighttertiary-fixed": "var(--m3syslighttertiary-fixed)",
         "m3syslighttertiary-fixed-dim": "var(--m3syslighttertiary-fixed-dim)",
       },
+      borderRadius: {
+        lg: `var(--radius)`,
+        md: `calc(var(--radius) - 2px)`,
+        sm: "calc(var(--radius) - 4px)",
+      },
       fontFamily: {
         "m3-body-large": "var(--m3-body-large-font-family)",
         "m3-body-medium": "var(--m3-body-medium-font-family)",
@@ -996,6 +1056,8 @@ module.exports = {
         "m3-title-medium-cn": "var(--m3-title-medium-cn-font-family)",
         "m3-title-small": "var(--m3-title-small-font-family)",
         "m3-title-small-cn": "var(--m3-title-small-cn-font-family)",
+        // TODO: it should be here since shadcn docs said so, but broke the fontFamily, find why
+        // sans: ["var(--font-sans)", ...fontFamily.sans],
       },
       boxShadow: {
         "m3-elevation-dark-1": "var(--m3-elevation-dark-1)",
@@ -1012,6 +1074,9 @@ module.exports = {
     },
   },
   plugins: [
+    // shadcn
+    require("tailwindcss-animate"),
+    // boilerplate
     require("@tailwindcss/forms"),
     require("@tailwindcss/typography"),
     plugin(({ addVariant }) => {

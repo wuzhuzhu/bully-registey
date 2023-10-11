@@ -1,11 +1,15 @@
 import React from 'react'
 import Nav from '@/components/layout/nav'
+import { Button } from '@/components/ui/button'
 
 const HomePage = () => {
     return (
-        <div>
+        <div className='bg-zinc-50 h-[100vh]'>
             <Nav />
-            HomePage</div >
+            <Button className="mt-[80px]">
+                Button
+            </Button>
+        </div >
     )
 }
 
