@@ -7,26 +7,25 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  provider          = "postgresql"
+  url               = env("POSTGRES_URL") // uses connection pooling
+  directUrl         = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
   shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
 }
 
-
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -40,17 +39,18 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId])
 }
 
 model User {
   id            String    @id @default(cuid())
-  name          String?
   email         String?   @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
+  Pet           Pet[]
 }
 
 model VerificationToken {
@@ -60,3 +60,22 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+
+// model Profile {
+//   id        String   @id @default(cuid())
+//   User      User     @relation(fields: [userId], references: [id])
+//   name      String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   Pet       Pet[]
+// }
+
+// model Pet {
+//   id          String   @id @default(cuid())
+//   name        String
+//   createdAt   DateTime @default(now())
+//   updatedAt   DateTime @updatedAt
+//   createdBy   User     @relation(fields: [createdById], references: [id])
+//   createdById String
+//   ownerId     String
+// }
