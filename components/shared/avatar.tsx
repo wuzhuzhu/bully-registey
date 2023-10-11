@@ -5,27 +5,25 @@ import { cn } from '@/lib/utils'
 
 const Avatar = ({
     src = '/img/avatar-3.png',
-    width = 64,
-    height = 64,
+    width, // the width is img width, not the div width(plus ring width)
     className = '',
     alt = 'avatar'
 }: {
     src: string,
     width: number,
-    height: number,
     // add tailwind class name type to classname prop
     className?: string
     alt?: string
 }) => {
     return (
-        <div className='relative flex shrink-0 overflow-hidden rounded-full'>
+        <div className='ring-2 ring-m-3sysdarkprimary rounded-full overflow-hidden'>
             <Image
-                src={src}
-                width={width}
-                height={height}
                 alt={alt}
+                width={width}
+                height={width}
+                src={src}
                 className={cn(
-                    'object-cover w-full h-full rounded-full',
+                    'object-cover rounded-full',
                     className
                 )}
             />

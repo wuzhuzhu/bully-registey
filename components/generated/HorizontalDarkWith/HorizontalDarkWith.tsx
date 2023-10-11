@@ -13,7 +13,7 @@ export const HorizontalDarkWith = ({
 }: {
   className?: string,
   divider?: string,
-  text?: React.ReactElement | string,
+  text?: React.ReactNode,
 }) => {
   return (
     <div

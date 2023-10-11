@@ -9,11 +9,13 @@ import { Icon39 } from "@/components/icons/Icon39";
 import { Icon4 } from "@/components/icons/Icon4";
 import { IconsMoreVert24Px1 } from "@/components/icons/IconsMoreVert24Px1";
 import { IconsTranslate24Px } from "@/components/icons/IconsTranslate24Px";
+import Avatar from "@/components/shared/avatar";
+import FamilyMember from "@/components/shared/family-member";
 
 const RegistryDetailPage = () => {
     return (
         <>
-            {/* main-content */}
+            {/* main title */}
             <div className="flex flex-col items-start justify-center gap-[8px] relative self-stretch w-full flex-[0_0_auto]">
                 <div className="inline-flex items-center gap-[8px] px-[4px] py-0 relative flex-[0_0_auto]">
                     <div className="relative w-[24px] h-[24px] bg-m-3sysdarkprimary rounded-[12px]">
@@ -50,6 +52,7 @@ const RegistryDetailPage = () => {
                     />
                 </div>
             </div>
+            {/* hero card */}
             <StackedCardDark
                 assistiveChipDark={<Icon39 className="!relative !w-[18px] !h-[18px]" />}
                 assistiveChipDarkLabelText="1398888888"
@@ -74,10 +77,17 @@ const RegistryDetailPage = () => {
                 text2="地区：北京市 朝阳区"
                 titleClassName="!mr-[-2.00px] !tracking-[var(--m3-body-medium-letter-spacing)] !text-[length:var(--m3-body-medium-font-size)] ![font-style:var(--m3-body-medium-font-style)] !font-[number:var(--m3-body-medium-font-weight)] !font-m3-body-medium !leading-[var(--m3-body-medium-line-height)]"
             />
+            {/* family tree */}
             <div className="flex px-0 py-[4px] self-stretch w-full flex-col items-center gap-[8px] relative flex-[0_0_auto]">
-                <Image width={64} height={64} className="relative flex-[0_0_auto]" alt="Gen" src="/img/gen-1.svg" />
+                {/* 父辈 parents */}
+                <div className="flex">
+                    <FamilyMember></FamilyMember>
+                    <FamilyMember></FamilyMember>
+
+                </div>
                 <div className="flex items-center justify-between relative self-stretch w-full flex-[0_0_auto]">
                     <div className="flex w-[171.33px] items-center justify-center relative">
+
                         <div className="inline-flex p-[4px] rounded-[16px] flex-col items-center gap-[8px] relative flex-[0_0_auto]">
                             <Image
                                 width={60} height={60} className="relative w-[60px] h-[60px] mt-[-3.00px] mix-blend-lighten"
