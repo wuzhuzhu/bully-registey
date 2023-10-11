@@ -1,4 +1,4 @@
-Sitemap: https://precedent.dev/sitemap.xml
+Sitemap: https://bullyregistry.cn/sitemap.xml
 
 User-agent: *
 Disallow: /api

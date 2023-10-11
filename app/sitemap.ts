@@ -1,3 +1,5 @@
+// TODO: update sitemap with new routes
+
 import { MetadataRoute } from "next";
 import db from "@/lib/prisma";
 

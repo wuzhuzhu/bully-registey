@@ -30,7 +30,7 @@ export default function RegistryLayout({
                             </div>
                             <p className={cn(
                                 rockSalt.className,
-                                "relative w-fit font-normal text-m3sysdarkon-surface text-[2px] tracking-[0.15px] leading-[24px] whitespace-nowrap"
+                                "relative w-fit font-normal text-m3sysdarkon-surface text-[10px] tracking-[0.15px] leading-[24px] whitespace-nowrap ml-1"
                             )}>
                                 Real Fair And Professional
                             </p>
