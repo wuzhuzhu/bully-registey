@@ -13,6 +13,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { Button } from "@/components/ui/button"
+import { PetWithRelations } from "@/prisma/generated/zod"
 
 export const metadata: Metadata = {
   title: "Pets - Dashboard",
@@ -45,7 +46,7 @@ export default async function TaskPage() {
 
           </div>
         </div>
-        <DataTable data={pets} columns={columns} />
+        <DataTable data={pets as PetWithRelations[]} columns={columns} />
       </div>
     </>
   )
