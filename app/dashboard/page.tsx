@@ -1,6 +1,4 @@
 import { Button } from '@/components/ui/button'
-import { getServerSessionWithOption } from '@/lib/utils'
-import Image from 'next/image'
 import {
     Card,
     CardContent,
@@ -14,29 +12,28 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
+import { getServerSessionWithOption } from '@/lib/utils'
+import Image from 'next/image'
 
 import { CalendarDateRangePicker } from "@/components/dashboard/date-range-picker"
-import { MainNav } from "@/components/dashboard/main-nav"
 import { Overview } from "@/components/dashboard/overview"
 import { RecentSales } from "@/components/dashboard/recent-sales"
-import { Search } from "@/components/dashboard/search"
-import TeamSwitcher from "@/components/dashboard/team-switcher"
-import { UserNav } from "@/components/dashboard/user-nav"
 import db from '@/lib/prisma'
+import MdNotifier from '@/components/layout/md-notifier'
 
 async function getStatisticsData() {
     const session = await getServerSessionWithOption()
     const [petsCount, petsCreatedCount, registerPetsCount, pendingPetsCount, userCount] = await Promise.all([
         // 所有已经录入的宠物数量
         db.pet.count({
-            where: {
-                createdById: session?.user?.id
-            }
+            // where: {
+            //     createdById: session?.user?.id
+            // }
         }),
         // 所有在过去30天内录入的宠物数量
         db.pet.count({
             where: {
-                createdById: session?.user?.id,
+                // createdById: session?.user?.id,
                 createdAt: {
                     gt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
                 }
@@ -46,7 +43,7 @@ async function getStatisticsData() {
         // 所有已经审核通过的宠物数量
         db.pet.count({
             where: {
-                createdById: session?.user?.id,
+                // createdById: session?.user?.id,
                 registration: {
                     status: 'APPROVED'
                 }
@@ -55,7 +52,7 @@ async function getStatisticsData() {
         // 处于待审核状态的宠物数量
         db.pet.count({
             where: {
-                createdById: session?.user?.id,
+                // createdById: session?.user?.id,
                 registration: {
                     status: 'PENDING'
                 }
@@ -89,10 +86,7 @@ const DashboardHomePage = async () => {
     } = await getStatisticsData()
     return (
         <>
-            <div className='md:hidden text-center'>
-                <h1 className='text-2xl mb-4'>屏幕分辨率过低</h1>
-                <p>管理后台页面不支持小屏幕显示,请使用电脑访问</p>
-            </div>
+            <MdNotifier />
             <div className="hidden flex-col md:flex">
                 <div className='flex-1 space-y-4 p-8 pt-4 w-screen'>
                     {/* 标题栏 */}

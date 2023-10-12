@@ -43,13 +43,13 @@ export function MainNav({
         href="/dashboard/pets"
         currentPath={pathname}
       >
-        犬类管理
+        犬管理
       </NavLink>
       <NavLink
         href="/dashboard/kennel"
         currentPath={pathname}
       >
-        犬舍
+        犬舍管理
       </NavLink>
       <NavLink
         href="/dashboard/settings"
