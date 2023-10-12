@@ -1,8 +1,11 @@
-import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import cx from "classnames";
-import { sfPro, inter } from "./fonts";
-import { Suspense } from "react";
+import { getServerSession } from "next-auth";
+
+import { inter, sfPro } from "./fonts";
+import "./globals.css";
+import SessionProvider from '@/components/providers/session-provider'
+import authOptions from "./api/auth/[...nextauth]/auth-options";
 
 export const metadata = {
   title: "中国恶霸犬注册|血统国际认证",
@@ -24,12 +27,17 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
+  const session = await getServerSession(authOptions);
   return (
     <html lang="en">
       <body className={cx(sfPro.variable, inter.variable, 'bg-m-3sysdarksurface')}>
-        <main>
-          {children}
-        </main>
+        {/* provide session to any wrapped client components */}
+        <SessionProvider>
+          <main>
+            {children}
+          </main>
+        </SessionProvider>
         <Analytics />
       </body>
     </html >

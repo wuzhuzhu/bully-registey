@@ -1,6 +1,8 @@
+import { getServerSession } from 'next-auth/next';
 import ms from "ms";
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import authOptions from '@/app/api/auth/[...nextauth]/auth-options';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -66,3 +68,7 @@ export const truncate = (str: string, length: number) => {
   if (!str || str.length <= length) return str;
   return `${str.slice(0, length)}...`;
 };
+
+export const getServerSessionWithOption = () => {
+  return getServerSession(authOptions);
+}

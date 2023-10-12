@@ -26,8 +26,8 @@ export default async function OG() {
         }}
       >
         <img
-          src={new URL("../public/logo.png", import.meta.url).toString()}
-          alt="Precedent Logo"
+          src={new URL("../public/img/logo.png", import.meta.url).toString()}
+          alt="CBR Logo"
           tw="w-20 h-20 mb-4 opacity-95"
         />
         <h1
