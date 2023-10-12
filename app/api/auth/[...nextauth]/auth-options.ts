@@ -1,9 +1,15 @@
 import db from "@/lib/prisma";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { NextAuthOptions } from "next-auth";
-import EmailProvider from "next-auth/providers/email";
+import { DefaultSession, NextAuthOptions } from "next-auth";
 import GithubProvider from 'next-auth/providers/github';
-import GoogleProvider from "next-auth/providers/google";
+
+declare module "next-auth" {
+    interface Session {
+        user: {
+            id: string;
+        } & DefaultSession["user"];
+    }
+}
 
 const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(db),
@@ -21,6 +27,18 @@ const authOptions: NextAuthOptions = {
         //     from: process.env.EMAIL_FROM
         // }),
     ],
+    callbacks: {
+        async session({ session, user }) {
+            return {
+                ...session,
+                user: {
+                    ...session.user,
+                    id: user.id,
+                },
+            };
+        },
+    }
+
 };
 
 export default authOptions

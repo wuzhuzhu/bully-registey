@@ -1,4 +1,4 @@
-import Nav from '@/components/layout/navbar'
+import Nav from '@/components/layout/nav'
 import React, { Suspense } from 'react'
 
 const DashboardLayout = ({ children }: {
@@ -9,7 +9,7 @@ const DashboardLayout = ({ children }: {
             <Suspense>
                 <Nav></Nav>
             </Suspense>
-            <div className='min-h-screen pt-24 pb-8 flex flex-col items-center gap-4 bg-zinc-100'>
+            <div className='min-h-screen pt-16 pb-8 flex flex-col items-center gap-4 bg-zinc-100'>
                 {children}
             </div>
         </div>
