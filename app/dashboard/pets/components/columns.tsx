@@ -6,11 +6,16 @@ import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 
 import { labels, statuses } from "../data/data"
-import { Task } from "../data/schema"
+import { PetWithRelations } from "@/prisma/generated/zod"
 import { DataTableColumnHeader } from "./data-table-column-header"
 import { DataTableRowActions } from "./data-table-row-actions"
+import { REGISTRATION_STATUS, TRANSLATION_MAP } from "@/lib/constants"
+import { CircleDashed } from "lucide-react"
 
-export const columns: ColumnDef<Task>[] = [
+
+
+export const columns: ColumnDef<PetWithRelations>[] = [
+  // 第一列 选择框
   {
     id: "select",
     header: ({ table }) => (
@@ -32,45 +37,98 @@ export const columns: ColumnDef<Task>[] = [
     enableSorting: false,
     enableHiding: false,
   },
+  // 第二列 姓名
   {
-    accessorKey: "id",
+    accessorKey: "name",
+    accessorFn: (originalRow, _index) => { return originalRow.name + originalRow.nameEn },
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Task" />
+      <DataTableColumnHeader column={column} title="犬名" />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
+    cell: ({ row }) => {
+      console.log({ row }, row.getValue("id"))
+      return <div className="w-[80px]">{`${row.original.name} / ${row.original.nameEn}`}</div>
+    },
     enableSorting: false,
     enableHiding: false,
   },
   {
-    accessorKey: "title",
+    accessorKey: "gender",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Title" />
+      <DataTableColumnHeader column={column} title="性别" />
     ),
     cell: ({ row }) => {
-      const label = labels.find((label) => label.value === row.original.label)
-
       return (
         <div className="flex space-x-2">
-          {label && <Badge variant="outline">{label.label}</Badge>}
-          <span className="max-w-[500px] truncate font-medium">
-            {row.getValue("title")}
+          <span className="w-[50px]">
+            {TRANSLATION_MAP.gender[row.original.gender]}
           </span>
         </div>
       )
     },
   },
   {
-    accessorKey: "status",
+    accessorKey: "registrationReadableId",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
+      <DataTableColumnHeader column={column} title="证书编号" />
     ),
     cell: ({ row }) => {
-      const status = statuses.find(
-        (status) => status.value === row.getValue("status")
+      return (
+        <div className="flex w-[100px] items-center">
+          <span>{row.original.registration?.readableId ?? '-'}</span>
+        </div>
       )
-
-      if (!status) {
-        return null
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
+  },
+  {
+    accessorKey: "color",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="颜色" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="flex w-[60px] items-center">
+          <span>{row.getValue('color')}</span>
+        </div>
+      )
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
+  },
+  {
+    accessorKey: "breed",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="品种" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="flex w-[60px] items-center">
+          <span>{row.getValue('breed')}</span>
+        </div>
+      )
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
+  },
+  {
+    accessorKey: "status",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="注册状态" />
+    ),
+    cell: ({ row }) => {
+      let status: {
+        label: string
+        icon: any
+      } = {
+        label: "仅登记",
+        icon: CircleDashed,
+      }
+      if (row.original.registration?.status) {
+        status = REGISTRATION_STATUS[row.original?.registration?.status as keyof typeof REGISTRATION_STATUS]
       }
 
       return (

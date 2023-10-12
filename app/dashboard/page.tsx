@@ -102,13 +102,13 @@ const DashboardHomePage = async () => {
                         <TabsList>
                             <TabsTrigger value="overview">概述</TabsTrigger>
                             <TabsTrigger value="analytics" disabled>
-                                分析(未开发)
+                                分析(未)
                             </TabsTrigger>
                             <TabsTrigger value="reports" disabled>
-                                报告(未开发)
+                                报告(未)
                             </TabsTrigger>
                             <TabsTrigger value="notifications" disabled>
-                                通知(未开发)
+                                通知(未)
                             </TabsTrigger>
                         </TabsList>
                         <TabsContent value="overview" className="space-y-4">

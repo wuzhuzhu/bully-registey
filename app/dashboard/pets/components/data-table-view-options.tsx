@@ -3,6 +3,7 @@
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
 import { MixerHorizontalIcon, PlusIcon } from "@radix-ui/react-icons"
 import { Table } from "@tanstack/react-table"
+import { DataTableActions } from "./data-table-actions"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -31,7 +32,7 @@ export function DataTableViewOptions<TData>({
             disabled
           >
             <MixerHorizontalIcon className="mr-2 h-4 w-4" />
-            选择显示列(未开发)
+            隐藏列(未)
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[150px]">
@@ -65,6 +66,7 @@ export function DataTableViewOptions<TData>({
         <PlusIcon className="mr-2 h-4 w-4" />
         新登记
       </Button>
+      <DataTableActions table={table} />
     </div>
   )
 }

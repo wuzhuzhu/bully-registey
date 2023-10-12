@@ -26,24 +26,24 @@ export const labels = [
 
 export const statuses = [
   {
-    value: "SUSPENDED",
-    label: "暂缓审核",
-    icon: QuestionMarkCircledIcon,
-  },
-  {
     value: "PENDING",
-    label: "等待审核",
+    label: "未申请",
     icon: StopwatchIcon,
   },
   {
     value: "APPROVED",
-    label: "审核通过",
+    label: "已批准",
     icon: CheckCircledIcon,
   },
   {
     value: "REJECTED",
-    label: "审核拒绝",
+    label: "已拒绝",
     icon: CrossCircledIcon,
+  },
+  {
+    value: "SUSPENDED",
+    label: "已暂停",
+    icon: QuestionMarkCircledIcon,
   },
 ]
 

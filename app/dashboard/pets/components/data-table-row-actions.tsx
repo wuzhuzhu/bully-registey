@@ -18,17 +18,26 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import { labels } from "../data/data"
-import { taskSchema } from "../data/schema"
+import { statuses } from "../data/data"
+import { PetSchema, RegistrationStatusSchema } from "@/prisma/generated/zod"
+import { object, z } from "zod"
+import { REGISTRATION_STATUS } from "@/lib/constants"
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
 }
 
+const PetSchemaWithStatus = PetSchema.extend({
+  registration: z.object({
+    status: RegistrationStatusSchema
+  }).nullable(),
+})
+
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const task = taskSchema.parse(row.original)
+  console.log("@@@@@@@@@@@@@@@@", { row: row.original })
+  const pet = PetSchemaWithStatus.parse(row.original)
 
   return (
     <DropdownMenu>
@@ -42,17 +51,18 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>Edit</DropdownMenuItem>
-        <DropdownMenuItem>Make a copy</DropdownMenuItem>
-        <DropdownMenuItem>Favorite</DropdownMenuItem>
+        <DropdownMenuItem>编辑</DropdownMenuItem>
+        <DropdownMenuItem>复制</DropdownMenuItem>
+        <DropdownMenuItem disabled>收藏</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuSub>
-          <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
+          <DropdownMenuSubTrigger>审核</DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
-            <DropdownMenuRadioGroup value={task.label}>
-              {labels.map((label) => (
-                <DropdownMenuRadioItem key={label.value} value={label.value}>
-                  {label.label}
+            {/* TODO: onclick */}
+            <DropdownMenuRadioGroup value={pet?.registration?.status}>
+              {Object.keys(REGISTRATION_STATUS).map((status) => (
+                <DropdownMenuRadioItem key={status} value={status}>
+                  {REGISTRATION_STATUS[status as keyof typeof REGISTRATION_STATUS].label}
                 </DropdownMenuRadioItem>
               ))}
             </DropdownMenuRadioGroup>
@@ -60,7 +70,7 @@ export function DataTableRowActions<TData>({
         </DropdownMenuSub>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          Delete
+          删除
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>
