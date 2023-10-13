@@ -12,6 +12,10 @@ export const KennelSchema = z.object({
   id: z.string().cuid(),
   name: z.string(),
   nameEn: z.string().nullable(),
+  imgUrl: z.string().nullable(),
+  description: z.string().nullable(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
 })
 
 export type Kennel = z.infer<typeof KennelSchema>

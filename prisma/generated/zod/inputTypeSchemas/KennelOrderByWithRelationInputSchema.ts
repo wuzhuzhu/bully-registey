@@ -9,6 +9,10 @@ export const KennelOrderByWithRelationInputSchema: z.ZodType<Prisma.KennelOrderB
   id: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
   nameEn: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  imgUrl: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  description: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional(),
   pets: z.lazy(() => PetOrderByRelationAggregateInputSchema).optional(),
   Profile: z.lazy(() => ProfileOrderByWithRelationInputSchema).optional()
 }).strict();

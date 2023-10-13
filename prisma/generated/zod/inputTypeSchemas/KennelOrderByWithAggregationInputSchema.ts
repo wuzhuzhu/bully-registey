@@ -10,6 +10,10 @@ export const KennelOrderByWithAggregationInputSchema: z.ZodType<Prisma.KennelOrd
   id: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
   nameEn: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  imgUrl: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  description: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => KennelCountOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => KennelMaxOrderByAggregateInputSchema).optional(),
   _min: z.lazy(() => KennelMinOrderByAggregateInputSchema).optional()
