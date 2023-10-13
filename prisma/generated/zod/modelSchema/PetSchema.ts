@@ -38,7 +38,7 @@ export type Pet = z.infer<typeof PetSchema>
 export type PetRelations = {
   createdBy: UserWithRelations;
   registration?: RegistrationWithRelations | null;
-  Kennel?: KennelWithRelations | null;
+  kennel?: KennelWithRelations | null;
   parents: PetWithRelations[];
   children: PetWithRelations[];
 };
@@ -48,7 +48,7 @@ export type PetWithRelations = z.infer<typeof PetSchema> & PetRelations
 export const PetWithRelationsSchema: z.ZodType<PetWithRelations> = PetSchema.merge(z.object({
   createdBy: z.lazy(() => UserWithRelationsSchema),
   registration: z.lazy(() => RegistrationWithRelationsSchema).nullable(),
-  Kennel: z.lazy(() => KennelWithRelationsSchema).nullable(),
+  kennel: z.lazy(() => KennelWithRelationsSchema).nullable(),
   parents: z.lazy(() => PetWithRelationsSchema).array(),
   children: z.lazy(() => PetWithRelationsSchema).array(),
 }))

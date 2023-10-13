@@ -46,7 +46,7 @@ export const columns: ColumnDef<PetWithRelations>[] = [
     ),
     cell: ({ row }) => {
       console.log({ row }, row.getValue("id"))
-      return <div className="w-[80px]">{`${row.original.name} / ${row.original.nameEn}`}</div>
+      return <div className="w-[120px]">{`${row.original.name} / ${row.original.nameEn}`}</div>
     },
     enableSorting: false,
     enableHiding: false,

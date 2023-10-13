@@ -24,7 +24,7 @@ export const PetOrderByWithRelationInputSchema: z.ZodType<Prisma.PetOrderByWithR
   kennelId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   createdBy: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
   registration: z.lazy(() => RegistrationOrderByWithRelationInputSchema).optional(),
-  Kennel: z.lazy(() => KennelOrderByWithRelationInputSchema).optional(),
+  kennel: z.lazy(() => KennelOrderByWithRelationInputSchema).optional(),
   parents: z.lazy(() => PetOrderByRelationAggregateInputSchema).optional(),
   children: z.lazy(() => PetOrderByRelationAggregateInputSchema).optional()
 }).strict();

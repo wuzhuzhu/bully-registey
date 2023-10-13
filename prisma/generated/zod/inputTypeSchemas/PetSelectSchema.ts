@@ -23,7 +23,7 @@ export const PetSelectSchema: z.ZodType<Prisma.PetSelect> = z.object({
   kennelId: z.boolean().optional(),
   createdBy: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
   registration: z.union([z.boolean(),z.lazy(() => RegistrationArgsSchema)]).optional(),
-  Kennel: z.union([z.boolean(),z.lazy(() => KennelArgsSchema)]).optional(),
+  kennel: z.union([z.boolean(),z.lazy(() => KennelArgsSchema)]).optional(),
   parents: z.union([z.boolean(),z.lazy(() => PetFindManyArgsSchema)]).optional(),
   children: z.union([z.boolean(),z.lazy(() => PetFindManyArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => PetCountOutputTypeArgsSchema)]).optional(),

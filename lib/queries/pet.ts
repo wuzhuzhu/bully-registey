@@ -13,23 +13,6 @@ export const getPets = async ({ skip = 0, take = 10, filter }: {
         petName?: string
     }
 } = {}) => {
-    // let pets
-    // if (filter && Object.keys(filter).length > 0) {
-    //     pets = await db.pet.findMany({
-    //         where: {
-    //             kennelId: filter?.kennelId,
-    //             registrationId: filter?.registrationId,
-    //             name: filter?.petName,
-    //         },
-    //         skip,
-    //         take,
-    //     })
-    // } else {
-    //     pets = await db.pet.findMany({
-    //         skip,
-    //         take,
-    //     })
-    // }
     const pets = await db.pet.findMany({
         where: {
             kennelId: filter?.kennelId,
@@ -39,7 +22,7 @@ export const getPets = async ({ skip = 0, take = 10, filter }: {
         skip,
         take,
         include: {
-            Kennel: true,
+            kennel: true,
             registration: true,
             createdBy: true,
         }

@@ -123,7 +123,7 @@ model Pet {
   createdById    String
   registration   Registration? @relation(fields: [registrationId], references: [id])
   registrationId String?       @unique
-  Kennel         Kennel?       @relation(fields: [kennelId], references: [id])
+  kennel         Kennel?       @relation(fields: [kennelId], references: [id])
   kennelId       String?
   parents        Pet[]         @relation("birth") // child post (post that are suggested)
   children       Pet[]         @relation("birth") // parent post (parent post of a suggested post)

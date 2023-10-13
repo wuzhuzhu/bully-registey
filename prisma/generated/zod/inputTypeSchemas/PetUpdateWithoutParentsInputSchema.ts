@@ -26,7 +26,7 @@ export const PetUpdateWithoutParentsInputSchema: z.ZodType<Prisma.PetUpdateWitho
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   createdBy: z.lazy(() => UserUpdateOneRequiredWithoutPetNestedInputSchema).optional(),
   registration: z.lazy(() => RegistrationUpdateOneWithoutPetNestedInputSchema).optional(),
-  Kennel: z.lazy(() => KennelUpdateOneWithoutPetsNestedInputSchema).optional(),
+  kennel: z.lazy(() => KennelUpdateOneWithoutPetsNestedInputSchema).optional(),
   children: z.lazy(() => PetUpdateManyWithoutParentsNestedInputSchema).optional()
 }).strict();
 

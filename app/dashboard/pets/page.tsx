@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 
 export default async function TaskPage() {
   const pets = await getPets()
-  console.log(pets[0].createdBy)
+  // console.log('First Pet in pet dash', pets && pets.length > 0 && pets[0].createdBy)
 
   return (
     <>

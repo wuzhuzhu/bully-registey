@@ -20,7 +20,7 @@ export const PetCreateWithoutCreatedByInputSchema: z.ZodType<Prisma.PetCreateWit
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   registration: z.lazy(() => RegistrationCreateNestedOneWithoutPetInputSchema).optional(),
-  Kennel: z.lazy(() => KennelCreateNestedOneWithoutPetsInputSchema).optional(),
+  kennel: z.lazy(() => KennelCreateNestedOneWithoutPetsInputSchema).optional(),
   parents: z.lazy(() => PetCreateNestedManyWithoutChildrenInputSchema).optional(),
   children: z.lazy(() => PetCreateNestedManyWithoutParentsInputSchema).optional()
 }).strict();

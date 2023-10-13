@@ -35,7 +35,7 @@ export const PetWhereInputSchema: z.ZodType<Prisma.PetWhereInput> = z.object({
   kennelId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   createdBy: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
   registration: z.union([ z.lazy(() => RegistrationNullableRelationFilterSchema),z.lazy(() => RegistrationWhereInputSchema) ]).optional().nullable(),
-  Kennel: z.union([ z.lazy(() => KennelNullableRelationFilterSchema),z.lazy(() => KennelWhereInputSchema) ]).optional().nullable(),
+  kennel: z.union([ z.lazy(() => KennelNullableRelationFilterSchema),z.lazy(() => KennelWhereInputSchema) ]).optional().nullable(),
   parents: z.lazy(() => PetListRelationFilterSchema).optional(),
   children: z.lazy(() => PetListRelationFilterSchema).optional()
 }).strict();
