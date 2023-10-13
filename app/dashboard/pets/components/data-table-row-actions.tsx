@@ -36,7 +36,6 @@ const PetSchemaWithStatus = PetSchema.extend({
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  console.log("@@@@@@@@@@@@@@@@", { row: row.original })
   const pet = PetSchemaWithStatus.parse(row.original)
 
   return (

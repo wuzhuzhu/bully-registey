@@ -37,6 +37,7 @@ export const columns: ColumnDef<PetWithRelations>[] = [
     enableSorting: false,
     enableHiding: false,
   },
+
   // 第二列 姓名
   {
     accessorKey: "name",
@@ -78,9 +79,9 @@ export const columns: ColumnDef<PetWithRelations>[] = [
         </div>
       )
     },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
-    },
+    // filterFn: (row, id, value) => {
+    //   return value.includes(row.getValue(id))
+    // },
   },
   {
     accessorKey: "color",
@@ -94,9 +95,6 @@ export const columns: ColumnDef<PetWithRelations>[] = [
         </div>
       )
     },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
-    },
   },
   {
     accessorKey: "breed",
@@ -109,9 +107,6 @@ export const columns: ColumnDef<PetWithRelations>[] = [
           <span>{row.getValue('breed')}</span>
         </div>
       )
-    },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
     },
   },
   {

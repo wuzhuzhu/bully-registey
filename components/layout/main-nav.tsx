@@ -14,7 +14,7 @@ const NavLink = function ({ href, children, currentPath }: {
     className={cn(
       "text-sm font-medium transition-colors hover:text-primary",
       {
-        "text-muted-foreground": currentPath !== href,
+        "text-secondary-foreground": currentPath !== href,
       }
     )}
   >

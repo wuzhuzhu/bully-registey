@@ -13,6 +13,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
+import Link from "next/link"
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>
@@ -59,12 +60,15 @@ export function DataTableViewOptions<TData>({
         </DropdownMenuContent>
       </DropdownMenu>
       <Button
+        asChild
         variant="outline"
         size="sm"
         className="ml-auto hidden h-8 lg:flex"
       >
-        <PlusIcon className="mr-2 h-4 w-4" />
-        新登记
+        <Link href='/dashboard/new/pet'>
+          <PlusIcon className="mr-2 h-4 w-4" />
+          新登记
+        </Link>
       </Button>
       <DataTableActions table={table} />
     </div>
