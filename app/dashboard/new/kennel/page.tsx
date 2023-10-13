@@ -26,12 +26,18 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/components/ui/use-toast"
+import { createKennelWithProfileAction } from '@/lib/actions'
 
-import { KennelCreateWithoutPetsInputSchema } from '@/prisma/generated/zod'
-type KennelCreateWithoutPetsInput = z.infer<typeof KennelCreateWithoutPetsInputSchema>
+import { KennelCreateInputSchema, ProfileCreateInputSchema } from '@/prisma/generated/zod'
+
+// 使用kennel和profile的schema合并扁平的表单schema
+// merge: If the two schemas share keys, the properties of B overrides the property of A
+// id和createdAt会被覆盖
+const KennelCreatePageInputSchema = ProfileCreateInputSchema.merge(KennelCreateInputSchema)
+type KennelCreatePageInputType = z.infer<typeof KennelCreatePageInputSchema>
 
 // This can come from your database or API.
-const defaultValues: Partial<KennelCreateWithoutPetsInput> = {
+const defaultValues: Partial<KennelCreatePageInputType> = {
     name: '',
     nameEn: '',
     imgUrl: '/img/dog-company-logo-icon.svg',
@@ -41,9 +47,10 @@ const defaultValues: Partial<KennelCreateWithoutPetsInput> = {
 
 const CreateKennelPage = () => {
     const { toast } = useToast()
+    // console.log(name)
 
-    const form = useForm<KennelCreateWithoutPetsInput>({
-        resolver: zodResolver(KennelCreateWithoutPetsInputSchema),
+    const form = useForm<KennelCreatePageInputType>({
+        resolver: zodResolver(KennelCreatePageInputSchema),
         defaultValues,
         mode: "onChange",
     })
@@ -53,7 +60,7 @@ const CreateKennelPage = () => {
         control: form.control,
     })
 
-    function onSubmit(data: KennelCreateWithoutPetsInput) {
+    function onSubmit(data: KennelCreatePageInputType) {
         console.log(data)
         toast({
             title: "You submitted the following values:",
@@ -68,7 +75,7 @@ const CreateKennelPage = () => {
     return (
         <div>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                <form onSubmit={form.handleSubmit(createKennelWithProfileAction)} className="space-y-8">
                     {/* name */}
                     <FormField
                         control={form.control}
@@ -99,20 +106,7 @@ const CreateKennelPage = () => {
                             </FormItem>
                         )}
                     />
-                    {/* 手机号 */}
-                    <FormField
-                        control={form.control}
-                        name="profile.mobile"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>手机号</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="输入正确手机号.." {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+
                     {/* description */}
                     <FormField
                         control={form.control}
@@ -136,11 +130,23 @@ const CreateKennelPage = () => {
                     />
 
                     {/* TODO: logo 上传图片  */}
-
-                    {/* ins */}
+                    {/*  TODO: 这里会报错，之后排查
                     <FormField
                         control={form.control}
-                        name="profile.instagram"
+                        name="mobile"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>手机号</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="输入正确手机号.." {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="instagram"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>instagram</FormLabel>
@@ -154,10 +160,9 @@ const CreateKennelPage = () => {
                             </FormItem>
                         )}
                     />
-                    {/* facebook */}
                     <FormField
                         control={form.control}
-                        name="profile.facebook"
+                        name="facebook"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>facebook</FormLabel>
@@ -171,10 +176,9 @@ const CreateKennelPage = () => {
                             </FormItem>
                         )}
                     />
-                    {/* 微信 */}
                     <FormField
                         control={form.control}
-                        name="profile.wechat"
+                        name="wechat"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>微信</FormLabel>
@@ -184,7 +188,7 @@ const CreateKennelPage = () => {
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />
+                    /> */}
 
                     {/* 下拉示例 */}
                     {/* <FormField
