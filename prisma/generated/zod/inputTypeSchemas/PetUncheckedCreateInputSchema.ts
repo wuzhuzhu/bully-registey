@@ -2,12 +2,11 @@ import type { Prisma } from '@prisma/client';
 import { z } from 'zod';
 import { PetTypeSchema } from './PetTypeSchema';
 import { GenderSchema } from './GenderSchema';
+import { PetUncheckedCreateNestedManyWithoutChildrenInputSchema } from './PetUncheckedCreateNestedManyWithoutChildrenInputSchema';
+import { PetUncheckedCreateNestedManyWithoutParentsInputSchema } from './PetUncheckedCreateNestedManyWithoutParentsInputSchema';
 
 export const PetUncheckedCreateInputSchema: z.ZodType<Prisma.PetUncheckedCreateInput> = z.object({
   id: z.string().cuid().optional(),
-  path: z.string(),
-  depth: z.number().int(),
-  numchild: z.number().int().optional(),
   name: z.string(),
   nameEn: z.string().optional().nullable(),
   ownerName: z.string(),
@@ -20,7 +19,9 @@ export const PetUncheckedCreateInputSchema: z.ZodType<Prisma.PetUncheckedCreateI
   updatedAt: z.coerce.date().optional(),
   createdById: z.string(),
   registrationId: z.string().optional().nullable(),
-  kennelId: z.string().optional().nullable()
+  kennelId: z.string().optional().nullable(),
+  parents: z.lazy(() => PetUncheckedCreateNestedManyWithoutChildrenInputSchema).optional(),
+  children: z.lazy(() => PetUncheckedCreateNestedManyWithoutParentsInputSchema).optional()
 }).strict();
 
 export default PetUncheckedCreateInputSchema;

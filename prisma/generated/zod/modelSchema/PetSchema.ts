@@ -16,9 +16,6 @@ export const PetSchema = z.object({
   type: PetTypeSchema,
   gender: GenderSchema,
   id: z.string().cuid(),
-  path: z.string(),
-  depth: z.number().int(),
-  numchild: z.number().int(),
   name: z.string(),
   nameEn: z.string().nullable(),
   ownerName: z.string(),
@@ -42,6 +39,8 @@ export type PetRelations = {
   createdBy: UserWithRelations;
   registration?: RegistrationWithRelations | null;
   Kennel?: KennelWithRelations | null;
+  parents: PetWithRelations[];
+  children: PetWithRelations[];
 };
 
 export type PetWithRelations = z.infer<typeof PetSchema> & PetRelations
@@ -50,6 +49,8 @@ export const PetWithRelationsSchema: z.ZodType<PetWithRelations> = PetSchema.mer
   createdBy: z.lazy(() => UserWithRelationsSchema),
   registration: z.lazy(() => RegistrationWithRelationsSchema).nullable(),
   Kennel: z.lazy(() => KennelWithRelationsSchema).nullable(),
+  parents: z.lazy(() => PetWithRelationsSchema).array(),
+  children: z.lazy(() => PetWithRelationsSchema).array(),
 }))
 
 export default PetSchema;

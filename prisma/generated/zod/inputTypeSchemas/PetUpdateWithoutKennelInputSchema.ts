@@ -1,7 +1,6 @@
 import type { Prisma } from '@prisma/client';
 import { z } from 'zod';
 import { StringFieldUpdateOperationsInputSchema } from './StringFieldUpdateOperationsInputSchema';
-import { IntFieldUpdateOperationsInputSchema } from './IntFieldUpdateOperationsInputSchema';
 import { NullableStringFieldUpdateOperationsInputSchema } from './NullableStringFieldUpdateOperationsInputSchema';
 import { PetTypeSchema } from './PetTypeSchema';
 import { EnumPetTypeFieldUpdateOperationsInputSchema } from './EnumPetTypeFieldUpdateOperationsInputSchema';
@@ -10,12 +9,11 @@ import { EnumGenderFieldUpdateOperationsInputSchema } from './EnumGenderFieldUpd
 import { DateTimeFieldUpdateOperationsInputSchema } from './DateTimeFieldUpdateOperationsInputSchema';
 import { UserUpdateOneRequiredWithoutPetNestedInputSchema } from './UserUpdateOneRequiredWithoutPetNestedInputSchema';
 import { RegistrationUpdateOneWithoutPetNestedInputSchema } from './RegistrationUpdateOneWithoutPetNestedInputSchema';
+import { PetUpdateManyWithoutChildrenNestedInputSchema } from './PetUpdateManyWithoutChildrenNestedInputSchema';
+import { PetUpdateManyWithoutParentsNestedInputSchema } from './PetUpdateManyWithoutParentsNestedInputSchema';
 
 export const PetUpdateWithoutKennelInputSchema: z.ZodType<Prisma.PetUpdateWithoutKennelInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  path: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  depth: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  numchild: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ownerName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -27,7 +25,9 @@ export const PetUpdateWithoutKennelInputSchema: z.ZodType<Prisma.PetUpdateWithou
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   createdBy: z.lazy(() => UserUpdateOneRequiredWithoutPetNestedInputSchema).optional(),
-  registration: z.lazy(() => RegistrationUpdateOneWithoutPetNestedInputSchema).optional()
+  registration: z.lazy(() => RegistrationUpdateOneWithoutPetNestedInputSchema).optional(),
+  parents: z.lazy(() => PetUpdateManyWithoutChildrenNestedInputSchema).optional(),
+  children: z.lazy(() => PetUpdateManyWithoutParentsNestedInputSchema).optional()
 }).strict();
 
 export default PetUpdateWithoutKennelInputSchema;

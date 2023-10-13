@@ -4,9 +4,6 @@ import { SortOrderSchema } from './SortOrderSchema';
 
 export const PetCountOrderByAggregateInputSchema: z.ZodType<Prisma.PetCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  path: z.lazy(() => SortOrderSchema).optional(),
-  depth: z.lazy(() => SortOrderSchema).optional(),
-  numchild: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
   nameEn: z.lazy(() => SortOrderSchema).optional(),
   ownerName: z.lazy(() => SortOrderSchema).optional(),

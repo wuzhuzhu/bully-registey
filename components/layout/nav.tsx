@@ -1,17 +1,17 @@
-"use client";
 
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 
 import { MainNav } from "@/components/layout/main-nav";
-import useScroll from "@/lib/hooks/use-scroll";
+// import useScroll from "@/lib/hooks/use-scroll";
 import UserDropdown from "./user-dropdown";
-import { Separator } from "@/components/ui/separator";
+import { getServerSession } from "next-auth";
+import authOptions from "@/app/api/auth/[...nextauth]/auth-options";
 
-export default function NavBar() {
-  const { data: session } = useSession();
-  const scrolled = useScroll(50);
+export default async function NavBar() {
+  const session = await getServerSession(authOptions);
+  // const scrolled = useScroll(50);
 
   return (
     <>

@@ -46,3 +46,21 @@ export const getPets = async ({ skip = 0, take = 10, filter }: {
     })
     return pets
 }
+
+export const getPetFamilyDepth = async (id: string, depth = 1) => {
+    let includeObject: any = {
+        include: { parents: true }
+    }
+    let pointer = includeObject.include;
+    for (let i = 0; i < depth - 1; i++) {
+        pointer.parents = { include: { children: true } };
+        pointer = pointer.children.include;
+    }
+
+    return db.pet.findMany({
+        where: {
+            id
+        },
+        include: includeObject.include
+    });
+}

@@ -1,7 +1,6 @@
 import type { Prisma } from '@prisma/client';
 import { z } from 'zod';
 import { StringFilterSchema } from './StringFilterSchema';
-import { IntFilterSchema } from './IntFilterSchema';
 import { StringNullableFilterSchema } from './StringNullableFilterSchema';
 import { EnumPetTypeFilterSchema } from './EnumPetTypeFilterSchema';
 import { PetTypeSchema } from './PetTypeSchema';
@@ -14,15 +13,13 @@ import { RegistrationNullableRelationFilterSchema } from './RegistrationNullable
 import { RegistrationWhereInputSchema } from './RegistrationWhereInputSchema';
 import { KennelNullableRelationFilterSchema } from './KennelNullableRelationFilterSchema';
 import { KennelWhereInputSchema } from './KennelWhereInputSchema';
+import { PetListRelationFilterSchema } from './PetListRelationFilterSchema';
 
 export const PetWhereInputSchema: z.ZodType<Prisma.PetWhereInput> = z.object({
   AND: z.union([ z.lazy(() => PetWhereInputSchema),z.lazy(() => PetWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => PetWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => PetWhereInputSchema),z.lazy(() => PetWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  path: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  depth: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
-  numchild: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   nameEn: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   ownerName: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
@@ -39,6 +36,8 @@ export const PetWhereInputSchema: z.ZodType<Prisma.PetWhereInput> = z.object({
   createdBy: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
   registration: z.union([ z.lazy(() => RegistrationNullableRelationFilterSchema),z.lazy(() => RegistrationWhereInputSchema) ]).optional().nullable(),
   Kennel: z.union([ z.lazy(() => KennelNullableRelationFilterSchema),z.lazy(() => KennelWhereInputSchema) ]).optional().nullable(),
+  parents: z.lazy(() => PetListRelationFilterSchema).optional(),
+  children: z.lazy(() => PetListRelationFilterSchema).optional()
 }).strict();
 
 export default PetWhereInputSchema;

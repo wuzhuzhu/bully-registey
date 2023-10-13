@@ -5,12 +5,10 @@ import { SortOrderInputSchema } from './SortOrderInputSchema';
 import { UserOrderByWithRelationInputSchema } from './UserOrderByWithRelationInputSchema';
 import { RegistrationOrderByWithRelationInputSchema } from './RegistrationOrderByWithRelationInputSchema';
 import { KennelOrderByWithRelationInputSchema } from './KennelOrderByWithRelationInputSchema';
+import { PetOrderByRelationAggregateInputSchema } from './PetOrderByRelationAggregateInputSchema';
 
 export const PetOrderByWithRelationInputSchema: z.ZodType<Prisma.PetOrderByWithRelationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  path: z.lazy(() => SortOrderSchema).optional(),
-  depth: z.lazy(() => SortOrderSchema).optional(),
-  numchild: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
   nameEn: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   ownerName: z.lazy(() => SortOrderSchema).optional(),
@@ -26,7 +24,9 @@ export const PetOrderByWithRelationInputSchema: z.ZodType<Prisma.PetOrderByWithR
   kennelId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   createdBy: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
   registration: z.lazy(() => RegistrationOrderByWithRelationInputSchema).optional(),
-  Kennel: z.lazy(() => KennelOrderByWithRelationInputSchema).optional()
+  Kennel: z.lazy(() => KennelOrderByWithRelationInputSchema).optional(),
+  parents: z.lazy(() => PetOrderByRelationAggregateInputSchema).optional(),
+  children: z.lazy(() => PetOrderByRelationAggregateInputSchema).optional()
 }).strict();
 
 export default PetOrderByWithRelationInputSchema;

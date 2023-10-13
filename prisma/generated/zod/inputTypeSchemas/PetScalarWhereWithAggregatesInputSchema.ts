@@ -1,7 +1,6 @@
 import type { Prisma } from '@prisma/client';
 import { z } from 'zod';
 import { StringWithAggregatesFilterSchema } from './StringWithAggregatesFilterSchema';
-import { IntWithAggregatesFilterSchema } from './IntWithAggregatesFilterSchema';
 import { StringNullableWithAggregatesFilterSchema } from './StringNullableWithAggregatesFilterSchema';
 import { EnumPetTypeWithAggregatesFilterSchema } from './EnumPetTypeWithAggregatesFilterSchema';
 import { PetTypeSchema } from './PetTypeSchema';
@@ -14,9 +13,6 @@ export const PetScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.PetScalar
   OR: z.lazy(() => PetScalarWhereWithAggregatesInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => PetScalarWhereWithAggregatesInputSchema),z.lazy(() => PetScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  path: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  depth: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
-  numchild: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
   name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   nameEn: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   ownerName: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),

@@ -5,9 +5,9 @@ import { UserCreateInputSchema } from '../inputTypeSchemas/UserCreateInputSchema
 import { UserUncheckedCreateInputSchema } from '../inputTypeSchemas/UserUncheckedCreateInputSchema'
 import { AccountFindManyArgsSchema } from "../outputTypeSchemas/AccountFindManyArgsSchema"
 import { SessionFindManyArgsSchema } from "../outputTypeSchemas/SessionFindManyArgsSchema"
-import { PetFindManyArgsSchema } from "../outputTypeSchemas/PetFindManyArgsSchema"
 import { RegistrationFindManyArgsSchema } from "../outputTypeSchemas/RegistrationFindManyArgsSchema"
 import { ProfileArgsSchema } from "../outputTypeSchemas/ProfileArgsSchema"
+import { PetFindManyArgsSchema } from "../outputTypeSchemas/PetFindManyArgsSchema"
 import { UserCountOutputTypeArgsSchema } from "../outputTypeSchemas/UserCountOutputTypeArgsSchema"
 // Select schema needs to be in file to prevent circular imports
 //------------------------------------------------------
@@ -20,9 +20,9 @@ export const UserSelectSchema: z.ZodType<Prisma.UserSelect> = z.object({
   image: z.boolean().optional(),
   accounts: z.union([z.boolean(),z.lazy(() => AccountFindManyArgsSchema)]).optional(),
   sessions: z.union([z.boolean(),z.lazy(() => SessionFindManyArgsSchema)]).optional(),
-  Pet: z.union([z.boolean(),z.lazy(() => PetFindManyArgsSchema)]).optional(),
   Registration: z.union([z.boolean(),z.lazy(() => RegistrationFindManyArgsSchema)]).optional(),
   Profile: z.union([z.boolean(),z.lazy(() => ProfileArgsSchema)]).optional(),
+  Pet: z.union([z.boolean(),z.lazy(() => PetFindManyArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => UserCountOutputTypeArgsSchema)]).optional(),
 }).strict()
 

@@ -4,12 +4,11 @@ import { PetTypeSchema } from './PetTypeSchema';
 import { GenderSchema } from './GenderSchema';
 import { UserCreateNestedOneWithoutPetInputSchema } from './UserCreateNestedOneWithoutPetInputSchema';
 import { RegistrationCreateNestedOneWithoutPetInputSchema } from './RegistrationCreateNestedOneWithoutPetInputSchema';
+import { PetCreateNestedManyWithoutChildrenInputSchema } from './PetCreateNestedManyWithoutChildrenInputSchema';
+import { PetCreateNestedManyWithoutParentsInputSchema } from './PetCreateNestedManyWithoutParentsInputSchema';
 
 export const PetCreateWithoutKennelInputSchema: z.ZodType<Prisma.PetCreateWithoutKennelInput> = z.object({
   id: z.string().cuid().optional(),
-  path: z.string(),
-  depth: z.number().int(),
-  numchild: z.number().int().optional(),
   name: z.string(),
   nameEn: z.string().optional().nullable(),
   ownerName: z.string(),
@@ -21,7 +20,9 @@ export const PetCreateWithoutKennelInputSchema: z.ZodType<Prisma.PetCreateWithou
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   createdBy: z.lazy(() => UserCreateNestedOneWithoutPetInputSchema),
-  registration: z.lazy(() => RegistrationCreateNestedOneWithoutPetInputSchema).optional()
+  registration: z.lazy(() => RegistrationCreateNestedOneWithoutPetInputSchema).optional(),
+  parents: z.lazy(() => PetCreateNestedManyWithoutChildrenInputSchema).optional(),
+  children: z.lazy(() => PetCreateNestedManyWithoutParentsInputSchema).optional()
 }).strict();
 
 export default PetCreateWithoutKennelInputSchema;

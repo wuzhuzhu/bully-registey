@@ -4,9 +4,9 @@ import { SortOrderSchema } from './SortOrderSchema';
 import { SortOrderInputSchema } from './SortOrderInputSchema';
 import { AccountOrderByRelationAggregateInputSchema } from './AccountOrderByRelationAggregateInputSchema';
 import { SessionOrderByRelationAggregateInputSchema } from './SessionOrderByRelationAggregateInputSchema';
-import { PetOrderByRelationAggregateInputSchema } from './PetOrderByRelationAggregateInputSchema';
 import { RegistrationOrderByRelationAggregateInputSchema } from './RegistrationOrderByRelationAggregateInputSchema';
 import { ProfileOrderByWithRelationInputSchema } from './ProfileOrderByWithRelationInputSchema';
+import { PetOrderByRelationAggregateInputSchema } from './PetOrderByRelationAggregateInputSchema';
 
 export const UserOrderByWithRelationInputSchema: z.ZodType<Prisma.UserOrderByWithRelationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
@@ -16,9 +16,9 @@ export const UserOrderByWithRelationInputSchema: z.ZodType<Prisma.UserOrderByWit
   image: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   accounts: z.lazy(() => AccountOrderByRelationAggregateInputSchema).optional(),
   sessions: z.lazy(() => SessionOrderByRelationAggregateInputSchema).optional(),
-  Pet: z.lazy(() => PetOrderByRelationAggregateInputSchema).optional(),
   Registration: z.lazy(() => RegistrationOrderByRelationAggregateInputSchema).optional(),
-  Profile: z.lazy(() => ProfileOrderByWithRelationInputSchema).optional()
+  Profile: z.lazy(() => ProfileOrderByWithRelationInputSchema).optional(),
+  Pet: z.lazy(() => PetOrderByRelationAggregateInputSchema).optional()
 }).strict();
 
 export default UserOrderByWithRelationInputSchema;

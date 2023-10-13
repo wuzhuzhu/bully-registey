@@ -46,7 +46,7 @@ export default async function TaskPage() {
 
           </div>
         </div>
-        <DataTable data={pets as PetWithRelations[]} columns={columns} />
+        <DataTable data={pets as unknown as PetWithRelations[]} columns={columns} />
       </div>
     </>
   )

@@ -4,8 +4,6 @@ import { getServerSession } from "next-auth";
 
 import { inter, sfPro } from "./fonts";
 import "./globals.css";
-import SessionProvider from '@/components/providers/session-provider'
-import authOptions from "./api/auth/[...nextauth]/auth-options";
 
 export const metadata = {
   title: "中国恶霸犬注册|血统国际认证",
@@ -28,16 +26,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
 
-  const session = await getServerSession(authOptions);
+
   return (
     <html lang="en">
       <body className={cx(sfPro.variable, inter.variable, 'bg-m-3sysdarksurface')}>
         {/* provide session to any wrapped client components */}
-        <SessionProvider>
-          <main>
-            {children}
-          </main>
-        </SessionProvider>
+        <main>
+          {children}
+        </main>
         <Analytics />
       </body>
     </html >

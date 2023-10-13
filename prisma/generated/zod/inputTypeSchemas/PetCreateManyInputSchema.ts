@@ -5,9 +5,6 @@ import { GenderSchema } from './GenderSchema';
 
 export const PetCreateManyInputSchema: z.ZodType<Prisma.PetCreateManyInput> = z.object({
   id: z.string().cuid().optional(),
-  path: z.string(),
-  depth: z.number().int(),
-  numchild: z.number().int().optional(),
   name: z.string(),
   nameEn: z.string().optional().nullable(),
   ownerName: z.string(),

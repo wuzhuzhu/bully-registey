@@ -5,8 +5,8 @@ import { NullableDateTimeFieldUpdateOperationsInputSchema } from './NullableDate
 import { NullableStringFieldUpdateOperationsInputSchema } from './NullableStringFieldUpdateOperationsInputSchema';
 import { AccountUpdateManyWithoutUserNestedInputSchema } from './AccountUpdateManyWithoutUserNestedInputSchema';
 import { SessionUpdateManyWithoutUserNestedInputSchema } from './SessionUpdateManyWithoutUserNestedInputSchema';
-import { PetUpdateManyWithoutCreatedByNestedInputSchema } from './PetUpdateManyWithoutCreatedByNestedInputSchema';
 import { ProfileUpdateOneWithoutUserNestedInputSchema } from './ProfileUpdateOneWithoutUserNestedInputSchema';
+import { PetUpdateManyWithoutCreatedByNestedInputSchema } from './PetUpdateManyWithoutCreatedByNestedInputSchema';
 
 export const UserUpdateWithoutRegistrationInputSchema: z.ZodType<Prisma.UserUpdateWithoutRegistrationInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -16,8 +16,8 @@ export const UserUpdateWithoutRegistrationInputSchema: z.ZodType<Prisma.UserUpda
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   accounts: z.lazy(() => AccountUpdateManyWithoutUserNestedInputSchema).optional(),
   sessions: z.lazy(() => SessionUpdateManyWithoutUserNestedInputSchema).optional(),
-  Pet: z.lazy(() => PetUpdateManyWithoutCreatedByNestedInputSchema).optional(),
-  Profile: z.lazy(() => ProfileUpdateOneWithoutUserNestedInputSchema).optional()
+  Profile: z.lazy(() => ProfileUpdateOneWithoutUserNestedInputSchema).optional(),
+  Pet: z.lazy(() => PetUpdateManyWithoutCreatedByNestedInputSchema).optional()
 }).strict();
 
 export default UserUpdateWithoutRegistrationInputSchema;
