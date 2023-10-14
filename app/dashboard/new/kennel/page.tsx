@@ -251,6 +251,7 @@ export default function Page() {
                                                     await deleteUploadedFile(uploadedImg)
                                                     setUploadedImg({})
                                                     setIsDialogOpen(false)
+
                                                 }}>确认</Button>
                                             </div>
 
