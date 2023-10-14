@@ -65,7 +65,7 @@ export function DataTableViewOptions<TData>({
         size="sm"
         className="ml-auto hidden h-8 lg:flex"
       >
-        <Link href='/dashboard/new/pet'>
+        <Link href='/dashboard/edit/pet'>
           <PlusIcon className="mr-2 h-4 w-4" />
           新登记
         </Link>

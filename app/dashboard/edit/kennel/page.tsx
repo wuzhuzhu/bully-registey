@@ -122,9 +122,7 @@ export default function Page() {
     return (
         /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
         <div>
-            <p>{JSON.stringify(
-                { errors, isSubmitSuccessful, isSubmitting }
-            )}</p>
+            {/* <p>{JSON.stringify( { errors, isSubmitSuccessful, isSubmitting })}</p> */}
             <Form {...hookedForm}>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                     <div className="flex gap-8">

@@ -13,11 +13,11 @@ export const metadata: Metadata = {
 const sidebarNavItems = [
     {
         title: "登记犬",
-        href: "/dashboard/new/pet",
+        href: "/dashboard/edit/pet",
     },
     {
         title: "登记犬舍",
-        href: "/dashboard/new/kennel",
+        href: "/dashboard/edit/kennel",
     },
     {
         title: '登记品类',
