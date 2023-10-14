@@ -1,6 +1,6 @@
 'use client'
 
-import { useTransition } from "react"
+import { useTransition, useEffect } from "react"
 import { useForm, SubmitHandler } from "react-hook-form"
 import { isEmpty } from 'lodash-es'
 
@@ -41,7 +41,8 @@ export default function Page() {
         handleSubmit,
         watch,
         control,
-        formState: { errors },
+        formState: { errors, isSubmitSuccessful },
+        reset,
     } = hookedForm
 
     const [isPending, startTransition] = useTransition();
@@ -68,6 +69,18 @@ export default function Page() {
 
         });
     };
+
+    // use this to reset the form after submission succeeds
+    useEffect(() => {
+        if (!isSubmitSuccessful) { return }
+
+        reset({
+            email: "",
+            name: "",
+            subject: "",
+            description: ""
+        })
+    }, [isSubmitSuccessful])
 
     return (
         /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
