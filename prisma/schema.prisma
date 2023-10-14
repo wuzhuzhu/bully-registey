@@ -9,10 +9,11 @@ generator client {
 // see https://github.com/chrishoermann/zod-prisma-types
 generator zod {
   provider                         = "zod-prisma-types"
-  useMultipleFiles                 = true
-  createRelationValuesTypes        = true // default is false
-  createInputTypes                 = false
+  // useMultipleFiles                 = true
+  // createRelationValuesTypes        = true // default is false
+  // createInputTypes                 = fales
   createOptionalDefaultValuesTypes = true
+  useMultipleFiles                 = false
 }
 
 datasource db {
@@ -68,6 +69,7 @@ model User {
 // 犬舍
 model Kennel {
   id          String   @id @default(cuid())
+  /// @zod.string.min(4).max(12)
   name        String
   nameEn      String?
   pets        Pet[]
