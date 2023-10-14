@@ -17,6 +17,7 @@ import {
 import { createKennelWithProfileAction, sampleDelayedServerAction } from '@/lib/actions'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { Textarea } from '@/components/ui/textarea'
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 
@@ -47,7 +48,7 @@ export default function Page() {
     // https://github.com/orgs/react-hook-form/discussions/10757
     const onSubmit: SubmitHandler<InputsType> = (data) => {
         startTransition(async () => {
-            await sampleDelayedServerAction(data)
+            await createKennelWithProfileAction(data)
             console.log('!!!!!!!!!!!!!!done')
         });
     };
@@ -58,15 +59,15 @@ export default function Page() {
             <Form {...hookedForm}>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                     <div className="flex gap-8">
-                        <div id="left" className="flex-1">
+                        <div id="left" className="flex-1 space-y-8">
                             <FormField
                                 control={control}
                                 name="name"
                                 render={({ field }) => {
-                                    console.log('field', field)
+                                    // console.log('field', field)
                                     return (
                                         <FormItem>
-                                            <FormLabel>名称</FormLabel>
+                                            <FormLabel>名称 *</FormLabel>
                                             <FormControl>
                                                 <Input placeholder="输入犬舍名称.." {...field} />
                                             </FormControl>
@@ -85,9 +86,55 @@ export default function Page() {
                                             {/* @ts-ignore */}
                                             <Input placeholder="可选英文名" {...field} />
                                         </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={control}
+                                name="description"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Bio</FormLabel>
+                                        <FormControl>
+                                            <Textarea
+                                                placeholder="写下你的犬舍介绍.."
+                                                className="resize-none"
+                                                {...field}
+                                            />
+                                        </FormControl>
                                         <FormDescription>
-                                            This is your public display name. It can be your real name or a
-                                            pseudonym. You can only change this once every 30 days.
+                                            目前用户端没有展示
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={control}
+                                name="Profile.create.mobile"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>电话</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="电话号码.." {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={control}
+                                name="Profile.create.instagram"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>instagram</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="instagram用户名.." {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            {field.value && `https://www.instagram.com/${field.value}`}
                                         </FormDescription>
                                         <FormMessage />
                                     </FormItem>
@@ -95,17 +142,29 @@ export default function Page() {
                             />
                             <FormField
                                 control={control}
-                                name="Profile.create.mobile"
+                                name="Profile.create.facebook"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>手机</FormLabel>
+                                        <FormLabel>facebook</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="shadcn" {...field} />
+                                            <Input placeholder="facebook用户名.." {...field} />
                                         </FormControl>
                                         <FormDescription>
-                                            This is your public display name. It can be your real name or a
-                                            pseudonym. You can only change this once every 30 days.
+                                            {field.value && `https://www.facebook.com/${field.value}`}
                                         </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={control}
+                                name="Profile.create.wechat"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>微信</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="wechat.." {...field} />
+                                        </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}

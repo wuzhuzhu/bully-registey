@@ -2,6 +2,9 @@
 
 import { getServerSessionWithOption } from "../utils"
 import db from '@/lib/prisma'
+import {
+    KennelCreateInputSchema
+} from '@/prisma/generated/zod'
 
 export async function whoAmI() {
     const session = await getServerSessionWithOption()
@@ -20,13 +23,11 @@ export async function sampleDelayedServerAction(
 export async function createKennelWithProfileAction(
     params: any
 ) {
-    console.log('createKennelWithProfileAction', params)
-    await db.kennel.create({
-        ...params,
-        profile: {
-            create: params.profile
-        }
+    KennelCreateInputSchema.parseAsync(params)
+    // console.log('createKennelWithProfileAction', params)
+    const data = await db.kennel.create({
+        data: params
     })
-    console.log('createKennelWithProfileAction DONE')
-    return { created: 'ok' }
+    // console.log('createKennelWithProfileAction DONE')
+    return { created: 'ok', data }
 }
