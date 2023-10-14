@@ -44,8 +44,7 @@ export const columns: ColumnDef<PetWithRelations>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="犬名" />
     ),
-    cell: ({ row }) => {
-      console.log({ row }, row.getValue("id"))
+    cell: ({ row, column }) => {
       return <div className="w-[120px]">{`${row.original.name} / ${row.original.nameEn}`}</div>
     },
     enableSorting: false,

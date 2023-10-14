@@ -10,7 +10,7 @@ const ServerActionPage = () => {
     return (
         <div>
             <p>{name || '尚未设置姓名'}</p>
-            <Button className="block" onClick={
+            <Button className="block" onClick={ // client component
                 async () => {
                     const res = await whoAmI()
                     setName(res)
@@ -19,7 +19,7 @@ const ServerActionPage = () => {
             >
                 设置姓名
             </Button>
-            <Button className="block" onClick={
+            <Button className="block" onClick={ // client component
                 () => setName('')
             }
             >

@@ -1,13 +1,14 @@
 
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 
 import { MainNav } from "@/components/layout/main-nav";
 // import useScroll from "@/lib/hooks/use-scroll";
-import UserDropdown from "./user-dropdown";
-import { getServerSession } from "next-auth";
 import authOptions from "@/app/api/auth/[...nextauth]/auth-options";
+import { getServerSession } from "next-auth";
+import UserDropdown from "./user-dropdown";
+import NavLoginBtn from "./nav-login-btn";
 
 export default async function NavBar() {
   const session = await getServerSession(authOptions);
@@ -35,12 +36,7 @@ export default async function NavBar() {
             {session ? (
               <UserDropdown session={session} />
             ) : (
-              <button
-                className="rounded-full border border-black bg-black p-1.5 px-4 text-sm text-white transition-all hover:bg-white hover:text-black"
-                onClick={() => signIn()}
-              >
-                登陆
-              </button>
+              <NavLoginBtn />
             )}
           </div>
         </div>

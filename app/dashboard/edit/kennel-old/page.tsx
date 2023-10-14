@@ -62,7 +62,7 @@ const CreateKennelPage = () => {
     })
 
     function onSubmit(data: KennelCreatePageInputType) {
-        console.log(data)
+        // console.log(data)
         toast({
             title: "You submitted the following values:",
             description: (

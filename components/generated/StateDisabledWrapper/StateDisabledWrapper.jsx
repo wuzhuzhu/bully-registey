@@ -37,6 +37,7 @@ export const StateDisabledWrapper = ({
         dispatch("mouse_enter");
       }}
       onClick={() => {
+        // client component
         dispatch("click");
       }}
     >

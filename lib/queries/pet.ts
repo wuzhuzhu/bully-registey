@@ -4,7 +4,19 @@ import db from '@/lib/prisma'
 
 export const revalidate = 3600 // revalidate the data at most every hour
 
-export const getPets = async ({ skip = 0, take = 10, filter }: {
+export const getPets = async () => {
+
+    const pets = await db.pet.findMany({
+        include: {
+            createdBy: true,
+            kennel: true,
+            registration: true,
+        }
+    })
+    return pets
+}
+
+export const getPetsPagination = async ({ skip = 0, take = 10, filter }: {
     skip?: number
     take?: number
     filter?: {

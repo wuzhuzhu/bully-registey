@@ -93,7 +93,7 @@ export default function Page() {
             }
 
             const { created, kennel, error } = await createKennelWithProfileAction(data)
-            console.log('created!!!!!!!!', created, kennel, error)
+            // console.log('created!!!!!!!!', created, kennel, error)
             if (created === 'ok') {
                 // TODO: revalidate the path to clear cache
                 // revalidatePath('/')
@@ -262,9 +262,9 @@ export default function Page() {
                                         <DialogTitle>确认删除已经上传的图片吗？</DialogTitle>
                                         <DialogDescription>
                                             <div className="flex w-full justify-end mt-8">
-                                                <Button onClick={async (e) => {
+                                                <Button onClick={async (e) => { // client component
                                                     e.preventDefault()
-                                                    console.log('uploadedImg?.name', uploadedImg)
+                                                    // console.log('uploadedImg?.name', uploadedImg)
                                                     await deleteUploadedFile(uploadedImg)
                                                     setUploadedImg({})
                                                     setIsDialogOpen(false)
