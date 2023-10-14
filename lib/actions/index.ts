@@ -5,6 +5,7 @@ import db from '@/lib/prisma'
 import {
     KennelCreateInputSchema
 } from '@/prisma/generated/zod'
+import { isEmpty } from 'lodash-es'
 
 export async function whoAmI() {
     const session = await getServerSessionWithOption()
@@ -23,12 +24,16 @@ export async function sampleDelayedServerAction(
 export async function createKennelWithProfileAction(
     params: any
 ) {
-
+    // console.log('createKennelWithProfileAction', params)
     try {
-        KennelCreateInputSchema.parse({ a: 1 })
+        KennelCreateInputSchema.parse(params)
     } catch (e) {
         console.log('createKennelWithProfileAction', e)
         return { created: 'error', error: e.message }
+    }
+
+    if (isEmpty(params.Profile.create)) {
+        params.Profile = undefined
     }
     // console.log('createKennelWithProfileAction', params)
     const data = await db.kennel.create({
