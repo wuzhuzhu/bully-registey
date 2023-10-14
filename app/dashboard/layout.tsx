@@ -1,5 +1,9 @@
 import Nav from '@/components/layout/nav'
 import React, { Suspense } from 'react'
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
+
+import { ourFileRouter } from '@/app/api/uploadthing/core'
 import { Toaster } from "@/components/ui/toaster"
 
 const DashboardLayout = ({ children }: {
@@ -11,6 +15,15 @@ const DashboardLayout = ({ children }: {
                 <Nav></Nav>
             </Suspense>
             <div className='min-h-screen pt-16 pb-8 flex flex-col items-center gap-4 bg-zinc-100'>
+                <NextSSRPlugin
+                    /**
+                     * The `extractRouterConfig` will extract **only** the route configs
+                     * from the router to prevent additional information from being
+                     * leaked to the client. The data passed to the client is the same
+                     * as if you were to fetch `/api/uploadthing` directly.
+                     */
+                    routerConfig={extractRouterConfig(ourFileRouter)}
+                />
                 {children}
             </div>
             <Toaster />
