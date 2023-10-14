@@ -6,8 +6,8 @@ import { SidebarNav } from "./components/sidebar-nav"
 import MdNotifier from "@/components/layout/md-notifier"
 
 export const metadata: Metadata = {
-    title: "Forms",
-    description: "Advanced form example using react-hook-form and Zod.",
+    title: "数据录入",
+    description: "集中录入数据表单",
 }
 
 const sidebarNavItems = [

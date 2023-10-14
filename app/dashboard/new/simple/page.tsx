@@ -51,7 +51,6 @@ export default function Page() {
     // https://scastiel.dev/server-components-actions-react-nextjs
     // https://github.com/orgs/react-hook-form/discussions/10757
     const onSubmit: SubmitHandler<InputsType> = (data) => {
-        debugger
         startTransition(async () => {
             await createKennelWithProfileAction(data)
             console.log('!!!!!!!!!!!!!!done')

@@ -83,7 +83,7 @@ model Profile {
   instagram String?
   facebook  String?
   wechat    String?
-  mobile    String
+  mobile    String?
   user      User?   @relation(fields: [userId], references: [id])
   userId    String? @unique
   kennel    Kennel? @relation(fields: [kennelId], references: [id])
