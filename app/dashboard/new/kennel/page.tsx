@@ -1,12 +1,13 @@
-"use client"
+'use client'
 
-import Link from "next/link"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useFieldArray, useForm } from "react-hook-form"
-import z from "zod"
+import { useTransition, useEffect, useState } from "react"
+import { useForm, SubmitHandler } from "react-hook-form"
+import { isEmpty, get } from 'lodash-es'
+import Image from 'next/image'
+import { UploadButton } from '@/lib/uploadthing';
+import { type UploadFileResponse } from 'uploadthing/next';
+import { X } from "lucide-react"
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
@@ -16,214 +17,286 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+    DialogClose,
+} from "@/components/ui/dialog"
+
+import { deleteUploadedFile } from '@/lib/actions'
+import { createKennelWithProfileAction, sampleDelayedServerAction } from '@/lib/actions'
+import { Input } from "@/components/ui/input"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { Textarea } from '@/components/ui/textarea'
 import { useToast } from "@/components/ui/use-toast"
-import { createKennelWithProfileAction } from '@/lib/actions'
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
-import { KennelCreateInputSchema, ProfileCreateInputSchema } from '@/prisma/generated/zod'
+import {
+    KennelCreateInputSchema as InputSchema
+} from '@/prisma/generated/zod'
 
-// 使用kennel和profile的schema合并扁平的表单schema
-// merge: If the two schemas share keys, the properties of B overrides the property of A
-// id和createdAt会被覆盖
+type InputsType = z.infer<typeof InputSchema>
 
-const KennelCreatePageInputSchema = ProfileCreateInputSchema.merge(KennelCreateInputSchema)
-type KennelCreatePageInputType = z.infer<typeof KennelCreatePageInputSchema>
-
-// This can come from your database or API.
-const defaultValues: Partial<KennelCreatePageInputType> = {
-    name: '',
-    nameEn: '',
-    imgUrl: '/img/dog-company-logo-icon.svg',
-    description: '犬舍主人很懒，没有写简介哦~',
-    profile: {}
-}
-
-const CreateKennelPage = () => {
+export default function Page() {
     const { toast } = useToast()
-    // console.log(name)
 
-    const form = useForm<KennelCreatePageInputType>({
-        resolver: zodResolver(KennelCreatePageInputSchema),
-        defaultValues,
-        mode: "onChange",
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+    // upload img
+    const [uploadedImg, setUploadedImg] = useState<UploadFileResponse>({})
+
+    const hookedForm = useForm<InputsType>({
+        defaultValues: {
+        },
+        resolver: zodResolver(InputSchema),
     })
 
-    const { fields, append } = useFieldArray({
-        name: "urls",
-        control: form.control,
-    })
+    const {
+        register,
+        handleSubmit,
+        watch,
+        control,
+        formState: { errors, isSubmitSuccessful, isSubmitting },
+        reset,
+    } = hookedForm
 
-    function onSubmit(data: KennelCreatePageInputType) {
-        console.log(data)
-        toast({
-            title: "You submitted the following values:",
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
+    const [isPending, startTransition] = useTransition();
+
+    // https://scastiel.dev/server-components-actions-react-nextjs
+    // https://github.com/orgs/react-hook-form/discussions/10757
+    const onSubmit: SubmitHandler<InputsType> = (data) => {
+        startTransition(async () => {
+            const { created, kennel, error } = await createKennelWithProfileAction(data)
+            console.log('created!!!!!!!!', created, kennel, error)
+            if (created === 'ok') {
+                // TODO: revalidate the path to clear cache
+                // revalidatePath('/')
+                toast({
+                    title: "创建成功",
+                    description: "犬舍名为：" + kennel?.name,
+                })
+            } else {
+                toast({
+                    title: "创建失败",
+                    description: error,
+                })
+            }
+
+        });
+    };
+
+    // use this to reset the form after submission succeeds
+    useEffect(() => {
+        if (!isSubmitSuccessful) { return }
+
+        reset({
+            email: "",
+            name: "",
+            subject: "",
+            description: ""
         })
-    }
+    }, [isSubmitSuccessful])
 
     return (
+        /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
         <div>
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(createKennelWithProfileAction)} className="space-y-8">
-                    {/* name */}
-                    <FormField
-                        control={form.control}
-                        name="name"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>犬舍名称</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="输入中文名称" {...field} />
-                                </FormControl>
-                                {/* <FormDescription>
-                                    这里登记犬舍的中文名称
-                                </FormDescription> */}
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="nameEn"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>犬舍英文名</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="输入英文名称" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+            <Form {...hookedForm}>
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+                    <div className="flex gap-8">
+                        <div id="left" className="flex-1 space-y-8">
+                            <FormField
+                                control={control}
+                                name="name"
+                                render={({ field }) => {
+                                    // console.log('field', field)
+                                    return (
+                                        <FormItem>
+                                            <FormLabel>名称 *</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="输入犬舍名称.." {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )
+                                }}
+                            />
+                            <FormField
+                                control={control}
+                                name="nameEn"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>犬舍英文名</FormLabel>
+                                        <FormControl>
+                                            {/* @ts-ignore */}
+                                            <Input placeholder="可选英文名" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={control}
+                                name="description"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Bio</FormLabel>
+                                        <FormControl>
+                                            <Textarea
+                                                placeholder="写下你的犬舍介绍.."
+                                                className="resize-none"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormDescription>
+                                            目前用户端没有展示
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
-                    {/* description */}
-                    <FormField
-                        control={form.control}
-                        name="description"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>简介</FormLabel>
-                                <FormControl>
-                                    <Textarea
-                                        placeholder="输入关于犬舍的介绍.."
-                                        className="resize-none"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormDescription>
-                                    只支持纯文本，不支持富文本格式
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                            <FormField
+                                control={control}
+                                name="Profile.create.mobile"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>电话</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="电话号码.." {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={control}
+                                name="Profile.create.instagram"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>instagram</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="instagram用户名.." {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            {field.value && `https://www.instagram.com/${field.value}`}
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={control}
+                                name="Profile.create.facebook"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>facebook</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="facebook用户名.." {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            {field.value && `https://www.facebook.com/${field.value}`}
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={control}
+                                name="Profile.create.wechat"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>微信</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="wechat.." {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                        <div id="right" className="flex flex-col items-center gap-4 ">
+                            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                                {(!isEmpty(uploadedImg)) ? (
+                                    <DialogTrigger>
+                                        <div className="flex group pt-4 relative">
+                                            <X className="absolute -right-2 top-2 text-slate-600/0 group-hover:text-slate-600/90 transition-all" size={20} />
+                                            <Avatar className='w-[80px] h-[80px] ring-2 ring-slate-200'>
+                                                <AvatarImage src={uploadedImg?.url || '/img/male-avatar.svg'} alt="avatar" />
+                                                <AvatarFallback>CN</AvatarFallback>
+                                            </Avatar>
+                                        </div>
+                                    </DialogTrigger>
+                                ) : (
+                                    <div className="flex group pt-4 relative">
+                                        <Avatar className='w-[80px] h-[80px] ring-2 ring-slate-200'>
+                                            <AvatarImage src='/img/male-avatar.svg' alt="avatar" />
+                                            <AvatarFallback>CN</AvatarFallback>
+                                        </Avatar>
+                                    </div>
+                                )}
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>确认删除已经上传的图片吗？</DialogTitle>
+                                        <DialogDescription>
+                                            <div className="flex w-full justify-end mt-8">
+                                                <Button onClick={async (e) => {
+                                                    e.preventDefault()
+                                                    console.log('uploadedImg?.name', uploadedImg)
+                                                    await deleteUploadedFile(uploadedImg)
+                                                    setUploadedImg({})
+                                                    setIsDialogOpen(false)
+                                                }}>确认</Button>
+                                            </div>
 
-                    {/* TODO: logo 上传图片  */}
-                    {/*  TODO: 这里会报错，之后排查
-                    <FormField
-                        control={form.control}
-                        name="mobile"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>手机号</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="输入正确手机号.." {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="instagram"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>instagram</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="输入instagram 账户名.." {...field} />
-                                </FormControl>
-                                {field.value && <FormDescription>
-                                    访问地址为<Link href={`https://instagram.com/${field.value}`}>{`https://instagram.com/${field.value}`}</Link>
-                                </FormDescription>}
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="facebook"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>facebook</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="输入facebook 账户名.." {...field} />
-                                </FormControl>
-                                {field.value && <FormDescription>
-                                    访问地址为<Link href={`https://facebook.com/${field.value}`}>{`https://facebook.com/${field.value}`}</Link>
-                                </FormDescription>}
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="wechat"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>微信</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="输入微信账户名.." {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    /> */}
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                </DialogContent>
+                            </Dialog>
 
-                    {/* 下拉示例 */}
-                    {/* <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Email</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select a verified email to display" />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        <SelectItem value="m@example.com">m@example.com</SelectItem>
-                                        <SelectItem value="m@google.com">m@google.com</SelectItem>
-                                        <SelectItem value="m@support.com">m@support.com</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                <FormDescription>
-                                    You can manage verified email addresses in your{" "}
-                                    <Link href="/examples/forms">email settings</Link>.
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    /> */}
+                            <UploadButton
+                                endpoint="imageUploader"
+                                onClientUploadComplete={(res: UploadFileResponse) => {
+                                    setUploadedImg(get(res, '0', {}))
+                                    console.log({
+                                        title: "上传成功",
+                                        res,
+                                    })
+                                }}
+                                onUploadError={(error: Error) => {
+                                    console.error({
+                                        title: "上传失败",
+                                        error: error.message,
+                                    })
+                                }}
+                                content={{
+                                    button({ ready }) {
+                                        if (ready) return '上传文件';
 
-                    <Button type="submit">创建/更新犬舍</Button>
+                                        return "Getting ready...";
+                                    },
+                                    allowedContent({ ready, fileTypes, isUploading }) {
+                                        if (!ready) return "文件不符合要求";
+                                        if (isUploading) return "上传中..";
+                                        return '你可以上传最大4MB的图片';
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <Button disabled={!isEmpty(errors)} type="submit">{
+                        !isEmpty(errors)
+                            ? '修正错误'
+                            : isSubmitting ? '提交中...' : '提交'
+                    }</Button>
                 </form>
+
             </Form>
-        </div>
+        </div >
     )
 }
-
-export default CreateKennelPage

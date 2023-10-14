@@ -1,11 +1,16 @@
 'use server'
 
+// TODO: check login status
+
 import { getServerSessionWithOption } from "../utils"
 import db from '@/lib/prisma'
 import {
     KennelCreateInputSchema
 } from '@/prisma/generated/zod'
 import { isEmpty } from 'lodash-es'
+import { utapi } from "uploadthing/server";
+
+import { type UploadFileResponse } from 'uploadthing/next';
 
 export async function whoAmI() {
     const session = await getServerSessionWithOption()
@@ -41,4 +46,16 @@ export async function createKennelWithProfileAction(
     })
     // console.log('createKennelWithProfileAction DONE')
     return { created: 'ok', kennel: data }
+}
+
+export async function deleteUploadedFile(uploadedImg: UploadFileResponse) {
+    try {
+        console.warn('deleteUploadedFile', uploadedImg)
+        await utapi.deleteFiles(uploadedImg?.key);
+        console.log('deleteUploadedFile DONE')
+        return { succeed: 'ok' }
+    } catch (e) {
+        console.log('deleteUploadedFile', e)
+        return { succeed: 'error', error: e.message }
+    }
 }

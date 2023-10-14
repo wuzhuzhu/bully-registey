@@ -9,7 +9,8 @@ const nextConfig = {
     domains: [
       "lh3.googleusercontent.com",
       "vercel.com",
-      "avatars.githubusercontent.com",
+      "avatars.githubusercontent.com", // github login
+      "utfs.io", // uploadthing
     ],
   },
   async redirects() {

@@ -1,7 +1,8 @@
 /** @type {import('tailwindcss').Config} */
+import { withUt } from "uploadthing/tw";
 const plugin = require("tailwindcss/plugin");
 
-module.exports = {
+module.exports = withUt({
   darkMode: ["class"],
   content: ["./app/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
   future: {
@@ -1084,4 +1085,4 @@ module.exports = {
       addVariant("radix-side-bottom", '&[data-side="bottom"]');
     }),
   ],
-};
+});
