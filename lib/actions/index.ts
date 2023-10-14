@@ -23,11 +23,17 @@ export async function sampleDelayedServerAction(
 export async function createKennelWithProfileAction(
     params: any
 ) {
-    KennelCreateInputSchema.parseAsync(params)
+
+    try {
+        KennelCreateInputSchema.parse({ a: 1 })
+    } catch (e) {
+        console.log('createKennelWithProfileAction', e)
+        return { created: 'error', error: e.message }
+    }
     // console.log('createKennelWithProfileAction', params)
     const data = await db.kennel.create({
         data: params
     })
     // console.log('createKennelWithProfileAction DONE')
-    return { created: 'ok', data }
+    return { created: 'ok', kennel: data }
 }

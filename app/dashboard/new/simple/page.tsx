@@ -18,6 +18,7 @@ import { createKennelWithProfileAction, sampleDelayedServerAction } from '@/lib/
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Textarea } from '@/components/ui/textarea'
+import { useToast } from "@/components/ui/use-toast"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 
@@ -28,6 +29,7 @@ import {
 type InputsType = z.infer<typeof InputSchema>
 
 export default function Page() {
+    const { toast } = useToast()
     const hookedForm = useForm<InputsType>({
         defaultValues: {
         },
@@ -48,8 +50,22 @@ export default function Page() {
     // https://github.com/orgs/react-hook-form/discussions/10757
     const onSubmit: SubmitHandler<InputsType> = (data) => {
         startTransition(async () => {
-            await createKennelWithProfileAction(data)
-            console.log('!!!!!!!!!!!!!!done')
+            const { created, kennel, error } = await createKennelWithProfileAction(data)
+            console.log('created!!!!!!!!', created, kennel, error)
+            if (created === 'ok') {
+                // TODO: revalidate the path to clear cache
+                // revalidatePath('/')
+                toast({
+                    title: "创建成功",
+                    description: "犬舍名为：" + kennel?.name,
+                })
+            } else {
+                toast({
+                    title: "创建失败",
+                    description: error,
+                })
+            }
+
         });
     };
 
