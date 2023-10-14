@@ -72,6 +72,14 @@ export default function Page() {
     // https://github.com/orgs/react-hook-form/discussions/10757
     const onSubmit: SubmitHandler<InputsType> = (data) => {
         startTransition(async () => {
+            // 融合上传图片的数据
+            const newData = {
+                ...data,
+                img: {
+                    create: uploadedImg
+                }
+            }
+
             const { created, kennel, error } = await createKennelWithProfileAction(data)
             console.log('created!!!!!!!!', created, kennel, error)
             if (created === 'ok') {

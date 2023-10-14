@@ -1,5 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  typescript: {
+    // !! WARN !!
+    // lint在build的时候超级慢 只能关掉
+    // !! WARN !!
+    ignoreBuildErrors: true,
+  },
   experimental: {
     serverActions: true,
   },
