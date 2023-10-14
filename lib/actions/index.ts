@@ -10,7 +10,7 @@ import {
 import { isEmpty } from 'lodash-es'
 import { utapi } from "uploadthing/server";
 
-import { type UploadFileResponse } from 'uploadthing/next';
+import type { UploadFileResponse } from 'uploadthing/client';
 
 import { isDeepEmpty } from '@/lib/utils'
 
@@ -39,8 +39,8 @@ export async function createKennelWithProfileAction(
         return { created: 'error', error: e.message }
     }
 
-    if (isDeepEmpty(params.Profile)) {
-        params.Profile = undefined
+    if (isDeepEmpty(params.profile)) {
+        params.profile = undefined
     }
     // console.log('createKennelWithProfileAction', params)
     const data = await db.kennel.create({

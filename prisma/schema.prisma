@@ -61,7 +61,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   Registration  Registration[]
-  Profile       Profile?
+  profile       Profile?
   Pet           Pet[]
 }
 
@@ -72,7 +72,7 @@ model Kennel {
   name        String
   nameEn      String?
   pets        Pet[]
-  Profile     Profile?
+  profile     Profile?
   img         File?
   description String?
   createdAt   DateTime @default(now())

@@ -5,29 +5,35 @@ import { Separator } from "@/components/ui/separator"
 import { SidebarNav } from "./components/sidebar-nav"
 import MdNotifier from "@/components/layout/md-notifier"
 
+import { Home, PawPrint, ListChecks, Palette } from 'lucide-react'
+
 export const metadata: Metadata = {
-    title: "数据录入",
-    description: "集中录入数据表单",
+    title: "数据录入/修改",
+    description: "新登录和修改信息都在这里",
 }
 
 const sidebarNavItems = [
     {
-        title: "登记犬",
+        title: "犬",
         href: "/dashboard/edit/pet",
+        icon: <PawPrint size={16} />
     },
     {
-        title: "登记犬舍",
+        title: "犬舍",
         href: "/dashboard/edit/kennel",
+        icon: <Home size={16} />
     },
     {
-        title: '登记品类',
+        title: '品类',
         href: "/#",
         disabled: true,
+        icon: <ListChecks size={16} />
     },
     {
-        title: '登记颜色',
+        title: '颜色',
         href: "/#",
         disabled: true,
+        icon: <Palette size={16} />
     }
 ]
 
@@ -48,10 +54,10 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
                 </div>
                 <Separator className="my-6" />
                 <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
-                    <aside className="-mx-4 lg:w-1/5 border-r">
+                    <aside className="lg:w-1/6 border-r">
                         <SidebarNav items={sidebarNavItems} />
                     </aside>
-                    <div className="flex-1 lg:max-w-3xl">{children}</div>
+                    <div className="flex-1 lg:max-w-4xl">{children}</div>
                 </div>
             </div>
         </>

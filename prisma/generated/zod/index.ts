@@ -345,7 +345,7 @@ export const UserIncludeSchema: z.ZodType<Prisma.UserInclude> = z.object({
   accounts: z.union([z.boolean(),z.lazy(() => AccountFindManyArgsSchema)]).optional(),
   sessions: z.union([z.boolean(),z.lazy(() => SessionFindManyArgsSchema)]).optional(),
   Registration: z.union([z.boolean(),z.lazy(() => RegistrationFindManyArgsSchema)]).optional(),
-  Profile: z.union([z.boolean(),z.lazy(() => ProfileArgsSchema)]).optional(),
+  profile: z.union([z.boolean(),z.lazy(() => ProfileArgsSchema)]).optional(),
   Pet: z.union([z.boolean(),z.lazy(() => PetFindManyArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => UserCountOutputTypeArgsSchema)]).optional(),
 }).strict()
@@ -375,7 +375,7 @@ export const UserSelectSchema: z.ZodType<Prisma.UserSelect> = z.object({
   accounts: z.union([z.boolean(),z.lazy(() => AccountFindManyArgsSchema)]).optional(),
   sessions: z.union([z.boolean(),z.lazy(() => SessionFindManyArgsSchema)]).optional(),
   Registration: z.union([z.boolean(),z.lazy(() => RegistrationFindManyArgsSchema)]).optional(),
-  Profile: z.union([z.boolean(),z.lazy(() => ProfileArgsSchema)]).optional(),
+  profile: z.union([z.boolean(),z.lazy(() => ProfileArgsSchema)]).optional(),
   Pet: z.union([z.boolean(),z.lazy(() => PetFindManyArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => UserCountOutputTypeArgsSchema)]).optional(),
 }).strict()
@@ -385,7 +385,7 @@ export const UserSelectSchema: z.ZodType<Prisma.UserSelect> = z.object({
 
 export const KennelIncludeSchema: z.ZodType<Prisma.KennelInclude> = z.object({
   pets: z.union([z.boolean(),z.lazy(() => PetFindManyArgsSchema)]).optional(),
-  Profile: z.union([z.boolean(),z.lazy(() => ProfileArgsSchema)]).optional(),
+  profile: z.union([z.boolean(),z.lazy(() => ProfileArgsSchema)]).optional(),
   img: z.union([z.boolean(),z.lazy(() => FileArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => KennelCountOutputTypeArgsSchema)]).optional(),
 }).strict()
@@ -411,7 +411,7 @@ export const KennelSelectSchema: z.ZodType<Prisma.KennelSelect> = z.object({
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
   pets: z.union([z.boolean(),z.lazy(() => PetFindManyArgsSchema)]).optional(),
-  Profile: z.union([z.boolean(),z.lazy(() => ProfileArgsSchema)]).optional(),
+  profile: z.union([z.boolean(),z.lazy(() => ProfileArgsSchema)]).optional(),
   img: z.union([z.boolean(),z.lazy(() => FileArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => KennelCountOutputTypeArgsSchema)]).optional(),
 }).strict()
@@ -736,7 +736,7 @@ export const UserWhereInputSchema: z.ZodType<Prisma.UserWhereInput> = z.object({
   accounts: z.lazy(() => AccountListRelationFilterSchema).optional(),
   sessions: z.lazy(() => SessionListRelationFilterSchema).optional(),
   Registration: z.lazy(() => RegistrationListRelationFilterSchema).optional(),
-  Profile: z.union([ z.lazy(() => ProfileNullableRelationFilterSchema),z.lazy(() => ProfileWhereInputSchema) ]).optional().nullable(),
+  profile: z.union([ z.lazy(() => ProfileNullableRelationFilterSchema),z.lazy(() => ProfileWhereInputSchema) ]).optional().nullable(),
   Pet: z.lazy(() => PetListRelationFilterSchema).optional()
 }).strict();
 
@@ -749,7 +749,7 @@ export const UserOrderByWithRelationInputSchema: z.ZodType<Prisma.UserOrderByWit
   accounts: z.lazy(() => AccountOrderByRelationAggregateInputSchema).optional(),
   sessions: z.lazy(() => SessionOrderByRelationAggregateInputSchema).optional(),
   Registration: z.lazy(() => RegistrationOrderByRelationAggregateInputSchema).optional(),
-  Profile: z.lazy(() => ProfileOrderByWithRelationInputSchema).optional(),
+  profile: z.lazy(() => ProfileOrderByWithRelationInputSchema).optional(),
   Pet: z.lazy(() => PetOrderByRelationAggregateInputSchema).optional()
 }).strict();
 
@@ -777,7 +777,7 @@ export const UserWhereUniqueInputSchema: z.ZodType<Prisma.UserWhereUniqueInput> 
   accounts: z.lazy(() => AccountListRelationFilterSchema).optional(),
   sessions: z.lazy(() => SessionListRelationFilterSchema).optional(),
   Registration: z.lazy(() => RegistrationListRelationFilterSchema).optional(),
-  Profile: z.union([ z.lazy(() => ProfileNullableRelationFilterSchema),z.lazy(() => ProfileWhereInputSchema) ]).optional().nullable(),
+  profile: z.union([ z.lazy(() => ProfileNullableRelationFilterSchema),z.lazy(() => ProfileWhereInputSchema) ]).optional().nullable(),
   Pet: z.lazy(() => PetListRelationFilterSchema).optional()
 }).strict());
 
@@ -814,7 +814,7 @@ export const KennelWhereInputSchema: z.ZodType<Prisma.KennelWhereInput> = z.obje
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   pets: z.lazy(() => PetListRelationFilterSchema).optional(),
-  Profile: z.union([ z.lazy(() => ProfileNullableRelationFilterSchema),z.lazy(() => ProfileWhereInputSchema) ]).optional().nullable(),
+  profile: z.union([ z.lazy(() => ProfileNullableRelationFilterSchema),z.lazy(() => ProfileWhereInputSchema) ]).optional().nullable(),
   img: z.union([ z.lazy(() => FileNullableRelationFilterSchema),z.lazy(() => FileWhereInputSchema) ]).optional().nullable(),
 }).strict();
 
@@ -826,7 +826,7 @@ export const KennelOrderByWithRelationInputSchema: z.ZodType<Prisma.KennelOrderB
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   pets: z.lazy(() => PetOrderByRelationAggregateInputSchema).optional(),
-  Profile: z.lazy(() => ProfileOrderByWithRelationInputSchema).optional(),
+  profile: z.lazy(() => ProfileOrderByWithRelationInputSchema).optional(),
   img: z.lazy(() => FileOrderByWithRelationInputSchema).optional()
 }).strict();
 
@@ -844,7 +844,7 @@ export const KennelWhereUniqueInputSchema: z.ZodType<Prisma.KennelWhereUniqueInp
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   pets: z.lazy(() => PetListRelationFilterSchema).optional(),
-  Profile: z.union([ z.lazy(() => ProfileNullableRelationFilterSchema),z.lazy(() => ProfileWhereInputSchema) ]).optional().nullable(),
+  profile: z.union([ z.lazy(() => ProfileNullableRelationFilterSchema),z.lazy(() => ProfileWhereInputSchema) ]).optional().nullable(),
   img: z.union([ z.lazy(() => FileNullableRelationFilterSchema),z.lazy(() => FileWhereInputSchema) ]).optional().nullable(),
 }).strict());
 
@@ -1530,7 +1530,7 @@ export const UserCreateInputSchema: z.ZodType<Prisma.UserCreateInput> = z.object
   accounts: z.lazy(() => AccountCreateNestedManyWithoutUserInputSchema).optional(),
   sessions: z.lazy(() => SessionCreateNestedManyWithoutUserInputSchema).optional(),
   Registration: z.lazy(() => RegistrationCreateNestedManyWithoutReviewedByInputSchema).optional(),
-  Profile: z.lazy(() => ProfileCreateNestedOneWithoutUserInputSchema).optional(),
+  profile: z.lazy(() => ProfileCreateNestedOneWithoutUserInputSchema).optional(),
   Pet: z.lazy(() => PetCreateNestedManyWithoutCreatedByInputSchema).optional()
 }).strict();
 
@@ -1543,7 +1543,7 @@ export const UserUncheckedCreateInputSchema: z.ZodType<Prisma.UserUncheckedCreat
   accounts: z.lazy(() => AccountUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   sessions: z.lazy(() => SessionUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   Registration: z.lazy(() => RegistrationUncheckedCreateNestedManyWithoutReviewedByInputSchema).optional(),
-  Profile: z.lazy(() => ProfileUncheckedCreateNestedOneWithoutUserInputSchema).optional(),
+  profile: z.lazy(() => ProfileUncheckedCreateNestedOneWithoutUserInputSchema).optional(),
   Pet: z.lazy(() => PetUncheckedCreateNestedManyWithoutCreatedByInputSchema).optional()
 }).strict();
 
@@ -1556,7 +1556,7 @@ export const UserUpdateInputSchema: z.ZodType<Prisma.UserUpdateInput> = z.object
   accounts: z.lazy(() => AccountUpdateManyWithoutUserNestedInputSchema).optional(),
   sessions: z.lazy(() => SessionUpdateManyWithoutUserNestedInputSchema).optional(),
   Registration: z.lazy(() => RegistrationUpdateManyWithoutReviewedByNestedInputSchema).optional(),
-  Profile: z.lazy(() => ProfileUpdateOneWithoutUserNestedInputSchema).optional(),
+  profile: z.lazy(() => ProfileUpdateOneWithoutUserNestedInputSchema).optional(),
   Pet: z.lazy(() => PetUpdateManyWithoutCreatedByNestedInputSchema).optional()
 }).strict();
 
@@ -1569,7 +1569,7 @@ export const UserUncheckedUpdateInputSchema: z.ZodType<Prisma.UserUncheckedUpdat
   accounts: z.lazy(() => AccountUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   sessions: z.lazy(() => SessionUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   Registration: z.lazy(() => RegistrationUncheckedUpdateManyWithoutReviewedByNestedInputSchema).optional(),
-  Profile: z.lazy(() => ProfileUncheckedUpdateOneWithoutUserNestedInputSchema).optional(),
+  profile: z.lazy(() => ProfileUncheckedUpdateOneWithoutUserNestedInputSchema).optional(),
   Pet: z.lazy(() => PetUncheckedUpdateManyWithoutCreatedByNestedInputSchema).optional()
 }).strict();
 
@@ -1605,7 +1605,7 @@ export const KennelCreateInputSchema: z.ZodType<Prisma.KennelCreateInput> = z.ob
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   pets: z.lazy(() => PetCreateNestedManyWithoutKennelInputSchema).optional(),
-  Profile: z.lazy(() => ProfileCreateNestedOneWithoutKennelInputSchema).optional(),
+  profile: z.lazy(() => ProfileCreateNestedOneWithoutKennelInputSchema).optional(),
   img: z.lazy(() => FileCreateNestedOneWithoutKennelInputSchema).optional()
 }).strict();
 
@@ -1617,7 +1617,7 @@ export const KennelUncheckedCreateInputSchema: z.ZodType<Prisma.KennelUncheckedC
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   pets: z.lazy(() => PetUncheckedCreateNestedManyWithoutKennelInputSchema).optional(),
-  Profile: z.lazy(() => ProfileUncheckedCreateNestedOneWithoutKennelInputSchema).optional(),
+  profile: z.lazy(() => ProfileUncheckedCreateNestedOneWithoutKennelInputSchema).optional(),
   img: z.lazy(() => FileUncheckedCreateNestedOneWithoutKennelInputSchema).optional()
 }).strict();
 
@@ -1629,7 +1629,7 @@ export const KennelUpdateInputSchema: z.ZodType<Prisma.KennelUpdateInput> = z.ob
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   pets: z.lazy(() => PetUpdateManyWithoutKennelNestedInputSchema).optional(),
-  Profile: z.lazy(() => ProfileUpdateOneWithoutKennelNestedInputSchema).optional(),
+  profile: z.lazy(() => ProfileUpdateOneWithoutKennelNestedInputSchema).optional(),
   img: z.lazy(() => FileUpdateOneWithoutKennelNestedInputSchema).optional()
 }).strict();
 
@@ -1641,7 +1641,7 @@ export const KennelUncheckedUpdateInputSchema: z.ZodType<Prisma.KennelUncheckedU
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   pets: z.lazy(() => PetUncheckedUpdateManyWithoutKennelNestedInputSchema).optional(),
-  Profile: z.lazy(() => ProfileUncheckedUpdateOneWithoutKennelNestedInputSchema).optional(),
+  profile: z.lazy(() => ProfileUncheckedUpdateOneWithoutKennelNestedInputSchema).optional(),
   img: z.lazy(() => FileUncheckedUpdateOneWithoutKennelNestedInputSchema).optional()
 }).strict();
 
@@ -3555,7 +3555,7 @@ export const UserCreateWithoutAccountsInputSchema: z.ZodType<Prisma.UserCreateWi
   image: z.string().optional().nullable(),
   sessions: z.lazy(() => SessionCreateNestedManyWithoutUserInputSchema).optional(),
   Registration: z.lazy(() => RegistrationCreateNestedManyWithoutReviewedByInputSchema).optional(),
-  Profile: z.lazy(() => ProfileCreateNestedOneWithoutUserInputSchema).optional(),
+  profile: z.lazy(() => ProfileCreateNestedOneWithoutUserInputSchema).optional(),
   Pet: z.lazy(() => PetCreateNestedManyWithoutCreatedByInputSchema).optional()
 }).strict();
 
@@ -3567,7 +3567,7 @@ export const UserUncheckedCreateWithoutAccountsInputSchema: z.ZodType<Prisma.Use
   image: z.string().optional().nullable(),
   sessions: z.lazy(() => SessionUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   Registration: z.lazy(() => RegistrationUncheckedCreateNestedManyWithoutReviewedByInputSchema).optional(),
-  Profile: z.lazy(() => ProfileUncheckedCreateNestedOneWithoutUserInputSchema).optional(),
+  profile: z.lazy(() => ProfileUncheckedCreateNestedOneWithoutUserInputSchema).optional(),
   Pet: z.lazy(() => PetUncheckedCreateNestedManyWithoutCreatedByInputSchema).optional()
 }).strict();
 
@@ -3595,7 +3595,7 @@ export const UserUpdateWithoutAccountsInputSchema: z.ZodType<Prisma.UserUpdateWi
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   sessions: z.lazy(() => SessionUpdateManyWithoutUserNestedInputSchema).optional(),
   Registration: z.lazy(() => RegistrationUpdateManyWithoutReviewedByNestedInputSchema).optional(),
-  Profile: z.lazy(() => ProfileUpdateOneWithoutUserNestedInputSchema).optional(),
+  profile: z.lazy(() => ProfileUpdateOneWithoutUserNestedInputSchema).optional(),
   Pet: z.lazy(() => PetUpdateManyWithoutCreatedByNestedInputSchema).optional()
 }).strict();
 
@@ -3607,7 +3607,7 @@ export const UserUncheckedUpdateWithoutAccountsInputSchema: z.ZodType<Prisma.Use
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   sessions: z.lazy(() => SessionUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   Registration: z.lazy(() => RegistrationUncheckedUpdateManyWithoutReviewedByNestedInputSchema).optional(),
-  Profile: z.lazy(() => ProfileUncheckedUpdateOneWithoutUserNestedInputSchema).optional(),
+  profile: z.lazy(() => ProfileUncheckedUpdateOneWithoutUserNestedInputSchema).optional(),
   Pet: z.lazy(() => PetUncheckedUpdateManyWithoutCreatedByNestedInputSchema).optional()
 }).strict();
 
@@ -3619,7 +3619,7 @@ export const UserCreateWithoutSessionsInputSchema: z.ZodType<Prisma.UserCreateWi
   image: z.string().optional().nullable(),
   accounts: z.lazy(() => AccountCreateNestedManyWithoutUserInputSchema).optional(),
   Registration: z.lazy(() => RegistrationCreateNestedManyWithoutReviewedByInputSchema).optional(),
-  Profile: z.lazy(() => ProfileCreateNestedOneWithoutUserInputSchema).optional(),
+  profile: z.lazy(() => ProfileCreateNestedOneWithoutUserInputSchema).optional(),
   Pet: z.lazy(() => PetCreateNestedManyWithoutCreatedByInputSchema).optional()
 }).strict();
 
@@ -3631,7 +3631,7 @@ export const UserUncheckedCreateWithoutSessionsInputSchema: z.ZodType<Prisma.Use
   image: z.string().optional().nullable(),
   accounts: z.lazy(() => AccountUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   Registration: z.lazy(() => RegistrationUncheckedCreateNestedManyWithoutReviewedByInputSchema).optional(),
-  Profile: z.lazy(() => ProfileUncheckedCreateNestedOneWithoutUserInputSchema).optional(),
+  profile: z.lazy(() => ProfileUncheckedCreateNestedOneWithoutUserInputSchema).optional(),
   Pet: z.lazy(() => PetUncheckedCreateNestedManyWithoutCreatedByInputSchema).optional()
 }).strict();
 
@@ -3659,7 +3659,7 @@ export const UserUpdateWithoutSessionsInputSchema: z.ZodType<Prisma.UserUpdateWi
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   accounts: z.lazy(() => AccountUpdateManyWithoutUserNestedInputSchema).optional(),
   Registration: z.lazy(() => RegistrationUpdateManyWithoutReviewedByNestedInputSchema).optional(),
-  Profile: z.lazy(() => ProfileUpdateOneWithoutUserNestedInputSchema).optional(),
+  profile: z.lazy(() => ProfileUpdateOneWithoutUserNestedInputSchema).optional(),
   Pet: z.lazy(() => PetUpdateManyWithoutCreatedByNestedInputSchema).optional()
 }).strict();
 
@@ -3671,7 +3671,7 @@ export const UserUncheckedUpdateWithoutSessionsInputSchema: z.ZodType<Prisma.Use
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   accounts: z.lazy(() => AccountUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   Registration: z.lazy(() => RegistrationUncheckedUpdateManyWithoutReviewedByNestedInputSchema).optional(),
-  Profile: z.lazy(() => ProfileUncheckedUpdateOneWithoutUserNestedInputSchema).optional(),
+  profile: z.lazy(() => ProfileUncheckedUpdateOneWithoutUserNestedInputSchema).optional(),
   Pet: z.lazy(() => PetUncheckedUpdateManyWithoutCreatedByNestedInputSchema).optional()
 }).strict();
 
@@ -4294,7 +4294,7 @@ export const UserCreateWithoutPetInputSchema: z.ZodType<Prisma.UserCreateWithout
   accounts: z.lazy(() => AccountCreateNestedManyWithoutUserInputSchema).optional(),
   sessions: z.lazy(() => SessionCreateNestedManyWithoutUserInputSchema).optional(),
   Registration: z.lazy(() => RegistrationCreateNestedManyWithoutReviewedByInputSchema).optional(),
-  Profile: z.lazy(() => ProfileCreateNestedOneWithoutUserInputSchema).optional()
+  profile: z.lazy(() => ProfileCreateNestedOneWithoutUserInputSchema).optional()
 }).strict();
 
 export const UserUncheckedCreateWithoutPetInputSchema: z.ZodType<Prisma.UserUncheckedCreateWithoutPetInput> = z.object({
@@ -4306,7 +4306,7 @@ export const UserUncheckedCreateWithoutPetInputSchema: z.ZodType<Prisma.UserUnch
   accounts: z.lazy(() => AccountUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   sessions: z.lazy(() => SessionUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   Registration: z.lazy(() => RegistrationUncheckedCreateNestedManyWithoutReviewedByInputSchema).optional(),
-  Profile: z.lazy(() => ProfileUncheckedCreateNestedOneWithoutUserInputSchema).optional()
+  profile: z.lazy(() => ProfileUncheckedCreateNestedOneWithoutUserInputSchema).optional()
 }).strict();
 
 export const UserCreateOrConnectWithoutPetInputSchema: z.ZodType<Prisma.UserCreateOrConnectWithoutPetInput> = z.object({
@@ -4348,7 +4348,7 @@ export const KennelCreateWithoutPetsInputSchema: z.ZodType<Prisma.KennelCreateWi
   description: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  Profile: z.lazy(() => ProfileCreateNestedOneWithoutKennelInputSchema).optional(),
+  profile: z.lazy(() => ProfileCreateNestedOneWithoutKennelInputSchema).optional(),
   img: z.lazy(() => FileCreateNestedOneWithoutKennelInputSchema).optional()
 }).strict();
 
@@ -4359,7 +4359,7 @@ export const KennelUncheckedCreateWithoutPetsInputSchema: z.ZodType<Prisma.Kenne
   description: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  Profile: z.lazy(() => ProfileUncheckedCreateNestedOneWithoutKennelInputSchema).optional(),
+  profile: z.lazy(() => ProfileUncheckedCreateNestedOneWithoutKennelInputSchema).optional(),
   img: z.lazy(() => FileUncheckedCreateNestedOneWithoutKennelInputSchema).optional()
 }).strict();
 
@@ -4497,7 +4497,7 @@ export const UserUpdateWithoutPetInputSchema: z.ZodType<Prisma.UserUpdateWithout
   accounts: z.lazy(() => AccountUpdateManyWithoutUserNestedInputSchema).optional(),
   sessions: z.lazy(() => SessionUpdateManyWithoutUserNestedInputSchema).optional(),
   Registration: z.lazy(() => RegistrationUpdateManyWithoutReviewedByNestedInputSchema).optional(),
-  Profile: z.lazy(() => ProfileUpdateOneWithoutUserNestedInputSchema).optional()
+  profile: z.lazy(() => ProfileUpdateOneWithoutUserNestedInputSchema).optional()
 }).strict();
 
 export const UserUncheckedUpdateWithoutPetInputSchema: z.ZodType<Prisma.UserUncheckedUpdateWithoutPetInput> = z.object({
@@ -4509,7 +4509,7 @@ export const UserUncheckedUpdateWithoutPetInputSchema: z.ZodType<Prisma.UserUnch
   accounts: z.lazy(() => AccountUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   sessions: z.lazy(() => SessionUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   Registration: z.lazy(() => RegistrationUncheckedUpdateManyWithoutReviewedByNestedInputSchema).optional(),
-  Profile: z.lazy(() => ProfileUncheckedUpdateOneWithoutUserNestedInputSchema).optional()
+  profile: z.lazy(() => ProfileUncheckedUpdateOneWithoutUserNestedInputSchema).optional()
 }).strict();
 
 export const RegistrationUpsertWithoutPetInputSchema: z.ZodType<Prisma.RegistrationUpsertWithoutPetInput> = z.object({
@@ -4563,7 +4563,7 @@ export const KennelUpdateWithoutPetsInputSchema: z.ZodType<Prisma.KennelUpdateWi
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  Profile: z.lazy(() => ProfileUpdateOneWithoutKennelNestedInputSchema).optional(),
+  profile: z.lazy(() => ProfileUpdateOneWithoutKennelNestedInputSchema).optional(),
   img: z.lazy(() => FileUpdateOneWithoutKennelNestedInputSchema).optional()
 }).strict();
 
@@ -4574,7 +4574,7 @@ export const KennelUncheckedUpdateWithoutPetsInputSchema: z.ZodType<Prisma.Kenne
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  Profile: z.lazy(() => ProfileUncheckedUpdateOneWithoutKennelNestedInputSchema).optional(),
+  profile: z.lazy(() => ProfileUncheckedUpdateOneWithoutKennelNestedInputSchema).optional(),
   img: z.lazy(() => FileUncheckedUpdateOneWithoutKennelNestedInputSchema).optional()
 }).strict();
 
@@ -4647,7 +4647,7 @@ export const UserCreateWithoutRegistrationInputSchema: z.ZodType<Prisma.UserCrea
   image: z.string().optional().nullable(),
   accounts: z.lazy(() => AccountCreateNestedManyWithoutUserInputSchema).optional(),
   sessions: z.lazy(() => SessionCreateNestedManyWithoutUserInputSchema).optional(),
-  Profile: z.lazy(() => ProfileCreateNestedOneWithoutUserInputSchema).optional(),
+  profile: z.lazy(() => ProfileCreateNestedOneWithoutUserInputSchema).optional(),
   Pet: z.lazy(() => PetCreateNestedManyWithoutCreatedByInputSchema).optional()
 }).strict();
 
@@ -4659,7 +4659,7 @@ export const UserUncheckedCreateWithoutRegistrationInputSchema: z.ZodType<Prisma
   image: z.string().optional().nullable(),
   accounts: z.lazy(() => AccountUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   sessions: z.lazy(() => SessionUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
-  Profile: z.lazy(() => ProfileUncheckedCreateNestedOneWithoutUserInputSchema).optional(),
+  profile: z.lazy(() => ProfileUncheckedCreateNestedOneWithoutUserInputSchema).optional(),
   Pet: z.lazy(() => PetUncheckedCreateNestedManyWithoutCreatedByInputSchema).optional()
 }).strict();
 
@@ -4730,7 +4730,7 @@ export const UserUpdateWithoutRegistrationInputSchema: z.ZodType<Prisma.UserUpda
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   accounts: z.lazy(() => AccountUpdateManyWithoutUserNestedInputSchema).optional(),
   sessions: z.lazy(() => SessionUpdateManyWithoutUserNestedInputSchema).optional(),
-  Profile: z.lazy(() => ProfileUpdateOneWithoutUserNestedInputSchema).optional(),
+  profile: z.lazy(() => ProfileUpdateOneWithoutUserNestedInputSchema).optional(),
   Pet: z.lazy(() => PetUpdateManyWithoutCreatedByNestedInputSchema).optional()
 }).strict();
 
@@ -4742,7 +4742,7 @@ export const UserUncheckedUpdateWithoutRegistrationInputSchema: z.ZodType<Prisma
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   accounts: z.lazy(() => AccountUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   sessions: z.lazy(() => SessionUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
-  Profile: z.lazy(() => ProfileUncheckedUpdateOneWithoutUserNestedInputSchema).optional(),
+  profile: z.lazy(() => ProfileUncheckedUpdateOneWithoutUserNestedInputSchema).optional(),
   Pet: z.lazy(() => PetUncheckedUpdateManyWithoutCreatedByNestedInputSchema).optional()
 }).strict();
 
@@ -4803,7 +4803,7 @@ export const KennelCreateWithoutImgInputSchema: z.ZodType<Prisma.KennelCreateWit
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   pets: z.lazy(() => PetCreateNestedManyWithoutKennelInputSchema).optional(),
-  Profile: z.lazy(() => ProfileCreateNestedOneWithoutKennelInputSchema).optional()
+  profile: z.lazy(() => ProfileCreateNestedOneWithoutKennelInputSchema).optional()
 }).strict();
 
 export const KennelUncheckedCreateWithoutImgInputSchema: z.ZodType<Prisma.KennelUncheckedCreateWithoutImgInput> = z.object({
@@ -4814,7 +4814,7 @@ export const KennelUncheckedCreateWithoutImgInputSchema: z.ZodType<Prisma.Kennel
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   pets: z.lazy(() => PetUncheckedCreateNestedManyWithoutKennelInputSchema).optional(),
-  Profile: z.lazy(() => ProfileUncheckedCreateNestedOneWithoutKennelInputSchema).optional()
+  profile: z.lazy(() => ProfileUncheckedCreateNestedOneWithoutKennelInputSchema).optional()
 }).strict();
 
 export const KennelCreateOrConnectWithoutImgInputSchema: z.ZodType<Prisma.KennelCreateOrConnectWithoutImgInput> = z.object({
@@ -4884,7 +4884,7 @@ export const KennelUpdateWithoutImgInputSchema: z.ZodType<Prisma.KennelUpdateWit
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   pets: z.lazy(() => PetUpdateManyWithoutKennelNestedInputSchema).optional(),
-  Profile: z.lazy(() => ProfileUpdateOneWithoutKennelNestedInputSchema).optional()
+  profile: z.lazy(() => ProfileUpdateOneWithoutKennelNestedInputSchema).optional()
 }).strict();
 
 export const KennelUncheckedUpdateWithoutImgInputSchema: z.ZodType<Prisma.KennelUncheckedUpdateWithoutImgInput> = z.object({
@@ -4895,7 +4895,7 @@ export const KennelUncheckedUpdateWithoutImgInputSchema: z.ZodType<Prisma.Kennel
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   pets: z.lazy(() => PetUncheckedUpdateManyWithoutKennelNestedInputSchema).optional(),
-  Profile: z.lazy(() => ProfileUncheckedUpdateOneWithoutKennelNestedInputSchema).optional()
+  profile: z.lazy(() => ProfileUncheckedUpdateOneWithoutKennelNestedInputSchema).optional()
 }).strict();
 
 export const PetUpsertWithoutAvatarInputSchema: z.ZodType<Prisma.PetUpsertWithoutAvatarInput> = z.object({

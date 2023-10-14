@@ -4,19 +4,18 @@ import db from '@/lib/prisma'
 
 export const revalidate = 3600 // revalidate the data at most every hour
 
-export const getPets = async () => {
+// export const getPetsSimple = async () => {
+//     const pets = await db.pet.findMany({
+//         include: {
+//             createdBy: true,
+//             kennel: true,
+//             registration: true,
+//         }
+//     })
+//     return pets
+// }
 
-    const pets = await db.pet.findMany({
-        include: {
-            createdBy: true,
-            kennel: true,
-            registration: true,
-        }
-    })
-    return pets
-}
-
-export const getPetsPagination = async ({ skip = 0, take = 10, filter }: {
+export const getPets = cache(async ({ skip = 0, take = 10, filter }: {
     skip?: number
     take?: number
     filter?: {
@@ -40,9 +39,9 @@ export const getPetsPagination = async ({ skip = 0, take = 10, filter }: {
         }
     })
     return pets
-}
+})
 
-export const getPetFamilyDepth = async (id: string, depth = 1) => {
+const getPetFamilyDepth = cache(async (id: string, depth = 1) => {
     let includeObject: any = {
         include: { parents: true }
     }
@@ -58,4 +57,4 @@ export const getPetFamilyDepth = async (id: string, depth = 1) => {
         },
         include: includeObject.include
     });
-}
+})

@@ -11,6 +11,7 @@ interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
     href: string
     title: string
     disabled?: boolean
+    icon?: React.ReactNode
   }[]
 }
 
@@ -26,22 +27,34 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
       {...props}
     >
       {items.map((item, i) => (
-        <Link
-          key={item.href + i}
-          href={item.href}
+        <div
           className={cn(
-            buttonVariants({
-              variant: "ghost", size: 'lg'
-            }),
+            "flex items-center space-x-0",
             pathname === item.href
               ? "bg-muted hover:bg-muted"
               : "text-muted-foreground hover:bg-transparent hover:underline",
             "justify-start",
-            item.disabled && "line-through cursor-not-allowed"
+            item.disabled && "cursor-not-allowed"
           )}
+          key={item.href + i}
         >
-          {item.title}
-        </Link>
+          {item.icon || ''}
+          <Link
+            href={item.href}
+            className={cn(
+              buttonVariants({
+                variant: "ghost", size: 'lg'
+              }),
+              pathname === item.href
+                ? "bg-muted hover:bg-muted"
+                : "text-muted-foreground hover:bg-transparent hover:underline",
+              "justify-start",
+              item.disabled && "line-through cursor-not-allowed"
+            )}
+          >
+            {item.title}
+          </Link>
+        </div>
       ))}
     </nav>
   )
