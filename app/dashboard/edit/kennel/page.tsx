@@ -2,7 +2,7 @@
 
 import { useTransition, useEffect, useState } from "react"
 import { useForm, SubmitHandler } from "react-hook-form"
-import { isEmpty, get } from 'lodash-es'
+import { isEmpty, get, pick } from 'lodash-es'
 import Image from 'next/image'
 import { UploadButton } from '@/lib/uploadthing';
 import { type UploadFileResponse } from 'uploadthing/next';
@@ -36,12 +36,27 @@ import { Textarea } from '@/components/ui/textarea'
 import { useToast } from "@/components/ui/use-toast"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { isDeepEmpty } from '@/lib/utils'
 
 import {
     KennelCreateInputSchema as InputSchema
 } from '@/prisma/generated/zod'
 
 type InputsType = z.infer<typeof InputSchema>
+
+const defaultValues: InputsType = {
+    name: '',
+    nameEn: '',
+    description: '',
+    Profile: {
+        create: {
+            mobile: '',
+            instagram: '',
+            facebook: '',
+            wechat: '',
+        }
+    },
+}
 
 export default function Page() {
     const { toast } = useToast()
@@ -52,8 +67,7 @@ export default function Page() {
     const [uploadedImg, setUploadedImg] = useState<UploadFileResponse>({})
 
     const hookedForm = useForm<InputsType>({
-        defaultValues: {
-        },
+        defaultValues,
         resolver: zodResolver(InputSchema),
     })
 
@@ -73,11 +87,9 @@ export default function Page() {
     const onSubmit: SubmitHandler<InputsType> = (data) => {
         startTransition(async () => {
             // 融合上传图片的数据
-            const newData = {
-                ...data,
-                img: {
-                    create: uploadedImg
-                }
+
+            if (!isEmpty(uploadedImg)) data.img = {
+                create: pick(uploadedImg, ['key', 'url', 'name', 'size'])
             }
 
             const { created, kennel, error } = await createKennelWithProfileAction(data)
@@ -101,19 +113,18 @@ export default function Page() {
 
     // use this to reset the form after submission succeeds
     useEffect(() => {
-        if (!isSubmitSuccessful) { return }
-
-        reset({
-            email: "",
-            name: "",
-            subject: "",
-            description: ""
-        })
+        if (!isEmpty(errors) || !isSubmitSuccessful) { return }
+        setIsDialogOpen(false)
+        setUploadedImg({})
+        reset(defaultValues)
     }, [isSubmitSuccessful])
 
     return (
         /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
         <div>
+            <p>{JSON.stringify(
+                { errors, isSubmitSuccessful, isSubmitting }
+            )}</p>
             <Form {...hookedForm}>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                     <div className="flex gap-8">
@@ -298,11 +309,13 @@ export default function Page() {
                             />
                         </div>
                     </div>
-                    <Button disabled={!isEmpty(errors)} type="submit">{
-                        !isEmpty(errors)
-                            ? '修正错误'
-                            : isSubmitting ? '提交中...' : '提交'
-                    }</Button>
+                    <Button
+                        // disabled={!isEmpty(errors)}
+                        type="submit"
+                    >
+                        {
+                            isSubmitting ? '提交中...' : '提交'
+                        }</Button>
                 </form>
 
             </Form>

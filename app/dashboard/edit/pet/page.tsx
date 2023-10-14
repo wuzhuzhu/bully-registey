@@ -27,9 +27,6 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/components/ui/use-toast"
 
-
-
-
 const CreatePetPage = () => {
     return (
         <div>CreatePetPage</div>

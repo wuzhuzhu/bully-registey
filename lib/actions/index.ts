@@ -12,6 +12,8 @@ import { utapi } from "uploadthing/server";
 
 import { type UploadFileResponse } from 'uploadthing/next';
 
+import { isDeepEmpty } from '@/lib/utils'
+
 export async function whoAmI() {
     const session = await getServerSessionWithOption()
     return session?.user?.name || 'Anonymous'
@@ -37,7 +39,7 @@ export async function createKennelWithProfileAction(
         return { created: 'error', error: e.message }
     }
 
-    if (isEmpty(params.Profile.create)) {
+    if (isDeepEmpty(params.Profile)) {
         params.Profile = undefined
     }
     // console.log('createKennelWithProfileAction', params)

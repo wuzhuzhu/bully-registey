@@ -72,3 +72,19 @@ export const truncate = (str: string, length: number) => {
 export const getServerSessionWithOption = () => {
   return getServerSession(authOptions);
 }
+
+export function isDeepEmpty(obj) {
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      const value = obj[key];
+      if (typeof value === 'object' && value !== null) {
+        if (!isDeepEmpty(value)) {
+          return false;
+        }
+      } else if (value !== '' && value !== null && value !== undefined) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
