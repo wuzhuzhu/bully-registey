@@ -33,6 +33,7 @@ import { KennelCreateInputSchema, ProfileCreateInputSchema } from '@/prisma/gene
 // 使用kennel和profile的schema合并扁平的表单schema
 // merge: If the two schemas share keys, the properties of B overrides the property of A
 // id和createdAt会被覆盖
+
 const KennelCreatePageInputSchema = ProfileCreateInputSchema.merge(KennelCreateInputSchema)
 type KennelCreatePageInputType = z.infer<typeof KennelCreatePageInputSchema>
 

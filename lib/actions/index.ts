@@ -8,6 +8,15 @@ export async function whoAmI() {
     return session?.user?.name || 'Anonymous'
 }
 
+export async function sampleDelayedServerAction(
+    params: any
+) {
+    console.log('sample Delayed Server Action', params)
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    console.log('sampleDelayedServerAction DONE')
+    return { created: 'ok' }
+}
+
 export async function createKennelWithProfileAction(
     params: any
 ) {
@@ -18,5 +27,6 @@ export async function createKennelWithProfileAction(
             create: params.profile
         }
     })
+    console.log('createKennelWithProfileAction DONE')
     return { created: 'ok' }
 }
