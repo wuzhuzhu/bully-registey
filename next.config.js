@@ -4,7 +4,7 @@ const nextConfig = {
     // !! WARN !!
     // lint在build的时候超级慢 只能关掉
     // !! WARN !!
-    ignoreBuildErrors: true,
+    // ignoreBuildErrors: true,
   },
   experimental: {
     serverActions: true,

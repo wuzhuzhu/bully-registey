@@ -1,5 +1,7 @@
 "use client"
 
+// TODO: 分页
+
 import * as React from "react"
 import {
   ColumnDef,
@@ -37,6 +39,11 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+
+  console.log(
+    '在客户端表格里面的Pets', { data }
+  )
+
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})

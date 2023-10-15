@@ -10,7 +10,7 @@ generator client {
 generator zod {
   provider                         = "zod-prisma-types"
   // useMultipleFiles                 = true
-  // createRelationValuesTypes        = true // default is false
+  createRelationValuesTypes        = true
   // createInputTypes                 = fales
   createOptionalDefaultValuesTypes = true
 }

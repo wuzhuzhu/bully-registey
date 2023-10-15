@@ -22,6 +22,8 @@ import { statuses } from "../data/data"
 import { PetSchema, RegistrationStatusSchema } from "@/prisma/generated/zod"
 import { object, z } from "zod"
 import { REGISTRATION_STATUS } from "@/lib/constants"
+import { startTransition } from "react"
+import { deletePetById } from "@/lib/actions"
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -38,6 +40,8 @@ export function DataTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>) {
   const pet = PetSchemaWithStatus.parse(row.original)
 
+  console.log('在操作按钮里面的pet行', { row })
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -51,7 +55,7 @@ export function DataTableRowActions<TData>({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
         <DropdownMenuItem>编辑</DropdownMenuItem>
-        <DropdownMenuItem>复制</DropdownMenuItem>
+        <DropdownMenuItem disabled>复制</DropdownMenuItem>
         <DropdownMenuItem disabled>收藏</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuSub>
@@ -68,11 +72,15 @@ export function DataTableRowActions<TData>({
           </DropdownMenuSubContent>
         </DropdownMenuSub>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => {
+          startTransition(() => {
+            deletePetById(row?.original?.id)
+          })
+        }}>
           删除
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>
-    </DropdownMenu>
+    </DropdownMenu >
   )
 }

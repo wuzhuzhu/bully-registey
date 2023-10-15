@@ -82,6 +82,32 @@ export const AccountOptionalDefaultsSchema = AccountSchema.merge(z.object({
 
 export type AccountOptionalDefaults = z.infer<typeof AccountOptionalDefaultsSchema>
 
+// ACCOUNT RELATION SCHEMA
+//------------------------------------------------------
+
+export type AccountRelations = {
+  user: UserWithRelations;
+};
+
+export type AccountWithRelations = z.infer<typeof AccountSchema> & AccountRelations
+
+export const AccountWithRelationsSchema: z.ZodType<AccountWithRelations> = AccountSchema.merge(z.object({
+  user: z.lazy(() => UserWithRelationsSchema),
+}))
+
+// ACCOUNT OPTIONAL DEFAULTS RELATION SCHEMA
+//------------------------------------------------------
+
+export type AccountOptionalDefaultsRelations = {
+  user: UserOptionalDefaultsWithRelations;
+};
+
+export type AccountOptionalDefaultsWithRelations = z.infer<typeof AccountOptionalDefaultsSchema> & AccountOptionalDefaultsRelations
+
+export const AccountOptionalDefaultsWithRelationsSchema: z.ZodType<AccountOptionalDefaultsWithRelations> = AccountOptionalDefaultsSchema.merge(z.object({
+  user: z.lazy(() => UserOptionalDefaultsWithRelationsSchema),
+}))
+
 /////////////////////////////////////////
 // SESSION SCHEMA
 /////////////////////////////////////////
@@ -103,6 +129,32 @@ export const SessionOptionalDefaultsSchema = SessionSchema.merge(z.object({
 }))
 
 export type SessionOptionalDefaults = z.infer<typeof SessionOptionalDefaultsSchema>
+
+// SESSION RELATION SCHEMA
+//------------------------------------------------------
+
+export type SessionRelations = {
+  user: UserWithRelations;
+};
+
+export type SessionWithRelations = z.infer<typeof SessionSchema> & SessionRelations
+
+export const SessionWithRelationsSchema: z.ZodType<SessionWithRelations> = SessionSchema.merge(z.object({
+  user: z.lazy(() => UserWithRelationsSchema),
+}))
+
+// SESSION OPTIONAL DEFAULTS RELATION SCHEMA
+//------------------------------------------------------
+
+export type SessionOptionalDefaultsRelations = {
+  user: UserOptionalDefaultsWithRelations;
+};
+
+export type SessionOptionalDefaultsWithRelations = z.infer<typeof SessionOptionalDefaultsSchema> & SessionOptionalDefaultsRelations
+
+export const SessionOptionalDefaultsWithRelationsSchema: z.ZodType<SessionOptionalDefaultsWithRelations> = SessionOptionalDefaultsSchema.merge(z.object({
+  user: z.lazy(() => UserOptionalDefaultsWithRelationsSchema),
+}))
 
 /////////////////////////////////////////
 // USER SCHEMA
@@ -126,6 +178,48 @@ export const UserOptionalDefaultsSchema = UserSchema.merge(z.object({
 }))
 
 export type UserOptionalDefaults = z.infer<typeof UserOptionalDefaultsSchema>
+
+// USER RELATION SCHEMA
+//------------------------------------------------------
+
+export type UserRelations = {
+  accounts: AccountWithRelations[];
+  sessions: SessionWithRelations[];
+  Registration: RegistrationWithRelations[];
+  profile?: ProfileWithRelations | null;
+  Pet: PetWithRelations[];
+};
+
+export type UserWithRelations = z.infer<typeof UserSchema> & UserRelations
+
+export const UserWithRelationsSchema: z.ZodType<UserWithRelations> = UserSchema.merge(z.object({
+  accounts: z.lazy(() => AccountWithRelationsSchema).array(),
+  sessions: z.lazy(() => SessionWithRelationsSchema).array(),
+  Registration: z.lazy(() => RegistrationWithRelationsSchema).array(),
+  profile: z.lazy(() => ProfileWithRelationsSchema).nullable(),
+  Pet: z.lazy(() => PetWithRelationsSchema).array(),
+}))
+
+// USER OPTIONAL DEFAULTS RELATION SCHEMA
+//------------------------------------------------------
+
+export type UserOptionalDefaultsRelations = {
+  accounts: AccountOptionalDefaultsWithRelations[];
+  sessions: SessionOptionalDefaultsWithRelations[];
+  Registration: RegistrationOptionalDefaultsWithRelations[];
+  profile?: ProfileOptionalDefaultsWithRelations | null;
+  Pet: PetOptionalDefaultsWithRelations[];
+};
+
+export type UserOptionalDefaultsWithRelations = z.infer<typeof UserOptionalDefaultsSchema> & UserOptionalDefaultsRelations
+
+export const UserOptionalDefaultsWithRelationsSchema: z.ZodType<UserOptionalDefaultsWithRelations> = UserOptionalDefaultsSchema.merge(z.object({
+  accounts: z.lazy(() => AccountOptionalDefaultsWithRelationsSchema).array(),
+  sessions: z.lazy(() => SessionOptionalDefaultsWithRelationsSchema).array(),
+  Registration: z.lazy(() => RegistrationOptionalDefaultsWithRelationsSchema).array(),
+  profile: z.lazy(() => ProfileOptionalDefaultsWithRelationsSchema).nullable(),
+  Pet: z.lazy(() => PetOptionalDefaultsWithRelationsSchema).array(),
+}))
 
 /////////////////////////////////////////
 // KENNEL SCHEMA
@@ -153,6 +247,40 @@ export const KennelOptionalDefaultsSchema = KennelSchema.merge(z.object({
 
 export type KennelOptionalDefaults = z.infer<typeof KennelOptionalDefaultsSchema>
 
+// KENNEL RELATION SCHEMA
+//------------------------------------------------------
+
+export type KennelRelations = {
+  pets: PetWithRelations[];
+  profile?: ProfileWithRelations | null;
+  img?: FileWithRelations | null;
+};
+
+export type KennelWithRelations = z.infer<typeof KennelSchema> & KennelRelations
+
+export const KennelWithRelationsSchema: z.ZodType<KennelWithRelations> = KennelSchema.merge(z.object({
+  pets: z.lazy(() => PetWithRelationsSchema).array(),
+  profile: z.lazy(() => ProfileWithRelationsSchema).nullable(),
+  img: z.lazy(() => FileWithRelationsSchema).nullable(),
+}))
+
+// KENNEL OPTIONAL DEFAULTS RELATION SCHEMA
+//------------------------------------------------------
+
+export type KennelOptionalDefaultsRelations = {
+  pets: PetOptionalDefaultsWithRelations[];
+  profile?: ProfileOptionalDefaultsWithRelations | null;
+  img?: FileOptionalDefaultsWithRelations | null;
+};
+
+export type KennelOptionalDefaultsWithRelations = z.infer<typeof KennelOptionalDefaultsSchema> & KennelOptionalDefaultsRelations
+
+export const KennelOptionalDefaultsWithRelationsSchema: z.ZodType<KennelOptionalDefaultsWithRelations> = KennelOptionalDefaultsSchema.merge(z.object({
+  pets: z.lazy(() => PetOptionalDefaultsWithRelationsSchema).array(),
+  profile: z.lazy(() => ProfileOptionalDefaultsWithRelationsSchema).nullable(),
+  img: z.lazy(() => FileOptionalDefaultsWithRelationsSchema).nullable(),
+}))
+
 /////////////////////////////////////////
 // PROFILE SCHEMA
 /////////////////////////////////////////
@@ -177,6 +305,36 @@ export const ProfileOptionalDefaultsSchema = ProfileSchema.merge(z.object({
 }))
 
 export type ProfileOptionalDefaults = z.infer<typeof ProfileOptionalDefaultsSchema>
+
+// PROFILE RELATION SCHEMA
+//------------------------------------------------------
+
+export type ProfileRelations = {
+  user?: UserWithRelations | null;
+  kennel?: KennelWithRelations | null;
+};
+
+export type ProfileWithRelations = z.infer<typeof ProfileSchema> & ProfileRelations
+
+export const ProfileWithRelationsSchema: z.ZodType<ProfileWithRelations> = ProfileSchema.merge(z.object({
+  user: z.lazy(() => UserWithRelationsSchema).nullable(),
+  kennel: z.lazy(() => KennelWithRelationsSchema).nullable(),
+}))
+
+// PROFILE OPTIONAL DEFAULTS RELATION SCHEMA
+//------------------------------------------------------
+
+export type ProfileOptionalDefaultsRelations = {
+  user?: UserOptionalDefaultsWithRelations | null;
+  kennel?: KennelOptionalDefaultsWithRelations | null;
+};
+
+export type ProfileOptionalDefaultsWithRelations = z.infer<typeof ProfileOptionalDefaultsSchema> & ProfileOptionalDefaultsRelations
+
+export const ProfileOptionalDefaultsWithRelationsSchema: z.ZodType<ProfileOptionalDefaultsWithRelations> = ProfileOptionalDefaultsSchema.merge(z.object({
+  user: z.lazy(() => UserOptionalDefaultsWithRelationsSchema).nullable(),
+  kennel: z.lazy(() => KennelOptionalDefaultsWithRelationsSchema).nullable(),
+}))
 
 /////////////////////////////////////////
 // VERIFICATION TOKEN SCHEMA
@@ -233,6 +391,52 @@ export const PetOptionalDefaultsSchema = PetSchema.merge(z.object({
 
 export type PetOptionalDefaults = z.infer<typeof PetOptionalDefaultsSchema>
 
+// PET RELATION SCHEMA
+//------------------------------------------------------
+
+export type PetRelations = {
+  createdBy: UserWithRelations;
+  registration?: RegistrationWithRelations | null;
+  kennel?: KennelWithRelations | null;
+  parents: PetWithRelations[];
+  children: PetWithRelations[];
+  avatar?: FileWithRelations | null;
+};
+
+export type PetWithRelations = z.infer<typeof PetSchema> & PetRelations
+
+export const PetWithRelationsSchema: z.ZodType<PetWithRelations> = PetSchema.merge(z.object({
+  createdBy: z.lazy(() => UserWithRelationsSchema),
+  registration: z.lazy(() => RegistrationWithRelationsSchema).nullable(),
+  kennel: z.lazy(() => KennelWithRelationsSchema).nullable(),
+  parents: z.lazy(() => PetWithRelationsSchema).array(),
+  children: z.lazy(() => PetWithRelationsSchema).array(),
+  avatar: z.lazy(() => FileWithRelationsSchema).nullable(),
+}))
+
+// PET OPTIONAL DEFAULTS RELATION SCHEMA
+//------------------------------------------------------
+
+export type PetOptionalDefaultsRelations = {
+  createdBy: UserOptionalDefaultsWithRelations;
+  registration?: RegistrationOptionalDefaultsWithRelations | null;
+  kennel?: KennelOptionalDefaultsWithRelations | null;
+  parents: PetOptionalDefaultsWithRelations[];
+  children: PetOptionalDefaultsWithRelations[];
+  avatar?: FileOptionalDefaultsWithRelations | null;
+};
+
+export type PetOptionalDefaultsWithRelations = z.infer<typeof PetOptionalDefaultsSchema> & PetOptionalDefaultsRelations
+
+export const PetOptionalDefaultsWithRelationsSchema: z.ZodType<PetOptionalDefaultsWithRelations> = PetOptionalDefaultsSchema.merge(z.object({
+  createdBy: z.lazy(() => UserOptionalDefaultsWithRelationsSchema),
+  registration: z.lazy(() => RegistrationOptionalDefaultsWithRelationsSchema).nullable(),
+  kennel: z.lazy(() => KennelOptionalDefaultsWithRelationsSchema).nullable(),
+  parents: z.lazy(() => PetOptionalDefaultsWithRelationsSchema).array(),
+  children: z.lazy(() => PetOptionalDefaultsWithRelationsSchema).array(),
+  avatar: z.lazy(() => FileOptionalDefaultsWithRelationsSchema).nullable(),
+}))
+
 /////////////////////////////////////////
 // REGISTRATION SCHEMA
 /////////////////////////////////////////
@@ -261,6 +465,36 @@ export const RegistrationOptionalDefaultsSchema = RegistrationSchema.merge(z.obj
 
 export type RegistrationOptionalDefaults = z.infer<typeof RegistrationOptionalDefaultsSchema>
 
+// REGISTRATION RELATION SCHEMA
+//------------------------------------------------------
+
+export type RegistrationRelations = {
+  reviewedBy?: UserWithRelations | null;
+  pet?: PetWithRelations | null;
+};
+
+export type RegistrationWithRelations = z.infer<typeof RegistrationSchema> & RegistrationRelations
+
+export const RegistrationWithRelationsSchema: z.ZodType<RegistrationWithRelations> = RegistrationSchema.merge(z.object({
+  reviewedBy: z.lazy(() => UserWithRelationsSchema).nullable(),
+  pet: z.lazy(() => PetWithRelationsSchema).nullable(),
+}))
+
+// REGISTRATION OPTIONAL DEFAULTS RELATION SCHEMA
+//------------------------------------------------------
+
+export type RegistrationOptionalDefaultsRelations = {
+  reviewedBy?: UserOptionalDefaultsWithRelations | null;
+  pet?: PetOptionalDefaultsWithRelations | null;
+};
+
+export type RegistrationOptionalDefaultsWithRelations = z.infer<typeof RegistrationOptionalDefaultsSchema> & RegistrationOptionalDefaultsRelations
+
+export const RegistrationOptionalDefaultsWithRelationsSchema: z.ZodType<RegistrationOptionalDefaultsWithRelations> = RegistrationOptionalDefaultsSchema.merge(z.object({
+  reviewedBy: z.lazy(() => UserOptionalDefaultsWithRelationsSchema).nullable(),
+  pet: z.lazy(() => PetOptionalDefaultsWithRelationsSchema).nullable(),
+}))
+
 /////////////////////////////////////////
 // FILE SCHEMA
 /////////////////////////////////////////
@@ -285,6 +519,36 @@ export const FileOptionalDefaultsSchema = FileSchema.merge(z.object({
 }))
 
 export type FileOptionalDefaults = z.infer<typeof FileOptionalDefaultsSchema>
+
+// FILE RELATION SCHEMA
+//------------------------------------------------------
+
+export type FileRelations = {
+  kennel?: KennelWithRelations | null;
+  pet?: PetWithRelations | null;
+};
+
+export type FileWithRelations = z.infer<typeof FileSchema> & FileRelations
+
+export const FileWithRelationsSchema: z.ZodType<FileWithRelations> = FileSchema.merge(z.object({
+  kennel: z.lazy(() => KennelWithRelationsSchema).nullable(),
+  pet: z.lazy(() => PetWithRelationsSchema).nullable(),
+}))
+
+// FILE OPTIONAL DEFAULTS RELATION SCHEMA
+//------------------------------------------------------
+
+export type FileOptionalDefaultsRelations = {
+  kennel?: KennelOptionalDefaultsWithRelations | null;
+  pet?: PetOptionalDefaultsWithRelations | null;
+};
+
+export type FileOptionalDefaultsWithRelations = z.infer<typeof FileOptionalDefaultsSchema> & FileOptionalDefaultsRelations
+
+export const FileOptionalDefaultsWithRelationsSchema: z.ZodType<FileOptionalDefaultsWithRelations> = FileOptionalDefaultsSchema.merge(z.object({
+  kennel: z.lazy(() => KennelOptionalDefaultsWithRelationsSchema).nullable(),
+  pet: z.lazy(() => PetOptionalDefaultsWithRelationsSchema).nullable(),
+}))
 
 /////////////////////////////////////////
 // SELECT & INCLUDE

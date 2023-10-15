@@ -91,7 +91,7 @@ const DashboardHomePage = async () => {
                 <div className='flex-1 space-y-4 p-8 pt-4 w-screen'>
                     {/* 标题栏 */}
                     <div className="flex items-center justify-between space-y-2">
-                        <h2 className="text-2xl font-semibold tracking-tight">Dashboard</h2>
+                        <h2 className="text-2xl font-semibold tracking-tight">数据看板</h2>
                         <div className="flex items-center space-x-2">
                             <CalendarDateRangePicker />
                             <Button disabled>预留按钮</Button>

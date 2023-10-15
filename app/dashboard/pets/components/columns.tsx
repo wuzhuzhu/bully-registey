@@ -2,16 +2,14 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 
-import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 
+import { REGISTRATION_STATUS, TRANSLATION_MAP } from "@/lib/constants"
 import { PetWithRelations } from "@/prisma/generated/zod"
+import { CircleDashed } from "lucide-react"
 import { DataTableColumnHeader } from "./data-table-column-header"
 import { DataTableRowActions } from "./data-table-row-actions"
-import { REGISTRATION_STATUS, TRANSLATION_MAP } from "@/lib/constants"
-import { CircleDashed } from "lucide-react"
-
-
+import Link from "next/link"
 
 export const columns: ColumnDef<PetWithRelations>[] = [
   // 第一列 选择框
@@ -40,12 +38,12 @@ export const columns: ColumnDef<PetWithRelations>[] = [
   // 第二列 姓名
   {
     accessorKey: "name",
-    accessorFn: (originalRow, _index) => { return originalRow.name + originalRow.nameEn },
+    // accessorFn: (originalRow, _index) => { return originalRow.name + originalRow.nameEn },
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="犬名" />
     ),
     cell: ({ row, column }) => {
-      return <div className="w-[120px]">{`${row.original.name} / ${row.original.nameEn}`}</div>
+      return <div className="w-[130px]">{`${row.original.name} / ${row.original.nameEn}`}</div>
     },
     enableSorting: false,
     enableHiding: false,
@@ -58,7 +56,7 @@ export const columns: ColumnDef<PetWithRelations>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
-          <span className="w-[50px]">
+          <span className="w-[30px]">
             {TRANSLATION_MAP.gender[row.original.gender]}
           </span>
         </div>
@@ -72,7 +70,7 @@ export const columns: ColumnDef<PetWithRelations>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <div className="flex w-[100px] items-center">
+        <div className="flex w-[130px] items-center">
           <span>{row.original.registration?.readableId ?? '-'}</span>
         </div>
       )
@@ -80,6 +78,22 @@ export const columns: ColumnDef<PetWithRelations>[] = [
     // filterFn: (row, id, value) => {
     //   return value.includes(row.getValue(id))
     // },
+  },
+  {
+    accessorKey: "kennelId",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="犬舍" />
+    ),
+    cell: ({ row }) => {
+      const kennelId = row.getValue('kennelId')
+      return (
+        <div className="flex w-[60px] items-center">
+          <Link href={kennelId ? `/dashboard/edit/kennel/${row.getValue('kennelId')}` : '#'}>
+            <span>{row.original.kennel?.name || '-'}</span>
+          </Link>
+        </div>
+      )
+    },
   },
   {
     accessorKey: "color",
@@ -132,9 +146,6 @@ export const columns: ColumnDef<PetWithRelations>[] = [
           <span>{status.label}</span>
         </div>
       )
-    },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
     },
   },
   // {

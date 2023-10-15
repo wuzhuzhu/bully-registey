@@ -1,6 +1,8 @@
 import { cache } from "react"
+import { unstable_cache } from "next/cache"
 
 import db from '@/lib/prisma'
+import { get } from "http"
 
 export const revalidate = 3600 // revalidate the data at most every hour
 
@@ -15,7 +17,7 @@ export const revalidate = 3600 // revalidate the data at most every hour
 //     return pets
 // }
 
-export const getPets = cache(async ({ skip = 0, take = 10, filter }: {
+export const getPetsNoCache = async ({ skip = 0, take = 10, filter }: {
     skip?: number
     take?: number
     filter?: {
@@ -38,8 +40,16 @@ export const getPets = cache(async ({ skip = 0, take = 10, filter }: {
             createdBy: true,
         }
     })
+    console.log('getPets', pets)
     return pets
-})
+}
+
+export const getPets = unstable_cache(getPetsNoCache,
+    ['pets'], // this line is not for revalidate tag
+    {
+        revalidate,
+        tags: ['pets'] // this one works
+    })
 
 const getPetFamilyDepth = cache(async (id: string, depth = 1) => {
     let includeObject: any = {
