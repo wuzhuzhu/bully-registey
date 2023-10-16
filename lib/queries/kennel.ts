@@ -39,19 +39,23 @@ export const getKennels = unstable_cache(getKennelsNoCache,
     ['kennels'], // this line is not for revalidate tag
     {
         revalidate,
-        tags: ['kennels', 'pets'] // this one works
+        tags: ['kennels', 'pets', 'file'] // this one works
     })
 
-
-export const getKennelById = cache(async (id: string) => {
+// should not have cache
+export const getKennelById = unstable_cache(async (id: string) => {
     const kennel = await db.kennel.findUnique({
         where: {
             id
         },
         include: {
             img: true,
+            profile: true,
         }
 
     })
     return kennel
+}, ['kennel'], {
+    revalidate: 3600,
+    tags: ['kennel', 'file']
 })

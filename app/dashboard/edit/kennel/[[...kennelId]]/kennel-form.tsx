@@ -1,13 +1,23 @@
 'use client'
-
-import { useTransition, useEffect, useState } from "react"
-import { useForm, SubmitHandler } from "react-hook-form"
-import { isEmpty, get, pick } from 'lodash-es'
-import Image from 'next/image'
-import { UploadButton } from '@/lib/uploadthing';
-import { type UploadFileResponse } from 'uploadthing/next';
+import z from 'zod'
+import { UploadButton } from '@/lib/uploadthing'
+import { get, isEmpty, pick } from 'lodash-es'
 import { X } from "lucide-react"
+import { useEffect, useState, useTransition } from "react"
+import { SubmitHandler, useForm } from "react-hook-form"
+import { type UploadFileResponse } from 'uploadthing/next'
+import { omit } from 'lodash-es'
+import { usePathname, useRouter } from 'next/navigation'
 
+
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger
+} from "@/components/ui/dialog"
 import {
     Form,
     FormControl,
@@ -17,54 +27,70 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-    DialogClose,
-} from "@/components/ui/dialog"
 
-import { deleteUploadedFile } from '@/lib/actions'
-import { createKennelWithProfileAction, sampleDelayedServerAction } from '@/lib/actions'
-import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from "@/components/ui/use-toast"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { createOrUpdateKennelWithProfileAction, deleteUploadedFile } from '@/lib/actions'
 import { isDeepEmpty } from '@/lib/utils'
+import { zodResolver } from "@hookform/resolvers/zod"
 
+import type { Prisma } from '@prisma/client'
 import {
-    KennelCreateInputSchema as InputSchema,
-    Kennel,
+    ProfileCreateWithoutKennelInputSchema, // 用以合并扁平的profile字段
+    KennelOptionalDefaultsSchema, // 没有关联关系，且自动字段为可选的schema，手动合并profile字段
+    KennelCreateOrConnectWithoutPetsInputSchema // 最终的输出到action的结构，在这个页面创建kennel只不创建pets
 } from '@/prisma/generated/zod'
+import type { KennelOptionalDefaults } from '@/prisma/generated/zod'
+import { KennelCreateActionSchema, revalidatePathByPathname } from '@/lib/actions'
+import type { KennelCreateActionType } from '@/lib/actions'
 
-type InputsType = z.infer<typeof InputSchema>
+// 表单输入结构为扁平的object类型声明
+type InputType = KennelOptionalDefaults & {
+    profile?: Nullable<Prisma.ProfileCreateWithoutKennelInput>
+}
+// 表单输入结构为扁平的object
+// 赋予可空内容可选属性
+const InputSchema = z.object({
+    ...KennelOptionalDefaultsSchema.shape,
+    nameEn: KennelOptionalDefaultsSchema.shape.nameEn.optional(),
+    description: KennelOptionalDefaultsSchema.shape.nameEn.optional(),
+})
+    .merge(z.object({
+        profile: ProfileCreateWithoutKennelInputSchema
+    }))
+
+function omitKennelDirty(kennel) {
+    return omit(kennel, ['profile.kennelId', 'profile.userId'])
+}
+
+// 为了最大程度复用server action，提交给server action前，整理结构为prisma的结构，并且区分创建/更新
 
 // TODO: handle the profile fields, just migrate the schema, maybe needs new seed data
 
-export default function Page({ kennel }: {
-    kennel?: Nullable<Kennel>
+export default function Page({ kennel: kennelDirty }: {
+    kennel?: Nullable<InputType>
 }) {
+    const router = useRouter()
     const { toast } = useToast()
+    const pathname = usePathname()
 
-    const defaultValues: InputsType = kennel || {
-        name: '',
-        nameEn: '',
-        description: '',
-        profile: {
-            create: {
+    const kennel = omitKennelDirty(kennelDirty)
+    const defaultValues: InputType = kennelDirty?.id
+        ? kennel // 更新，使用清理过的数据
+        : { // 创建，使用默认值
+            name: '',
+            nameEn: '',
+            description: '',
+            profile: {
                 mobile: '',
                 instagram: '',
                 facebook: '',
-                wechat: '',
+                wechat: ''
             }
-        },
-    }
+        }
     console.log({ defaultValues, kennel })
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -72,12 +98,13 @@ export default function Page({ kennel }: {
     // upload img
     const [uploadedImg, setUploadedImg] = useState<UploadFileResponse>(kennel?.img || {})
 
-    const hookedForm = useForm<InputsType>({
+    const hookedForm = useForm<InputType>({
         defaultValues,
         resolver: zodResolver(InputSchema),
     })
 
     const {
+        getValues,
         register,
         handleSubmit,
         watch,
@@ -90,30 +117,95 @@ export default function Page({ kennel }: {
 
     // https://scastiel.dev/server-components-actions-react-nextjs
     // https://github.com/orgs/react-hook-form/discussions/10757
-    const onSubmit: SubmitHandler<InputsType> = (data) => {
+    const onSubmit: SubmitHandler<InputType> = (data) => {
+        // 准备server action参数
+        const { profile, ...kennel } = data
+
+        const hasImg = !isEmpty(uploadedImg)
+        const img = hasImg
+            // 有图像
+            ? pick(uploadedImg, ['key', 'url', 'name', 'size'])
+            // 没有图像
+            : kennelDirty?.img?.id
+                // 原来有图像现在没有了，删除
+                ? { delete: true }
+                // 没有到没有，不变
+                : undefined
+        const profileUpsertInput = !isDeepEmpty(profile) ? {
+            upsert: {
+                create: profile,
+                update: profile,
+                where: {
+                    kennelId: kennel?.id
+                }
+            },
+        } : undefined
+        const imgUpsertInput = hasImg ? {
+            upsert: {
+                create: img,
+                update: {
+                    ...img,
+                    updatedAt: new Date().toISOString()
+                },
+                where: {
+                    kennelId: kennelDirty?.id
+                }
+            }
+        } : img
+        // 使用server action操作DB
+        const actionParams: Prisma.KennelUpdateOneWithoutImgNestedInput | KennelCreateWithoutImgInput = kennel?.id
+            ? { // 有现有犬舍id，更新
+                where: {
+                    id: kennel.id
+                },
+                data: {
+                    ...kennel,
+                    profile: profileUpsertInput,
+                    img: imgUpsertInput
+                },
+                include: {
+                    profile: true,
+                    img: true
+                }
+            } : { // 创建新的犬舍
+                data: {
+                    ...kennel,
+                    profile: !isDeepEmpty(profile) ? {
+                        create: profile
+                    } : undefined,
+                    img: hasImg ? {
+                        create: img
+                    } : undefined
+                },
+                include: {
+                    profile: true,
+                    img: true
+                }
+            }
+        const isUpdate = !!kennel?.id
         startTransition(async () => {
             // 融合上传图片的数据
+            // if (!isEmpty(uploadedImg)) data.img = pick(uploadedImg, ['key', 'url', 'name', 'size'])
+            // 去掉默认值带来的空关系 避免无效创建
+            // if (isDeepEmpty(data.profile)) delete actionParams.create.profile
+            // if (isDeepEmpty(data.img)) delete actionParams.img
 
-            if (!isEmpty(uploadedImg)) data.img = {
-                create: pick(uploadedImg, ['key', 'url', 'name', 'size'])
-            }
+            console.log('在transition中整理好了actionParams：', { actionParams })
 
-            if (isDeepEmpty(data.profile)) {
-                data.profile = undefined
-            }
-
-            const { created, kennel, error } = await createKennelWithProfileAction(data)
+            const { created, kennel: newKennel, error } = await createOrUpdateKennelWithProfileAction(actionParams, kennelDirty?.id)
             // console.log('created!!!!!!!!', created, kennel, error)
             if (created === 'ok') {
-                // TODO: revalidate the path to clear cache
-                // revalidatePath('/')
+                // 刷新表单kennel数据
+                // await revalidatePathByPathname(pathname)
+                // router.refresh()
+                // setTimeout(() => { location.reload() }, 1000)
                 toast({
-                    title: "创建成功",
-                    description: "犬舍名为：" + kennel?.name,
+                    title: `${isUpdate ? '更新' : '创建'}成功}`,
+                    description: "犬舍名为：" + newKennel?.name,
                 })
             } else {
                 toast({
-                    title: "创建失败",
+                    title: `${isUpdate ? '更新' : '创建'}失败`,
                     description: error,
                 })
             }
@@ -125,12 +217,27 @@ export default function Page({ kennel }: {
     useEffect(() => {
         if (!isEmpty(errors) || !isSubmitSuccessful) { return }
         setIsDialogOpen(false)
-        setUploadedImg({})
-        reset(defaultValues)
+        if (!kennelDirty?.id) { // 新建的时候才重置
+            setUploadedImg({})
+            reset(defaultValues)
+        }
     }, [isSubmitSuccessful])
+
+    // use this to reset the form after submission succeeds
+    // useEffect(() => {
+    //     console.log('isSubmitSuccessful变化导致useeffect', { defaultValues, kennelDirty })
+    //     if (!isEmpty(errors) || !isSubmitSuccessful) { return }
+    //     setIsDialogOpen(false)
+
+    //     if (!kennelDirty?.id) {
+    //         setUploadedImg({})
+    //         reset(defaultValues)
+    //     }
+    // }, [isSubmitSuccessful])
 
     return (
         <Form Form {...hookedForm}>
+            <p>defaultValues: {JSON.stringify(defaultValues)}, error: {JSON.stringify(errors)}, isSubmitSuccessful: {isSubmitSuccessful.toString()}</p>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                 <div className="flex gap-8">
                     <div id="left" className="flex-1 space-y-8 border-border pr-8 border-r">
@@ -187,7 +294,7 @@ export default function Page({ kennel }: {
 
                         <FormField
                             control={control}
-                            name="profile.create.mobile"
+                            name="profile.mobile"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>电话</FormLabel>
@@ -200,7 +307,7 @@ export default function Page({ kennel }: {
                         />
                         <FormField
                             control={control}
-                            name="profile.create.instagram"
+                            name="profile.instagram"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>instagram</FormLabel>
@@ -216,7 +323,7 @@ export default function Page({ kennel }: {
                         />
                         <FormField
                             control={control}
-                            name="profile.create.facebook"
+                            name="profile.facebook"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>facebook</FormLabel>
@@ -232,7 +339,7 @@ export default function Page({ kennel }: {
                         />
                         <FormField
                             control={control}
-                            name="profile.create.wechat"
+                            name="profile.wechat"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>微信</FormLabel>
@@ -272,10 +379,17 @@ export default function Page({ kennel }: {
                                             <Button onClick={async (e) => { // client component
                                                 e.preventDefault()
                                                 // console.log('uploadedImg?.name', uploadedImg)
-                                                await deleteUploadedFile(uploadedImg)
-                                                setUploadedImg({})
-                                                setIsDialogOpen(false)
-
+                                                try {
+                                                    const { succeed } = await deleteUploadedFile({ kennelId: kennelDirty?.id, uploadedImg })
+                                                    if (succeed === 'ok') {
+                                                        setUploadedImg({})
+                                                        // update the kennel
+                                                        onSubmit(getValues())
+                                                        setUploadedImg({})
+                                                    }
+                                                } finally {
+                                                    setIsDialogOpen(false)
+                                                }
                                             }}>确认</Button>
                                         </div>
 

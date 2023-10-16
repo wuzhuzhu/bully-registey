@@ -157,16 +157,24 @@ model Registration {
   petId        String?            @unique
 }
 
+enum FileStatus {
+  UPLOADED
+  DELETED
+}
+
 model File {
-  id         String  @id @default(cuid())
-  key        String  @unique
+  id         String     @id @default(cuid())
+  key        String     @unique
   url        String
   name       String
   size       Int
-  kennel     Kennel? @relation(fields: [kennelId], references: [id])
-  kennelId   String? @unique
-  imageOf    Pet?    @relation("images", fields: [imageOfId], references: [id])
+  kennel     Kennel?    @relation(fields: [kennelId], references: [id], onDelete: Cascade)
+  kennelId   String?    @unique
+  imageOf    Pet?       @relation("images", fields: [imageOfId], references: [id])
   imageOfId  String?
-  avatarOf   Pet?    @relation("avatar", fields: [avatarOfId], references: [id])
-  avatarOfId String? @unique
+  avatarOf   Pet?       @relation("avatar", fields: [avatarOfId], references: [id])
+  avatarOfId String?    @unique
+  crceatedAt DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  status     FileStatus @default(UPLOADED)
 }

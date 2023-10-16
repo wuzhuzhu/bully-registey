@@ -3,6 +3,7 @@ import ms from "ms";
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import authOptions from '@/app/api/auth/[...nextauth]/auth-options';
+import type { Kennel } from '@prisma/client';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -73,18 +74,34 @@ export const getServerSessionWithOption = () => {
   return getServerSession(authOptions);
 }
 
-export function isDeepEmpty(obj: any) {
+export function isDeepEmpty(obj) {
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
       const value = obj[key];
-      if (typeof value === 'object' && value !== null) {
+      if (typeof value === 'object' && !!value) {
         if (!isDeepEmpty(value)) {
           return false;
         }
-      } else if (value !== '' && value !== null && value !== undefined) {
+      } else if (!!value) {
         return false;
       }
     }
   }
   return true;
+}
+
+// https://www.prisma.io/docs/concepts/components/prisma-client/excluding-fields#excluding-the-password-field
+// Exclude keys from user
+// usage: 
+// function main() {
+//   const user = await prisma.user.findUnique({ where: 1 })
+//   const userWithoutPassword = exclude(user, ['password'])
+// }
+function excludeKennel<Kennel, Key extends keyof Kennel>(
+  kennel: Kennel,
+  keys: Key[]
+): Omit<User, Key> {
+  return Object.fromEntries(
+    Object.entries(user).filter(([key]) => !keys.includes(key))
+  )
 }
