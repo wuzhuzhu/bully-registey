@@ -5,7 +5,7 @@ import { unstable_cache } from 'next/cache'
 export const revalidate = 3600 // revalidate the data at most every hour
 
 // get kennels with count of pets
-export const getKennelsNoCache = async ({ skip = 0, take = 10, filter }: {
+export const getKennelsNoCache = async ({ skip = 0, take = 50, filter }: {
     skip?: number
     take?: number
     filter?: {
@@ -39,7 +39,7 @@ export const getKennels = unstable_cache(getKennelsNoCache,
     ['kennels'], // this line is not for revalidate tag
     {
         revalidate,
-        tags: ['kennels'] // this one works
+        tags: ['kennels', 'pets'] // this one works
     })
 
 

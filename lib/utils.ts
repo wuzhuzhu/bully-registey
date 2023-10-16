@@ -73,7 +73,7 @@ export const getServerSessionWithOption = () => {
   return getServerSession(authOptions);
 }
 
-export function isDeepEmpty(obj) {
+export function isDeepEmpty(obj: any) {
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
       const value = obj[key];

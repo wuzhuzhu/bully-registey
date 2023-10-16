@@ -4,6 +4,7 @@ import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
 import { MixerHorizontalIcon, PlusIcon } from "@radix-ui/react-icons"
 import { Table } from "@tanstack/react-table"
 import { DataTableActions } from "./data-table-actions"
+import { RefreshCcw } from 'lucide-react'
 
 import { Button } from "@/components/ui/button"
 import {
@@ -14,6 +15,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
+import HardRefreshBtn from "@/components/shared/hard-refresh-btn"
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>
@@ -25,6 +27,7 @@ export function DataTableViewOptions<TData>({
   return (
     <div className="flex gap-2">
       <DropdownMenu>
+        <HardRefreshBtn />
         <DropdownMenuTrigger asChild>
           <Button
             variant="outline"

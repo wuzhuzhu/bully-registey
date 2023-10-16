@@ -88,7 +88,6 @@ export async function deleteKennelById(kennelId: string) {
             // createdById: session?.user?.id
         }
     })
-    // revalidatePath('/dashboard/pets')
     revalidateTag('kennels') // template:  revalidate cache through tag
     console.log('deletePet DONE', deleted)
     return { succeed: 'ok' }

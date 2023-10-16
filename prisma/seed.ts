@@ -1,5 +1,5 @@
 // generate several prisma db seed based on ./schema.prisma
-
+import { revalidatePath } from 'next/cache';
 import { PrismaClient } from '@prisma/client';
 import { fakerZH_CN as f } from '@faker-js/faker'
 
