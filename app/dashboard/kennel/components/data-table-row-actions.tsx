@@ -24,7 +24,7 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const kennel = useMemo(() => KennelSchema.parse(row?.original), [])
+  const kennel = useMemo(() => KennelSchema.parse(row?.original), [row])
   // console.log('在操作按钮里面的kennel行', { row })
 
   return (

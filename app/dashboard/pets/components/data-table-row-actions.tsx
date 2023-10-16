@@ -22,7 +22,7 @@ import { statuses } from "../data/data"
 import { PetSchema, RegistrationStatusSchema } from "@/prisma/generated/zod"
 import { object, z } from "zod"
 import { REGISTRATION_STATUS } from "@/lib/constants"
-import { startTransition } from "react"
+import { startTransition, useMemo } from "react"
 import { deletePetById } from "@/lib/actions"
 
 interface DataTableRowActionsProps<TData> {
@@ -35,10 +35,11 @@ const PetSchemaWithStatus = PetSchema.extend({
   }).nullable(),
 })
 
+
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const pet = PetSchemaWithStatus.parse(row.original)
+  const pet = useMemo(() => PetSchemaWithStatus.parse(row.original), [row])
 
   console.log('在操作按钮里面的pet行', { row })
 
