@@ -237,7 +237,7 @@ export default function Page({ kennel: kennelDirty }: {
 
     return (
         <Form Form {...hookedForm}>
-            <p>defaultValues: {JSON.stringify(defaultValues)}, error: {JSON.stringify(errors)}, isSubmitSuccessful: {isSubmitSuccessful.toString()}</p>
+            {/* <p>defaultValues: {JSON.stringify(defaultValues)}, error: {JSON.stringify(errors)}, isSubmitSuccessful: {isSubmitSuccessful.toString()}</p> */}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                 <div className="flex gap-8">
                     <div id="left" className="flex-1 space-y-8 border-border pr-8 border-r">
