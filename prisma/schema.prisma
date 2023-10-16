@@ -114,26 +114,26 @@ enum Gender {
 // use this extension to express tree structure on prisma: 
 // https://prisma-extension-bark.gitbook.io/docs/client-extension-api-reference
 model Pet {
-  id             String        @id @default(cuid())
-  name           String
-  nameEn         String?
-  ownerName      String
-  type           PetType       @default(DOG)
-  gender         Gender
-  birthDate      DateTime
-  breed          String?
-  color          String?
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  createdBy      User          @relation(fields: [createdById], references: [id])
-  createdById    String
-  registration   Registration? @relation(fields: [registrationId], references: [id])
-  registrationId String?       @unique
-  kennel         Kennel?       @relation(fields: [kennelId], references: [id])
-  kennelId       String?
-  parents        Pet[]         @relation("birth") // child post (post that are suggested)
-  children       Pet[]         @relation("birth") // parent post (parent post of a suggested post)
-  avatar         File?
+  id           String        @id @default(cuid())
+  name         String
+  nameEn       String?
+  ownerName    String
+  type         PetType       @default(DOG)
+  gender       Gender
+  birthDate    DateTime
+  breed        String?
+  color        String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  createdBy    User          @relation(fields: [createdById], references: [id])
+  createdById  String
+  registration Registration?
+  kennel       Kennel?       @relation(fields: [kennelId], references: [id])
+  kennelId     String?
+  parents      Pet[]         @relation("birth") // child post (post that are suggested)
+  children     Pet[]         @relation("birth") // parent post (parent post of a suggested post)
+  avatar       File?         @relation("avatar")
+  images       File[]        @relation("images")
 }
 
 enum RegistrationStatus {
@@ -153,17 +153,20 @@ model Registration {
   reviewedBy   User?              @relation(fields: [reviewedById], references: [id])
   reviewedById String?
   attachments  String? // 可以存储文件路径或其他相关信息
-  pet          Pet?
+  pet          Pet?               @relation(fields: [petId], references: [id])
+  petId        String?            @unique
 }
 
 model File {
-  id       String  @id @default(cuid())
-  key      String  @unique
-  url      String
-  name     String
-  size     Int
-  kennel   Kennel? @relation(fields: [kennelId], references: [id])
-  kennelId String? @unique
-  pet      Pet?    @relation(fields: [petId], references: [id])
-  petId    String? @unique
+  id         String  @id @default(cuid())
+  key        String  @unique
+  url        String
+  name       String
+  size       Int
+  kennel     Kennel? @relation(fields: [kennelId], references: [id])
+  kennelId   String? @unique
+  imageOf    Pet?    @relation("images", fields: [imageOfId], references: [id])
+  imageOfId  String?
+  avatarOf   Pet?    @relation("avatar", fields: [avatarOfId], references: [id])
+  avatarOfId String? @unique
 }

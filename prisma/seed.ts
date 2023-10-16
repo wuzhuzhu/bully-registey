@@ -3,7 +3,8 @@
 import { PrismaClient } from '@prisma/client';
 import { fakerZH_CN as f } from '@faker-js/faker'
 
-import type { PetType, Gender } from '@prisma/client' // 处理enum
+import type { PetType, Gender, RegistrationStatus } from '@prisma/client' // 处理enum
+import { is } from 'date-fns/locale';
 
 const prisma = new PrismaClient();
 
@@ -40,6 +41,190 @@ async function main() {
         data: getBasicPets(adminUserId)
     })
 
+    console.log('=== creating fake imgs ===')
+    const avatar1 = await prisma.file.create({
+        data: {
+            key: 'avatar-1',
+            url: f.image.urlLoremFlickr({ category: 'animals' }),
+            name: 'avatar-1',
+            size: 2000,
+        }
+    })
+    const avatar2 = await prisma.file.create({
+        data: {
+            key: 'avatar-2',
+            url: f.image.urlLoremFlickr({ category: 'animals' }),
+            name: 'avatar-2',
+            size: 2000,
+        }
+    })
+    const img1 = await prisma.file.create({
+        data: {
+            key: 'image-1',
+            url: f.image.urlLoremFlickr({ category: 'animals' }),
+            name: 'image-1',
+            size: 2000,
+        }
+    })
+    const img2 = await prisma.file.create({
+        data: {
+            key: 'image-2',
+            url: f.image.urlLoremFlickr({ category: 'animals' }),
+            name: 'image-2',
+            size: 2000,
+        }
+    })
+
+    console.log('=== creating marvel kennel ===')
+    const marverlKennel = await prisma.kennel.create({
+        data: {
+            name: '漫威国际超级英雄犬舍',
+            nameEn: 'Marvel Kennel',
+            description: f.lorem.paragraph(),
+        }
+    })
+
+    // create related data
+    console.log('=== creating related Pet ===')
+    const relatedPet = await prisma.pet.create({
+        data: generateRelatedPetData({
+            adminUserId,
+            kennelId: marverlKennel.id,
+            avatarId: avatar1.id,
+            img1Id: img1.id,
+            img2Id: img2.id,
+            generationDepth: 3,
+            totalGenerations: 3,
+        })
+    })
+    /*     const relatedPet = await prisma.pet.create({
+            data: {
+                name: '绿巨人浩克',
+                nameEn: 'Hulk',
+                ownerName: 'Tony Stark',
+                type: 'DOG' as PetType, // 处理enum
+                gender: f.person.sex().toUpperCase() as Gender, // 处理enum
+                birthDate: f.date.past(),
+                breed: '恶霸犬',
+                color: f.color.human(),
+                createdById: adminUserId,
+                kennelId: marverlKennel.id,
+                avatar: {
+                    connect: {
+                        id: avatar1.id
+                    }
+                },
+                images: {
+                    connect: [
+                        { id: img1.id },
+                        { id: img2.id }
+                    ]
+                },
+                registration: {
+                    create: {
+                        readableId: '2021-0001',
+                        status: 'APPROVED' as RegistrationStatus,
+                        registeredAt: f.date.past(),
+                        registerEnd: f.date.future(),
+                    }
+                },
+                parents: {
+                    create: [
+                        {
+                            name: '浩克妈妈',
+                            nameEn: 'Mother',
+                            ownerName: 'Tony Stark',
+                            type: 'DOG' as PetType, // 处理enum
+                            gender: 'FEMALE' as Gender, // 处理enum
+                            birthDate: f.date.past(),
+                            breed: '恶霸犬',
+                            color: f.color.human(),
+                            createdById: adminUserId,
+                            avatar: {
+                                connect: {
+                                    id: avatar2.id
+                                }
+                            },
+                            images: {
+                                connect: [
+                                    { id: img1.id },
+                                ]
+                            },
+                        },
+                        {
+                            name: '浩克爸爸',
+                            nameEn: 'Father',
+                            ownerName: 'Tony Stark',
+                            type: 'DOG' as PetType, // 处理enum
+                            gender: 'FEMALE' as Gender, // 处理enum
+                            birthDate: f.date.past(),
+                            breed: '恶霸犬',
+                            color: f.color.human(),
+                            createdById: adminUserId,
+                            avatar: {
+                                connect: {
+                                    id: avatar2.id
+                                }
+                            },
+                            images: {
+                                connect: [
+                                    { id: img1.id },
+                                ]
+                            },
+                        }
+                    ]
+                },
+                children: {
+                    create: [
+                        {
+                            name: '浩克孩子1',
+                            nameEn: 'Hulk Child1',
+                            ownerName: 'Tony Stark',
+                            type: 'DOG' as PetType, // 处理enum
+                            gender: f.person.sex().toUpperCase() as Gender, // 处理enum
+                            birthDate: f.date.past(),
+                            breed: '恶霸犬',
+                            color: f.color.human(),
+                            createdById: adminUserId,
+                            avatar: {
+                                connect: {
+                                    id: avatar1.id
+                                }
+                            },
+                            images: {
+                                connect: [
+                                    { id: img1.id },
+                                    { id: img2.id }
+                                ]
+                            },
+                        },
+                        {
+                            name: '浩克孩子2',
+                            nameEn: 'Hulk Child1',
+                            ownerName: 'Tony Stark',
+                            type: 'DOG' as PetType, // 处理enum
+                            gender: f.person.sex().toUpperCase() as Gender, // 处理enum
+                            birthDate: f.date.past(),
+                            breed: '恶霸犬',
+                            color: f.color.human(),
+                            createdById: adminUserId,
+                            avatar: {
+                                connect: {
+                                    id: avatar1.id
+                                }
+                            },
+                            images: {
+                                connect: [
+                                    { id: img1.id },
+                                    { id: img2.id }
+                                ]
+                            },
+                        },
+                    ]
+                },
+            }
+        }) */
+    console.log('@@@@@@@Related Pet CREATED, ID IS: @@@@@@@', relatedPet.id, '@@@@@')
 }
 
 main()
@@ -78,4 +263,132 @@ function generatePetData(adminUserId: string) {
 
 const getBasicPets = (adminUserId: string) => {
     return Array.from({ length: 30 }, () => generatePetData(adminUserId))
+}
+
+function generateBasicPetData({ adminUserId, kennelId, avatarId, img1Id, img2Id, sex, generationDepth, totalGenerations }: {
+    adminUserId: string,
+    kennelId: string,
+    avatarId: string,
+    img1Id: string,
+    img2Id: string,
+    sex?: 'FEMALE' | 'MALE'
+    generationDepth: number
+    totalGenerations: number
+}) {
+    // console.log('creating pet basic data', { generationDepth })
+    const isRoot = totalGenerations === generationDepth
+    const res: any = {
+        name: `${isRoot ? '绿巨人浩克' : '浩克长辈' + (3 - generationDepth) + '代'}`,
+        nameEn: 'Hulk',
+        ownerName: 'Tony Stark',
+        type: 'DOG' as PetType, // 处理enum
+        gender: sex || f.person.sex().toUpperCase() as Gender, // 处理enum
+        birthDate: f.date.past(),
+        breed: '恶霸犬',
+        color: f.color.human(),
+        createdById: adminUserId,
+        kennelId,
+        avatar: {
+            connect: {
+                id: avatarId
+            }
+        },
+        images: {
+            connect: [
+                { id: img1Id },
+                { id: img2Id }
+            ]
+        },
+        registration: {
+            create: {
+                readableId: f.string.uuid(),
+                status: 'APPROVED' as RegistrationStatus,
+                registeredAt: f.date.past(),
+                registerEnd: f.date.future(),
+            }
+        },
+    }
+    if (isRoot) {
+        res.children = {
+            create: [{
+                name: '浩克孩子1',
+                nameEn: 'Hulk Child1',
+                ownerName: 'Tony Stark',
+                type: 'DOG' as PetType, // 处理enum
+                gender: f.person.sex().toUpperCase() as Gender, // 处理enum
+                birthDate: f.date.past(),
+                breed: '恶霸犬',
+                color: f.color.human(),
+                createdById: adminUserId,
+                avatar: {
+                    connect: {
+                        id: avatarId
+                    }
+                },
+                images: {
+                    connect: [
+                        { id: img1Id },
+                        { id: img2Id }
+                    ]
+                },
+            },
+            {
+                name: '浩克孩子2',
+                nameEn: 'Hulk Child1',
+                ownerName: 'Tony Stark',
+                type: 'DOG' as PetType, // 处理enum
+                gender: f.person.sex().toUpperCase() as Gender, // 处理enum
+                birthDate: f.date.past(),
+                breed: '恶霸犬',
+                color: f.color.human(),
+                createdById: adminUserId,
+                avatar: {
+                    connect: {
+                        id: avatarId
+                    }
+                },
+                images: {
+                    connect: [
+                        { id: img1Id },
+                        { id: img2Id }
+                    ]
+                },
+            },]
+        }
+    }
+    return res
+}
+
+function generateRelatedPetData({
+    ...args
+}: {
+    adminUserId: string,
+    kennelId: string,
+    avatarId: string,
+    img1Id: string,
+    img2Id: string,
+    generationDepth: number
+    totalGenerations: number
+    sex?: 'FEMALE' | 'MALE'
+}) {
+    const { generationDepth, totalGenerations } = args
+    const isRoot = generationDepth === totalGenerations
+    const petData = generateBasicPetData({ ...args })
+    if (generationDepth > 0) {
+        petData.parents = {
+            create: [
+                generateRelatedPetData({
+                    ...args,
+                    generationDepth: generationDepth - 1,
+                    sex: 'FEMALE',
+                }),
+                generateRelatedPetData({
+                    ...args,
+                    generationDepth: generationDepth - 1,
+                    sex: 'MALE',
+                }),
+            ]
+        }
+    }
+    return petData
 }

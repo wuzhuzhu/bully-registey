@@ -29,7 +29,9 @@ export const getPetsNoCache = async ({ skip = 0, take = 10, filter }: {
     const pets = await db.pet.findMany({
         where: {
             kennelId: filter?.kennelId,
-            registrationId: filter?.registrationId,
+            registration: {
+                id: filter?.registrationId
+            },
             name: filter?.petName,
         },
         skip,
