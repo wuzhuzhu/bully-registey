@@ -1,22 +1,21 @@
-import { Session } from 'next-auth';
 'use server'
 
 // No try catch inside this file, let the caller handle it
 // TODO: check login status
 
-import { getServerSessionWithOption } from "../utils"
-import db from '@/lib/prisma'
+import db from '@/lib/prisma';
 import {
     KennelCreateInputSchema
-} from '@/prisma/generated/zod'
-import { isEmpty } from 'lodash-es'
+} from '@/prisma/generated/zod';
+import type { Prisma } from '@prisma/client';
 import { utapi } from "uploadthing/server";
+import { getServerSessionWithOption } from "../utils";
 
 import type { UploadFileResponse } from 'uploadthing/client';
 
-import { isDeepEmpty } from '@/lib/utils'
-import { revalidate } from '../queries/kennel';
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { isDeepEmpty } from '@/lib/utils';
+import { revalidateTag } from 'next/cache';
+
 
 export async function whoAmI() {
     const session = await getServerSessionWithOption()
@@ -33,26 +32,27 @@ export async function sampleDelayedServerAction(
 }
 
 export async function createKennelWithProfileAction(
-    params: any
+    params: Prisma.KennelCreateInput
 ) {
-    // console.log('createKennelWithProfileAction', params)
+    console.log('createKennelWithProfileAction', params)
     try {
         KennelCreateInputSchema.parse(params)
     } catch (e) {
         console.log('createKennelWithProfileAction', e)
         throw new Error('Invalid Kennel Data on creating Kennel')
     }
-
-    if (isDeepEmpty(params.profile)) {
-        params.profile = undefined
-    }
     // console.log('createKennelWithProfileAction', params)
     const data = await db.kennel.create({
-        data: params
+        data: params,
+        include: {
+            profile: true
+        }
     })
-    // console.log('createKennelWithProfileAction DONE')
+    console.log('createKennelWithProfileAction DONE', data)
     return { created: 'ok', kennel: data }
 }
+
+
 
 // 删除 Delete
 

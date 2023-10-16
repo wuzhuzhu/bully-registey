@@ -98,6 +98,10 @@ export default function Page({ kennel }: {
                 create: pick(uploadedImg, ['key', 'url', 'name', 'size'])
             }
 
+            if (isDeepEmpty(data.profile)) {
+                data.profile = undefined
+            }
+
             const { created, kennel, error } = await createKennelWithProfileAction(data)
             // console.log('created!!!!!!!!', created, kennel, error)
             if (created === 'ok') {

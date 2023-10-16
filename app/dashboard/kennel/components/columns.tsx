@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import type { Kennel } from '@prisma/client'
 import { DataTableColumnHeader } from "./data-table-column-header"
 import { DataTableRowActions } from "./data-table-row-actions"
+import Link from "next/link"
 
 type KennelWithPetsCount = Kennel & {
   _count?: {
@@ -46,7 +47,11 @@ export const columns: ColumnDef<KennelWithPetsCount>[] = [
       <DataTableColumnHeader column={column} title="犬舍名" />
     ),
     cell: ({ row, column }) => {
-      return <div className="w-[200px]">{`${row.original.name} / ${row.original.nameEn}`}</div>
+      return <div className="w-[200px]">
+        <Link href={`/dashboard/edit/kennel/${row.original.id}`}>
+          {`${row.original.name} / ${row.original.nameEn}`}
+        </Link>
+      </div >
     },
     enableSorting: false,
     enableHiding: false,
