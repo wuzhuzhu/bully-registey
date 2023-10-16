@@ -40,6 +40,9 @@ export const getPetsNoCache = async ({ skip = 0, take = 10, filter }: {
             kennel: true,
             registration: true,
             createdBy: true,
+        },
+        orderBy: {
+            createdAt: 'desc'
         }
     })
     console.log('getPets', pets)

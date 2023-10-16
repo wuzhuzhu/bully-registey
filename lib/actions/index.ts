@@ -75,6 +75,25 @@ export async function deletePetById(petId: string) {
     return { succeed: 'ok' }
 }
 
+export async function deleteKennelById(kennelId: string) {
+    const session = await getServerSessionWithOption()
+    if (!session) {
+        throw new Error('Not Authorized')
+    }
+
+    console.warn('delete kennel', { kennelId })
+    const deleted = await db.kennel.delete({
+        where: {
+            id: kennelId,
+            // createdById: session?.user?.id
+        }
+    })
+    // revalidatePath('/dashboard/pets')
+    revalidateTag('kennels') // template:  revalidate cache through tag
+    console.log('deletePet DONE', deleted)
+    return { succeed: 'ok' }
+}
+
 export async function deleteUploadedFile(uploadedImg: UploadFileResponse) {
     console.warn('deleteUploadedFile', uploadedImg)
     await utapi.deleteFiles(uploadedImg?.key);
