@@ -1,7 +1,7 @@
 'use client'
 
 import { UploadButton } from '@/lib/uploadthing'
-import { get, isEmpty } from 'lodash-es'
+import { get, isEmpty, pick } from 'lodash-es'
 import { X } from "lucide-react"
 import Image from 'next/image'
 
@@ -19,8 +19,10 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 
-import { deleteUploadedPetAvatar } from '@/lib/actions'
+import { deleteUploadedPetAvatar, createFileAction, updatePetAction } from '@/lib/actions'
 import { useState } from 'react'
+import { FileCreateInputSchema } from '@/prisma/generated/zod'
+import { useToast } from '@/components/ui/use-toast'
 // import {
 //     ProfileCreateWithoutKennelInputSchema, // 用以合并扁平的profile字段
 //     KennelOptionalDefaultsSchema, // 没有关联关系，且自动字段为可选的schema，手动合并profile字段
@@ -42,8 +44,18 @@ const PriviewImage = ({ src, type }: {
         </div>
 }
 
-const FileUpload = ({ uploadedImg, setUploadedImg, petDirty, onSubmit, getValues, type, deleteUploaded }: any) => {
-    // console.log({ type, uploadedImg })
+const FileUpload = ({ uploadedImg, setUploadedImg, petDirty, submit, getValues, type, deleteUploaded }: {
+    uploadedImg: UploadFileResponse
+    setUploadedImg: (arg: UploadFileResponse) => void
+    petDirty: any
+    submit: (value: any) => void
+    getValues: () => any
+    type: string
+    deleteUploaded: typeof deleteUploadedPetAvatar
+}) => {
+    const { toast } = useToast()
+    console.log({ type, uploadedImg })
+    // debugger
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const defaultImg = type === 'avatar'
         ? '/img/male-avatar.svg'
@@ -51,6 +63,7 @@ const FileUpload = ({ uploadedImg, setUploadedImg, petDirty, onSubmit, getValues
 
     return (
         <div className="flex flex-col gap-4 items-center">
+            {/* <>{JSON.stringify(uploadedImg)}</> */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 {(!isEmpty(uploadedImg)) ? (
                     <DialogTrigger>
@@ -76,9 +89,28 @@ const FileUpload = ({ uploadedImg, setUploadedImg, petDirty, onSubmit, getValues
                                         const { succeed } = await deleteUploaded({ petId: petDirty?.id, uploadedImg })
                                         if (succeed === 'ok') {
                                             setUploadedImg({})
-                                            // update the pet
-                                            onSubmit(getValues())
-                                            setUploadedImg({})
+                                            // delete file in the pet
+                                            /* if (petDirty?.id) { // 更新状态下，已经有petId了
+                                                if (type === 'avatar') {
+                                                    const { succeed: updateAvatarSucceed } = updatePetAction({ // 删除掉file自动消失
+                                                        where: { id: petDirty?.id },
+                                                        data: {
+                                                            avatar: {
+                                                                delete: true
+                                                            }
+                                                        }
+                                                    }, petDirty?.id)
+                                                } else {
+                                                    const { succeed: updateImgSucceed } = updatePetAction({ // 删除掉file自动消失
+                                                        where: { id: petDirty?.id },
+                                                        data: {
+                                                            img: {
+                                                                delete: true
+                                                            }
+                                                        }
+                                                    }, petDirty?.id)
+                                                }
+                                            } */
                                         }
                                     } finally {
                                         setIsDialogOpen(false)
@@ -91,12 +123,58 @@ const FileUpload = ({ uploadedImg, setUploadedImg, petDirty, onSubmit, getValues
             </Dialog>
             <UploadButton
                 endpoint="imageUploader"
-                onClientUploadComplete={(res: UploadFileResponse) => {
-                    setUploadedImg(get(res, '0', {}))
+                onClientUploadComplete={async (res: UploadFileResponse) => {
+                    let f = get(res, '0', {})
+                    f = pick(f, ['key', 'url', 'name', 'size'])
+                    setUploadedImg(f)
+                    const { succeed, data: createdFileData } = await createFileAction(f)
                     console.log({
                         title: "上传成功",
-                        res,
+                        createdFileData,
                     })
+                    if (succeed === 'ok' && petDirty?.id) { // 更新状态下，已经有petId了, 直接连接上
+                        if (type === 'avatar') {
+                            const { succeed, data } = await updatePetAction({
+                                where: { id: petDirty?.id },
+                                data: {
+                                    avatar: {
+                                        connect: {
+                                            id: createdFileData?.id
+                                        }
+                                    }
+                                },
+                                include: {
+                                    avatar: true
+                                }
+                            }, petDirty?.id)
+                            if (succeed === 'ok') {
+                                toast({
+                                    title: '关联成功',
+                                    description: "头像文件已经关联到" + petDirty?.name + data?.avatar?.name,
+                                })
+                            }
+                        } else {
+                            const { succeed, data } = await updatePetAction({
+                                where: { id: petDirty?.id },
+                                data: {
+                                    img: {
+                                        connect: {
+                                            id: createdFileData?.id
+                                        }
+                                    }
+                                },
+                                include: {
+                                    img: true
+                                }
+                            }, petDirty?.id)
+                            if (succeed === 'ok') {
+                                toast({
+                                    title: '关联成功',
+                                    description: "图片文件已经关联到" + petDirty?.name + data?.img?.name,
+                                })
+                            }
+                        }
+                    }
                 }}
                 onUploadError={(error: Error) => {
                     console.error({
@@ -116,7 +194,7 @@ const FileUpload = ({ uploadedImg, setUploadedImg, petDirty, onSubmit, getValues
                     },
                 }}
             />
-        </div>
+        </div >
     )
 }
 

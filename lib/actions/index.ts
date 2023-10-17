@@ -17,6 +17,7 @@ import type { UploadFileResponse } from 'uploadthing/client';
 
 import { isDeepEmpty } from '@/lib/utils';
 import { revalidateTag, revalidatePath } from 'next/cache';
+import { revalidate } from '../queries/kennel';
 
 
 // 创建犬舍 Create Kennel
@@ -59,10 +60,10 @@ export async function createPetAction(
     }
     params.data.createdBy = createBy
     const data = await db.pet.create(params)
-    revalidatePath('/dashboard/edit/pet')
+    revalidatePath('/dashboard/edit/pet', 'layout')
     console.log('revalidate: ', '/dashboard/edit/kennel')
     console.log('createPetAction DONE', data)
-    return { succeed: 'ok', kennel: data }
+    return { succeed: 'ok', data }
 }
 
 export async function updatePetAction(
@@ -72,11 +73,12 @@ export async function updatePetAction(
     console.log('updatePetAction', params)
     const data = await db.pet.update(params)
     revalidatePath('/dashboard/edit/pet' + (petId ? petId : ''))
+    revalidateTag('pet')
+    revalidateTag('pets')
     console.log('revalidate: ', '/dashboard/edit/kennel' + (petId ? petId : ''))
     console.log('createOrUpdateKennelWithProfileAction DONE', data)
-    return { succeed: 'ok', kennel: data }
+    return { succeed: 'ok', data }
 }
-
 
 // 删除 Delete
 
@@ -209,6 +211,16 @@ export async function deleteUploadedPetImg({ petId, uploadedImg }: {
 export async function revalidatePathByPathname(pathname: string) {
     console.log('revalidatePathByPathname', pathname)
     revalidatePath('/')
+}
+
+export async function createFileAction(params: UploadFileResponse) {
+    console.log('createFileAction', { params })
+    const file = await db.file.create({
+        data: params
+    })
+    revalidateTag('file')
+    console.log('createFileAction OK', { params })
+    return { succeed: 'ok', data: file }
 }
 
 // examples

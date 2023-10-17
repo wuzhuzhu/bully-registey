@@ -80,7 +80,7 @@ export const getPetById = unstable_cache(async (id: string) => {
 
     })
     return pet
-}, ['kennel'], {
+}, ['pet'], {
     revalidate,
     tags: ['pet', 'file', 'kennel', 'registration']
 })

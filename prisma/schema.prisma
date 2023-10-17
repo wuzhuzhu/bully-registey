@@ -175,7 +175,7 @@ model File {
   imgOfId    String?    @unique
   avatarOf   Pet?       @relation("avatar", fields: [avatarOfId], references: [id])
   avatarOfId String?    @unique
-  crceatedAt DateTime   @default(now())
+  createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
   status     FileStatus @default(UPLOADED)
 }

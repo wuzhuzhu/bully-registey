@@ -1,29 +1,16 @@
 'use client'
-import z from 'zod'
-import { UploadButton } from '@/lib/uploadthing'
-import { get, isEmpty, pick } from 'lodash-es'
-import { X } from "lucide-react"
+import { startOfDay } from "date-fns"
+import { formatInTimeZone } from 'date-fns-tz'
+import { isEmpty, omit } from 'lodash-es'
+import { CalendarIcon } from 'lucide-react'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState, useTransition } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
-import { omit } from 'lodash-es'
-import { usePathname, useRouter } from 'next/navigation'
-import { format, startOfDay } from "date-fns"
-import { formatInTimeZone } from 'date-fns-tz'
-import { CalendarIcon } from 'lucide-react'
 
+import { DevTool } from "@hookform/devtools"
 import type { Prisma } from '@prisma/client'
 import { type UploadFileResponse } from 'uploadthing/next'
-import { DevTool } from "@hookform/devtools";
-import { DayPicker } from 'react-day-picker';
 
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger
-} from "@/components/ui/dialog"
 import {
     Form,
     FormControl,
@@ -40,27 +27,23 @@ import {
 } from "@/components/ui/popover"
 import { Separator } from '@/components/ui/separator'
 
-import { Calendar } from "@/components/ui/calendar"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
+import { Calendar } from "@/components/ui/calendar"
 import { Input } from "@/components/ui/input"
-import { Textarea } from '@/components/ui/textarea'
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
 import { useToast } from "@/components/ui/use-toast"
-import RelatedPets from './components/related-pets'
-import { isDeepEmpty } from '@/lib/utils'
+import { cn, isDeepEmpty } from '@/lib/utils'
 import { zodResolver } from "@hookform/resolvers/zod"
-import { cn } from '@/lib/utils'
+import RelatedPets from './components/related-pets'
 
-import { createPetAction, updatePetAction, deleteUploadedPetAvatar, deleteUploadedPetImg } from '@/lib/actions'
+import { createPetAction, deleteUploadedPetAvatar, deleteUploadedPetImg, updatePetAction } from '@/lib/actions'
 // import {
 //     ProfileCreateWithoutKennelInputSchema, // 用以合并扁平的profile字段
 //     KennelOptionalDefaultsSchema, // 没有关联关系，且自动字段为可选的schema，手动合并profile字段
 //     KennelCreateOrConnectWithoutPetsInputSchema // 最终的输出到action的结构，在这个页面创建kennel只不创建pets
 // } from '@/prisma/generated/zod'
-import { PetOptionalDefaultsSchema, PetOptionalDefaultsWithRelationsSchema, PetCreateManyCreatedByInputSchema, Pet } from '@/prisma/generated/zod'
-import type { PetOptionalDefaultsWithRelations } from '@/prisma/generated/zod'
+import { Pet, PetCreateManyCreatedByInputSchema } from '@/prisma/generated/zod'
 import FileUpload from './components/file-upload'
 
 // 表单输入结构为扁平的object
@@ -101,8 +84,8 @@ export default function Page({ pet: petDirty, session }: {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
     // upload img
-    const [uploadedImg, setUploadedImg] = useState<UploadFileResponse>(pet?.img || {})
-    const [uploadedAvatar, setUploadedAvatar] = useState<UploadFileResponse>(pet?.img || {})
+    const [uploadedImg, setUploadedImg] = useState<UploadFileResponse>(petDirty?.img || {})
+    const [uploadedAvatar, setUploadedAvatar] = useState<UploadFileResponse>(petDirty?.avatar || {})
 
     const hookedForm = useForm<InputType>({
         defaultValues,
@@ -134,20 +117,24 @@ export default function Page({ pet: petDirty, session }: {
         const createData = data
         const updateData = data
 
-        const img = pick(uploadedImg, ['key', 'url', 'name', 'size'])
-        const avatar = pick(uploadedAvatar, ['key', 'url', 'name', 'size'])
+        // const img = pick(uploadedImg, ['key', 'url', 'name', 'size'])
+        // const avatar = pick(uploadedAvatar, ['key', 'url', 'name', 'size'])
 
-        if (!isUpdate) {
+        if (!isUpdate) { // 新建Pet，之前没有PetId，一定没有在上传文件中关联过
             createData.img = hasImg ? {
-                ...data,
-                img: {
-                    create: img
+                connectOrCreate: {
+                    create: uploadedImg,
+                    where: {
+                        key: uploadedImg?.key
+                    }
                 }
             } : undefined
             createData.avatar = hasAvatar ? {
-                ...data,
-                avatar: {
-                    create: img
+                connectOrCreate: {
+                    create: uploadedAvatar,
+                    where: {
+                        key: uploadedAvatar?.key
+                    }
                 }
             } : undefined
             const createParams = {
@@ -158,11 +145,20 @@ export default function Page({ pet: petDirty, session }: {
                             id: session.user?.id
                         }
                     }
+                },
+                include: {
+                    kennel: true,
+                    registration: true,
+                    createdBy: true,
+                    parents: true,
+                    avatar: true,
+                    img: true,
                 }
             }
+            // debugger
             startTransition(async () => {
                 console.log('在transition中整理好了actionParams：', { createParams })
-                const { succeed, pet: newPet, error } = await createPetAction(createParams)
+                const { succeed, data: newPet, error } = await createPetAction(createParams)
                 if (succeed === 'ok') {
                     toast({
                         title: '创建成功',
@@ -203,9 +199,9 @@ export default function Page({ pet: petDirty, session }: {
             const avatarInput = hasOriginalAvatar
                 ? hasAvatar
                     ? petDirty?.avatar?.key === uploadedAvatar?.key
-                        ? undefined // 上传的图片和原来的一样，不更新
+                        ? undefined // 有旧有新相等
                         : {
-                            upsert: {
+                            upsert: { // 有旧有新不相等
                                 create: avatar,
                                 update: {
                                     ...avatar,
@@ -216,13 +212,13 @@ export default function Page({ pet: petDirty, session }: {
                                 }
                             }
                         }
-                    : {
+                    : { // 有旧无新
                         delete: true
                     }
                 : hasAvatar
-                    ? {
+                    ? { // 无旧有新
                         create: avatar
-                    }
+                    } // 无旧无新
                     : undefined
 
             updateData.img = imgInput
@@ -245,11 +241,13 @@ export default function Page({ pet: petDirty, session }: {
                     registration: true,
                     createdBy: true,
                     parents: true,
+                    avatar: true,
+                    img: true,
                 },
             }
             startTransition(async () => {
                 console.log('在transition中整理好了actionParams：', { updateParams })
-                const { succeed, pet: newPet, error } = await updatePetAction(updateParams)
+                const { succeed, data: newPet } = await updatePetAction(updateParams, petDirty?.id)
                 if (succeed === 'ok') {
                     toast({
                         title: '更新成功',
@@ -258,7 +256,7 @@ export default function Page({ pet: petDirty, session }: {
                 } else {
                     toast({
                         title: '更新失败',
-                        description: error,
+                        // description: error,
                     })
                 }
             });
@@ -453,13 +451,17 @@ export default function Page({ pet: petDirty, session }: {
                         <div className="flex flex-col gap-4 items-center">
                             <FileUpload
                                 {...{
-                                    uploadedImg: uploadedAvatar, setUploadedImg: setUploadedAvatar, petDirty, onSubmit, getValues,
+                                    submit: handleSubmit(onSubmit),
+                                    setUploadedImg: setUploadedAvatar,
+                                    uploadedImg: uploadedAvatar,
+                                    petDirty, getValues,
                                     type: 'avatar',
                                     deleteUploaded: deleteUploadedPetAvatar,
                                 }} />
                             <FileUpload
                                 {...{
-                                    uploadedImg, setUploadedImg, petDirty, onSubmit, getValues,
+                                    uploadedImg, setUploadedImg, petDirty, getValues,
+                                    onSubmit: handleSubmit(onSubmit),
                                     type: 'img',
                                     deleteUploaded: deleteUploadedPetImg,
                                 }} />
