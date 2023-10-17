@@ -1,8 +1,5 @@
 'use server'
 
-import type { Prisma } from '@prisma/client'
-import type { KennelOptionalDefaults } from '@/prisma/generated/zod'
-
 // No try catch inside this file, let the caller handle it
 // TODO: check login status
 
@@ -24,7 +21,7 @@ import { revalidateTag, revalidatePath } from 'next/cache';
 
 // 创建犬舍 Create Kennel
 export async function createOrUpdateKennelWithProfileAction(
-    params: Prisma.KennelCreateOrConnectWithoutPetsInput,
+    params: Prisma.KennelCreateArgs | Prisma.KennelUpdateArgs,
     kennelId: string = ''
 ) {
     const isUpdate = !!kennelId
@@ -42,7 +39,42 @@ export async function createOrUpdateKennelWithProfileAction(
     revalidatePath('/dashboard/edit/kennel' + (kennelId ? kennelId : ''))
     console.log('revalidate: ', '/dashboard/edit/kennel' + (kennelId ? kennelId : ''))
     console.log('createOrUpdateKennelWithProfileAction DONE', data)
-    return { created: 'ok', kennel: data }
+    return { succeed: 'ok', kennel: data }
+}
+
+// 创建犬 Create Pet
+export async function createPetAction(
+    params: Prisma.PetCreateArgs,
+    petId: string = ''
+) {
+    console.log('createPetAction', params)
+    const session = await getServerSessionWithOption()
+    if (!session) {
+        throw new Error('Not Authorized')
+    }
+    const createBy = {
+        connect: {
+            id: session?.user?.id
+        }
+    }
+    params.data.createdBy = createBy
+    const data = await db.pet.create(params)
+    revalidatePath('/dashboard/edit/pet')
+    console.log('revalidate: ', '/dashboard/edit/kennel')
+    console.log('createPetAction DONE', data)
+    return { succeed: 'ok', kennel: data }
+}
+
+export async function updatePetAction(
+    params: Prisma.PetUpdateArgs,
+    petId: string
+) {
+    console.log('updatePetAction', params)
+    const data = await db.pet.update(params)
+    revalidatePath('/dashboard/edit/pet' + (petId ? petId : ''))
+    console.log('revalidate: ', '/dashboard/edit/kennel' + (petId ? petId : ''))
+    console.log('createOrUpdateKennelWithProfileAction DONE', data)
+    return { succeed: 'ok', kennel: data }
 }
 
 
@@ -84,9 +116,9 @@ export async function deleteKennelById(kennelId: string) {
     return { succeed: 'ok' }
 }
 
-export async function deleteUploadedFile({ kennelId, uploadedImg }: {
+export async function deleteUploadedKennelImg({ kennelId, uploadedImg }: {
     kennelId: undefined | string,
-    UploadFileResponse: UploadFileResponse
+    uploadedImg: UploadFileResponse
 }) {
     console.warn('deleteUploadedFile', uploadedImg)
     if (kennelId) {
@@ -106,10 +138,71 @@ export async function deleteUploadedFile({ kennelId, uploadedImg }: {
 
     if (uploadedImg?.key) {
         await utapi.deleteFiles(uploadedImg?.key);
-        revalidateTag('file', 'files')
+        revalidateTag('file')
+        revalidateTag('files')
     }
 
     console.log('deleteUploadedFile DONE')
+    return { succeed: 'ok' }
+}
+
+export async function deleteUploadedPetAvatar({ petId, uploadedImg }: {
+    petId: undefined | string,
+    uploadedImg: UploadFileResponse
+}) {
+    console.warn('deleteUploadedPetAvatar', uploadedImg)
+    if (petId) {
+        console.warn('开始删除pet关联的头像')
+        await db.pet.update({
+            where: {
+                id: petId
+            },
+            data: {
+                avatar: {
+                    delete: true
+                }
+            }
+        })
+        revalidateTag('pet')
+    }
+
+    if (uploadedImg?.key) {
+        await utapi.deleteFiles(uploadedImg?.key);
+        revalidateTag('file')
+        revalidateTag('files')
+    }
+
+    console.log('deleteUploadedPetAvatar DONE')
+    return { succeed: 'ok' }
+}
+
+export async function deleteUploadedPetImg({ petId, uploadedImg }: {
+    petId: undefined | string,
+    uploadedImg: UploadFileResponse
+}) {
+    console.warn('deleteUploadedPetAvatar', uploadedImg)
+    if (petId) {
+        console.warn('开始删除pet关联的图片')
+        await db.pet.update({
+            where: {
+                id: petId
+            },
+            data: {
+                img: {
+                    delete: true
+                }
+            }
+        })
+        revalidateTag('pet')
+    }
+
+    if (uploadedImg?.key) {
+        await utapi.deleteFiles(uploadedImg?.key);
+        revalidateTag('file')
+        revalidateTag('files')
+    }
+
+    console.log('deleteUploadedPetImg DONE')
     return { succeed: 'ok' }
 }
 

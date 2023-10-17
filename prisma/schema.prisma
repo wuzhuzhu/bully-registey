@@ -115,9 +115,10 @@ enum Gender {
 // https://prisma-extension-bark.gitbook.io/docs/client-extension-api-reference
 model Pet {
   id           String        @id @default(cuid())
+  /// @zod.string.min(2).max(12)
   name         String
   nameEn       String?
-  ownerName    String
+  ownerName    String?
   type         PetType       @default(DOG)
   gender       Gender
   birthDate    DateTime
@@ -133,7 +134,7 @@ model Pet {
   parents      Pet[]         @relation("birth") // child post (post that are suggested)
   children     Pet[]         @relation("birth") // parent post (parent post of a suggested post)
   avatar       File?         @relation("avatar")
-  images       File[]        @relation("images")
+  img          File?         @relation("img")
 }
 
 enum RegistrationStatus {
@@ -170,8 +171,8 @@ model File {
   size       Int
   kennel     Kennel?    @relation(fields: [kennelId], references: [id], onDelete: Cascade)
   kennelId   String?    @unique
-  imageOf    Pet?       @relation("images", fields: [imageOfId], references: [id])
-  imageOfId  String?
+  imgOf      Pet?       @relation("img", fields: [imgOfId], references: [id])
+  imgOfId    String?    @unique
   avatarOf   Pet?       @relation("avatar", fields: [avatarOfId], references: [id])
   avatarOfId String?    @unique
   crceatedAt DateTime   @default(now())

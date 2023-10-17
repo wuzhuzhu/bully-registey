@@ -29,6 +29,7 @@ export const getPetsNoCache = async ({ skip = 0, take = 10, filter }: {
             kennel: true,
             registration: true,
             createdBy: true,
+            parents: true,
         },
         orderBy: {
             createdAt: 'desc'
@@ -61,4 +62,25 @@ const getPetFamilyDepth = cache(async (id: string, depth = 1) => {
         },
         include: includeObject.include
     });
+})
+
+export const getPetById = unstable_cache(async (id: string) => {
+    const pet = await db.pet.findUnique({
+        where: {
+            id
+        },
+        include: {
+            kennel: true,
+            parents: true,
+            children: true,
+            avatar: true,
+            img: true,
+            registration: true,
+        }
+
+    })
+    return pet
+}, ['kennel'], {
+    revalidate,
+    tags: ['pet', 'file', 'kennel', 'registration']
 })

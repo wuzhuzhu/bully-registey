@@ -43,7 +43,9 @@ export const columns: ColumnDef<PetWithRelations>[] = [
       <DataTableColumnHeader column={column} title="犬名" />
     ),
     cell: ({ row, column }) => {
-      return <div className="w-[130px]">{`${row.original.name} / ${row.original.nameEn}`}</div>
+      return <Link href={`/dashboard/edit/pet/${row.original.id}`}>
+        {`${row.original.name} / ${row.original.nameEn}`}
+      </Link>
     },
     enableSorting: false,
     enableHiding: false,

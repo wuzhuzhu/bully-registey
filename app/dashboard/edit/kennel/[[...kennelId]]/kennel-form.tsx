@@ -33,7 +33,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from "@/components/ui/use-toast"
-import { createOrUpdateKennelWithProfileAction, deleteUploadedFile } from '@/lib/actions'
+import { createOrUpdateKennelWithProfileAction, deleteUploadedKennelImg } from '@/lib/actions'
 import { isDeepEmpty } from '@/lib/utils'
 import { zodResolver } from "@hookform/resolvers/zod"
 
@@ -44,8 +44,7 @@ import {
     KennelCreateOrConnectWithoutPetsInputSchema // 最终的输出到action的结构，在这个页面创建kennel只不创建pets
 } from '@/prisma/generated/zod'
 import type { KennelOptionalDefaults } from '@/prisma/generated/zod'
-import { KennelCreateActionSchema, revalidatePathByPathname } from '@/lib/actions'
-import type { KennelCreateActionType } from '@/lib/actions'
+// import { KennelCreateActionSchema, revalidatePathByPathname } from '@/lib/actions'
 
 // 表单输入结构为扁平的object类型声明
 type InputType = KennelOptionalDefaults & {
@@ -192,9 +191,8 @@ export default function Page({ kennel: kennelDirty }: {
 
             console.log('在transition中整理好了actionParams：', { actionParams })
 
-            const { created, kennel: newKennel, error } = await createOrUpdateKennelWithProfileAction(actionParams, kennelDirty?.id)
-            // console.log('created!!!!!!!!', created, kennel, error)
-            if (created === 'ok') {
+            const { succeed, kennel: newKennel, error } = await createOrUpdateKennelWithProfileAction(actionParams, kennelDirty?.id)
+            if (succeed === 'ok') {
                 // 刷新表单kennel数据
                 // await revalidatePathByPathname(pathname)
                 // router.refresh()
@@ -236,7 +234,7 @@ export default function Page({ kennel: kennelDirty }: {
     // }, [isSubmitSuccessful])
 
     return (
-        <Form Form {...hookedForm}>
+        <Form {...hookedForm}>
             {/* <p>defaultValues: {JSON.stringify(defaultValues)}, error: {JSON.stringify(errors)}, isSubmitSuccessful: {isSubmitSuccessful.toString()}</p> */}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                 <div className="flex gap-8">
@@ -380,7 +378,7 @@ export default function Page({ kennel: kennelDirty }: {
                                                 e.preventDefault()
                                                 // console.log('uploadedImg?.name', uploadedImg)
                                                 try {
-                                                    const { succeed } = await deleteUploadedFile({ kennelId: kennelDirty?.id, uploadedImg })
+                                                    const { succeed } = await deleteUploadedKennelImg({ id: kennelDirty?.id, uploadedImg })
                                                     if (succeed === 'ok') {
                                                         setUploadedImg({})
                                                         // update the kennel

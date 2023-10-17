@@ -2,6 +2,7 @@ import Nav from '@/components/layout/nav';
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import React, { Suspense } from 'react';
 import { extractRouterConfig } from "uploadthing/server";
+import { useSession, SessionProvider } from "next-auth/react"
 
 import { ourFileRouter } from '@/app/api/uploadthing/core';
 import { Toaster } from "@/components/ui/toaster";

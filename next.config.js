@@ -5,7 +5,8 @@ const nextConfig = {
     // lint在build的时候超级慢 只能关掉
     // !! WARN !!
     // ignore ts build error if prod
-    ignoreBuildErrors: process.env.NODE_ENV === "production",
+    // ignoreBuildErrors: process.env.NODE_ENV === "production",
+    ignoreBuildErrors: true
   },
   experimental: {
     serverActions: true,

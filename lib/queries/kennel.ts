@@ -42,8 +42,8 @@ export const getKennels = unstable_cache(getKennelsNoCache,
         tags: ['kennels', 'pets', 'file'] // this one works
     })
 
-// should not have cache
 export const getKennelById = unstable_cache(async (id: string) => {
+    console.log('getKennelById', id)
     const kennel = await db.kennel.findUnique({
         where: {
             id
@@ -56,6 +56,6 @@ export const getKennelById = unstable_cache(async (id: string) => {
     })
     return kennel
 }, ['kennel'], {
-    revalidate: 3600,
+    revalidate,
     tags: ['kennel', 'file']
 })

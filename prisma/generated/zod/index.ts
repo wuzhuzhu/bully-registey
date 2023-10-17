@@ -28,7 +28,7 @@ export const PetScalarFieldEnumSchema = z.enum(['id','name','nameEn','ownerName'
 
 export const RegistrationScalarFieldEnumSchema = z.enum(['id','readableId','status','registeredAt','registerEnd','reviewedAt','reviewedById','attachments','petId']);
 
-export const FileScalarFieldEnumSchema = z.enum(['id','key','url','name','size','kennelId','imageOfId','avatarOfId','crceatedAt','updatedAt','status']);
+export const FileScalarFieldEnumSchema = z.enum(['id','key','url','name','size','kennelId','imgOfId','avatarOfId','crceatedAt','updatedAt','status']);
 
 export const SortOrderSchema = z.enum(['asc','desc']);
 
@@ -368,9 +368,9 @@ export const PetSchema = z.object({
   type: PetTypeSchema,
   gender: GenderSchema,
   id: z.string().cuid(),
-  name: z.string(),
+  name: z.string().min(2).max(12),
   nameEn: z.string().nullable(),
-  ownerName: z.string(),
+  ownerName: z.string().nullable(),
   birthDate: z.coerce.date(),
   breed: z.string().nullable(),
   color: z.string().nullable(),
@@ -404,7 +404,7 @@ export type PetRelations = {
   parents: PetWithRelations[];
   children: PetWithRelations[];
   avatar?: FileWithRelations | null;
-  images: FileWithRelations[];
+  img?: FileWithRelations | null;
 };
 
 export type PetWithRelations = z.infer<typeof PetSchema> & PetRelations
@@ -416,7 +416,7 @@ export const PetWithRelationsSchema: z.ZodType<PetWithRelations> = PetSchema.mer
   parents: z.lazy(() => PetWithRelationsSchema).array(),
   children: z.lazy(() => PetWithRelationsSchema).array(),
   avatar: z.lazy(() => FileWithRelationsSchema).nullable(),
-  images: z.lazy(() => FileWithRelationsSchema).array(),
+  img: z.lazy(() => FileWithRelationsSchema).nullable(),
 }))
 
 // PET OPTIONAL DEFAULTS RELATION SCHEMA
@@ -429,7 +429,7 @@ export type PetOptionalDefaultsRelations = {
   parents: PetOptionalDefaultsWithRelations[];
   children: PetOptionalDefaultsWithRelations[];
   avatar?: FileOptionalDefaultsWithRelations | null;
-  images: FileOptionalDefaultsWithRelations[];
+  img?: FileOptionalDefaultsWithRelations | null;
 };
 
 export type PetOptionalDefaultsWithRelations = z.infer<typeof PetOptionalDefaultsSchema> & PetOptionalDefaultsRelations
@@ -441,7 +441,7 @@ export const PetOptionalDefaultsWithRelationsSchema: z.ZodType<PetOptionalDefaul
   parents: z.lazy(() => PetOptionalDefaultsWithRelationsSchema).array(),
   children: z.lazy(() => PetOptionalDefaultsWithRelationsSchema).array(),
   avatar: z.lazy(() => FileOptionalDefaultsWithRelationsSchema).nullable(),
-  images: z.lazy(() => FileOptionalDefaultsWithRelationsSchema).array(),
+  img: z.lazy(() => FileOptionalDefaultsWithRelationsSchema).nullable(),
 }))
 
 /////////////////////////////////////////
@@ -515,7 +515,7 @@ export const FileSchema = z.object({
   name: z.string(),
   size: z.number().int(),
   kennelId: z.string().nullable(),
-  imageOfId: z.string().nullable(),
+  imgOfId: z.string().nullable(),
   avatarOfId: z.string().nullable(),
   crceatedAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
@@ -540,7 +540,7 @@ export type FileOptionalDefaults = z.infer<typeof FileOptionalDefaultsSchema>
 
 export type FileRelations = {
   kennel?: KennelWithRelations | null;
-  imageOf?: PetWithRelations | null;
+  imgOf?: PetWithRelations | null;
   avatarOf?: PetWithRelations | null;
 };
 
@@ -548,7 +548,7 @@ export type FileWithRelations = z.infer<typeof FileSchema> & FileRelations
 
 export const FileWithRelationsSchema: z.ZodType<FileWithRelations> = FileSchema.merge(z.object({
   kennel: z.lazy(() => KennelWithRelationsSchema).nullable(),
-  imageOf: z.lazy(() => PetWithRelationsSchema).nullable(),
+  imgOf: z.lazy(() => PetWithRelationsSchema).nullable(),
   avatarOf: z.lazy(() => PetWithRelationsSchema).nullable(),
 }))
 
@@ -557,7 +557,7 @@ export const FileWithRelationsSchema: z.ZodType<FileWithRelations> = FileSchema.
 
 export type FileOptionalDefaultsRelations = {
   kennel?: KennelOptionalDefaultsWithRelations | null;
-  imageOf?: PetOptionalDefaultsWithRelations | null;
+  imgOf?: PetOptionalDefaultsWithRelations | null;
   avatarOf?: PetOptionalDefaultsWithRelations | null;
 };
 
@@ -565,7 +565,7 @@ export type FileOptionalDefaultsWithRelations = z.infer<typeof FileOptionalDefau
 
 export const FileOptionalDefaultsWithRelationsSchema: z.ZodType<FileOptionalDefaultsWithRelations> = FileOptionalDefaultsSchema.merge(z.object({
   kennel: z.lazy(() => KennelOptionalDefaultsWithRelationsSchema).nullable(),
-  imageOf: z.lazy(() => PetOptionalDefaultsWithRelationsSchema).nullable(),
+  imgOf: z.lazy(() => PetOptionalDefaultsWithRelationsSchema).nullable(),
   avatarOf: z.lazy(() => PetOptionalDefaultsWithRelationsSchema).nullable(),
 }))
 
@@ -743,7 +743,7 @@ export const PetIncludeSchema: z.ZodType<Prisma.PetInclude> = z.object({
   parents: z.union([z.boolean(),z.lazy(() => PetFindManyArgsSchema)]).optional(),
   children: z.union([z.boolean(),z.lazy(() => PetFindManyArgsSchema)]).optional(),
   avatar: z.union([z.boolean(),z.lazy(() => FileArgsSchema)]).optional(),
-  images: z.union([z.boolean(),z.lazy(() => FileFindManyArgsSchema)]).optional(),
+  img: z.union([z.boolean(),z.lazy(() => FileArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => PetCountOutputTypeArgsSchema)]).optional(),
 }).strict()
 
@@ -759,7 +759,6 @@ export const PetCountOutputTypeArgsSchema: z.ZodType<Prisma.PetCountOutputTypeDe
 export const PetCountOutputTypeSelectSchema: z.ZodType<Prisma.PetCountOutputTypeSelect> = z.object({
   parents: z.boolean().optional(),
   children: z.boolean().optional(),
-  images: z.boolean().optional(),
 }).strict();
 
 export const PetSelectSchema: z.ZodType<Prisma.PetSelect> = z.object({
@@ -782,7 +781,7 @@ export const PetSelectSchema: z.ZodType<Prisma.PetSelect> = z.object({
   parents: z.union([z.boolean(),z.lazy(() => PetFindManyArgsSchema)]).optional(),
   children: z.union([z.boolean(),z.lazy(() => PetFindManyArgsSchema)]).optional(),
   avatar: z.union([z.boolean(),z.lazy(() => FileArgsSchema)]).optional(),
-  images: z.union([z.boolean(),z.lazy(() => FileFindManyArgsSchema)]).optional(),
+  img: z.union([z.boolean(),z.lazy(() => FileArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => PetCountOutputTypeArgsSchema)]).optional(),
 }).strict()
 
@@ -818,7 +817,7 @@ export const RegistrationSelectSchema: z.ZodType<Prisma.RegistrationSelect> = z.
 
 export const FileIncludeSchema: z.ZodType<Prisma.FileInclude> = z.object({
   kennel: z.union([z.boolean(),z.lazy(() => KennelArgsSchema)]).optional(),
-  imageOf: z.union([z.boolean(),z.lazy(() => PetArgsSchema)]).optional(),
+  imgOf: z.union([z.boolean(),z.lazy(() => PetArgsSchema)]).optional(),
   avatarOf: z.union([z.boolean(),z.lazy(() => PetArgsSchema)]).optional(),
 }).strict()
 
@@ -834,13 +833,13 @@ export const FileSelectSchema: z.ZodType<Prisma.FileSelect> = z.object({
   name: z.boolean().optional(),
   size: z.boolean().optional(),
   kennelId: z.boolean().optional(),
-  imageOfId: z.boolean().optional(),
+  imgOfId: z.boolean().optional(),
   avatarOfId: z.boolean().optional(),
   crceatedAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
   status: z.boolean().optional(),
   kennel: z.union([z.boolean(),z.lazy(() => KennelArgsSchema)]).optional(),
-  imageOf: z.union([z.boolean(),z.lazy(() => PetArgsSchema)]).optional(),
+  imgOf: z.union([z.boolean(),z.lazy(() => PetArgsSchema)]).optional(),
   avatarOf: z.union([z.boolean(),z.lazy(() => PetArgsSchema)]).optional(),
 }).strict()
 
@@ -1322,7 +1321,7 @@ export const PetWhereInputSchema: z.ZodType<Prisma.PetWhereInput> = z.object({
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   nameEn: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  ownerName: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  ownerName: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   type: z.union([ z.lazy(() => EnumPetTypeFilterSchema),z.lazy(() => PetTypeSchema) ]).optional(),
   gender: z.union([ z.lazy(() => EnumGenderFilterSchema),z.lazy(() => GenderSchema) ]).optional(),
   birthDate: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
@@ -1338,14 +1337,14 @@ export const PetWhereInputSchema: z.ZodType<Prisma.PetWhereInput> = z.object({
   parents: z.lazy(() => PetListRelationFilterSchema).optional(),
   children: z.lazy(() => PetListRelationFilterSchema).optional(),
   avatar: z.union([ z.lazy(() => FileNullableRelationFilterSchema),z.lazy(() => FileWhereInputSchema) ]).optional().nullable(),
-  images: z.lazy(() => FileListRelationFilterSchema).optional()
+  img: z.union([ z.lazy(() => FileNullableRelationFilterSchema),z.lazy(() => FileWhereInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const PetOrderByWithRelationInputSchema: z.ZodType<Prisma.PetOrderByWithRelationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
   nameEn: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
-  ownerName: z.lazy(() => SortOrderSchema).optional(),
+  ownerName: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   type: z.lazy(() => SortOrderSchema).optional(),
   gender: z.lazy(() => SortOrderSchema).optional(),
   birthDate: z.lazy(() => SortOrderSchema).optional(),
@@ -1361,7 +1360,7 @@ export const PetOrderByWithRelationInputSchema: z.ZodType<Prisma.PetOrderByWithR
   parents: z.lazy(() => PetOrderByRelationAggregateInputSchema).optional(),
   children: z.lazy(() => PetOrderByRelationAggregateInputSchema).optional(),
   avatar: z.lazy(() => FileOrderByWithRelationInputSchema).optional(),
-  images: z.lazy(() => FileOrderByRelationAggregateInputSchema).optional()
+  img: z.lazy(() => FileOrderByWithRelationInputSchema).optional()
 }).strict();
 
 export const PetWhereUniqueInputSchema: z.ZodType<Prisma.PetWhereUniqueInput> = z.object({
@@ -1372,9 +1371,9 @@ export const PetWhereUniqueInputSchema: z.ZodType<Prisma.PetWhereUniqueInput> = 
   AND: z.union([ z.lazy(() => PetWhereInputSchema),z.lazy(() => PetWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => PetWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => PetWhereInputSchema),z.lazy(() => PetWhereInputSchema).array() ]).optional(),
-  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string().min(2).max(12) ]).optional(),
   nameEn: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  ownerName: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  ownerName: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   type: z.union([ z.lazy(() => EnumPetTypeFilterSchema),z.lazy(() => PetTypeSchema) ]).optional(),
   gender: z.union([ z.lazy(() => EnumGenderFilterSchema),z.lazy(() => GenderSchema) ]).optional(),
   birthDate: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
@@ -1390,14 +1389,14 @@ export const PetWhereUniqueInputSchema: z.ZodType<Prisma.PetWhereUniqueInput> = 
   parents: z.lazy(() => PetListRelationFilterSchema).optional(),
   children: z.lazy(() => PetListRelationFilterSchema).optional(),
   avatar: z.union([ z.lazy(() => FileNullableRelationFilterSchema),z.lazy(() => FileWhereInputSchema) ]).optional().nullable(),
-  images: z.lazy(() => FileListRelationFilterSchema).optional()
+  img: z.union([ z.lazy(() => FileNullableRelationFilterSchema),z.lazy(() => FileWhereInputSchema) ]).optional().nullable(),
 }).strict());
 
 export const PetOrderByWithAggregationInputSchema: z.ZodType<Prisma.PetOrderByWithAggregationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
   nameEn: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
-  ownerName: z.lazy(() => SortOrderSchema).optional(),
+  ownerName: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   type: z.lazy(() => SortOrderSchema).optional(),
   gender: z.lazy(() => SortOrderSchema).optional(),
   birthDate: z.lazy(() => SortOrderSchema).optional(),
@@ -1419,7 +1418,7 @@ export const PetScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.PetScalar
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   nameEn: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
-  ownerName: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  ownerName: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   type: z.union([ z.lazy(() => EnumPetTypeWithAggregatesFilterSchema),z.lazy(() => PetTypeSchema) ]).optional(),
   gender: z.union([ z.lazy(() => EnumGenderWithAggregatesFilterSchema),z.lazy(() => GenderSchema) ]).optional(),
   birthDate: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
@@ -1547,13 +1546,13 @@ export const FileWhereInputSchema: z.ZodType<Prisma.FileWhereInput> = z.object({
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   size: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
   kennelId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  imageOfId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  imgOfId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   avatarOfId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   crceatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   status: z.union([ z.lazy(() => EnumFileStatusFilterSchema),z.lazy(() => FileStatusSchema) ]).optional(),
   kennel: z.union([ z.lazy(() => KennelNullableRelationFilterSchema),z.lazy(() => KennelWhereInputSchema) ]).optional().nullable(),
-  imageOf: z.union([ z.lazy(() => PetNullableRelationFilterSchema),z.lazy(() => PetWhereInputSchema) ]).optional().nullable(),
+  imgOf: z.union([ z.lazy(() => PetNullableRelationFilterSchema),z.lazy(() => PetWhereInputSchema) ]).optional().nullable(),
   avatarOf: z.union([ z.lazy(() => PetNullableRelationFilterSchema),z.lazy(() => PetWhereInputSchema) ]).optional().nullable(),
 }).strict();
 
@@ -1564,13 +1563,13 @@ export const FileOrderByWithRelationInputSchema: z.ZodType<Prisma.FileOrderByWit
   name: z.lazy(() => SortOrderSchema).optional(),
   size: z.lazy(() => SortOrderSchema).optional(),
   kennelId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
-  imageOfId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  imgOfId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   avatarOfId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   crceatedAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   status: z.lazy(() => SortOrderSchema).optional(),
   kennel: z.lazy(() => KennelOrderByWithRelationInputSchema).optional(),
-  imageOf: z.lazy(() => PetOrderByWithRelationInputSchema).optional(),
+  imgOf: z.lazy(() => PetOrderByWithRelationInputSchema).optional(),
   avatarOf: z.lazy(() => PetOrderByWithRelationInputSchema).optional()
 }).strict();
 
@@ -1579,12 +1578,36 @@ export const FileWhereUniqueInputSchema: z.ZodType<Prisma.FileWhereUniqueInput> 
     id: z.string().cuid(),
     key: z.string(),
     kennelId: z.string(),
+    imgOfId: z.string(),
     avatarOfId: z.string()
   }),
   z.object({
     id: z.string().cuid(),
     key: z.string(),
     kennelId: z.string(),
+    imgOfId: z.string(),
+  }),
+  z.object({
+    id: z.string().cuid(),
+    key: z.string(),
+    kennelId: z.string(),
+    avatarOfId: z.string(),
+  }),
+  z.object({
+    id: z.string().cuid(),
+    key: z.string(),
+    kennelId: z.string(),
+  }),
+  z.object({
+    id: z.string().cuid(),
+    key: z.string(),
+    imgOfId: z.string(),
+    avatarOfId: z.string(),
+  }),
+  z.object({
+    id: z.string().cuid(),
+    key: z.string(),
+    imgOfId: z.string(),
   }),
   z.object({
     id: z.string().cuid(),
@@ -1598,6 +1621,17 @@ export const FileWhereUniqueInputSchema: z.ZodType<Prisma.FileWhereUniqueInput> 
   z.object({
     id: z.string().cuid(),
     kennelId: z.string(),
+    imgOfId: z.string(),
+    avatarOfId: z.string(),
+  }),
+  z.object({
+    id: z.string().cuid(),
+    kennelId: z.string(),
+    imgOfId: z.string(),
+  }),
+  z.object({
+    id: z.string().cuid(),
+    kennelId: z.string(),
     avatarOfId: z.string(),
   }),
   z.object({
@@ -1606,6 +1640,15 @@ export const FileWhereUniqueInputSchema: z.ZodType<Prisma.FileWhereUniqueInput> 
   }),
   z.object({
     id: z.string().cuid(),
+    imgOfId: z.string(),
+    avatarOfId: z.string(),
+  }),
+  z.object({
+    id: z.string().cuid(),
+    imgOfId: z.string(),
+  }),
+  z.object({
+    id: z.string().cuid(),
     avatarOfId: z.string(),
   }),
   z.object({
@@ -1614,6 +1657,17 @@ export const FileWhereUniqueInputSchema: z.ZodType<Prisma.FileWhereUniqueInput> 
   z.object({
     key: z.string(),
     kennelId: z.string(),
+    imgOfId: z.string(),
+    avatarOfId: z.string(),
+  }),
+  z.object({
+    key: z.string(),
+    kennelId: z.string(),
+    imgOfId: z.string(),
+  }),
+  z.object({
+    key: z.string(),
+    kennelId: z.string(),
     avatarOfId: z.string(),
   }),
   z.object({
@@ -1622,6 +1676,15 @@ export const FileWhereUniqueInputSchema: z.ZodType<Prisma.FileWhereUniqueInput> 
   }),
   z.object({
     key: z.string(),
+    imgOfId: z.string(),
+    avatarOfId: z.string(),
+  }),
+  z.object({
+    key: z.string(),
+    imgOfId: z.string(),
+  }),
+  z.object({
+    key: z.string(),
     avatarOfId: z.string(),
   }),
   z.object({
@@ -1629,10 +1692,26 @@ export const FileWhereUniqueInputSchema: z.ZodType<Prisma.FileWhereUniqueInput> 
   }),
   z.object({
     kennelId: z.string(),
+    imgOfId: z.string(),
     avatarOfId: z.string(),
   }),
   z.object({
     kennelId: z.string(),
+    imgOfId: z.string(),
+  }),
+  z.object({
+    kennelId: z.string(),
+    avatarOfId: z.string(),
+  }),
+  z.object({
+    kennelId: z.string(),
+  }),
+  z.object({
+    imgOfId: z.string(),
+    avatarOfId: z.string(),
+  }),
+  z.object({
+    imgOfId: z.string(),
   }),
   z.object({
     avatarOfId: z.string(),
@@ -1642,6 +1721,7 @@ export const FileWhereUniqueInputSchema: z.ZodType<Prisma.FileWhereUniqueInput> 
   id: z.string().cuid().optional(),
   key: z.string().optional(),
   kennelId: z.string().optional(),
+  imgOfId: z.string().optional(),
   avatarOfId: z.string().optional(),
   AND: z.union([ z.lazy(() => FileWhereInputSchema),z.lazy(() => FileWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => FileWhereInputSchema).array().optional(),
@@ -1649,12 +1729,11 @@ export const FileWhereUniqueInputSchema: z.ZodType<Prisma.FileWhereUniqueInput> 
   url: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   size: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
-  imageOfId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   crceatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   status: z.union([ z.lazy(() => EnumFileStatusFilterSchema),z.lazy(() => FileStatusSchema) ]).optional(),
   kennel: z.union([ z.lazy(() => KennelNullableRelationFilterSchema),z.lazy(() => KennelWhereInputSchema) ]).optional().nullable(),
-  imageOf: z.union([ z.lazy(() => PetNullableRelationFilterSchema),z.lazy(() => PetWhereInputSchema) ]).optional().nullable(),
+  imgOf: z.union([ z.lazy(() => PetNullableRelationFilterSchema),z.lazy(() => PetWhereInputSchema) ]).optional().nullable(),
   avatarOf: z.union([ z.lazy(() => PetNullableRelationFilterSchema),z.lazy(() => PetWhereInputSchema) ]).optional().nullable(),
 }).strict());
 
@@ -1665,7 +1744,7 @@ export const FileOrderByWithAggregationInputSchema: z.ZodType<Prisma.FileOrderBy
   name: z.lazy(() => SortOrderSchema).optional(),
   size: z.lazy(() => SortOrderSchema).optional(),
   kennelId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
-  imageOfId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  imgOfId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   avatarOfId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   crceatedAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
@@ -1687,7 +1766,7 @@ export const FileScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.FileScal
   name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   size: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
   kennelId: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
-  imageOfId: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  imgOfId: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   avatarOfId: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   crceatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
@@ -2109,9 +2188,9 @@ export const VerificationTokenUncheckedUpdateManyInputSchema: z.ZodType<Prisma.V
 
 export const PetCreateInputSchema: z.ZodType<Prisma.PetCreateInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string(),
+  name: z.string().min(2).max(12),
   nameEn: z.string().optional().nullable(),
-  ownerName: z.string(),
+  ownerName: z.string().optional().nullable(),
   type: z.lazy(() => PetTypeSchema).optional(),
   gender: z.lazy(() => GenderSchema),
   birthDate: z.coerce.date(),
@@ -2125,14 +2204,14 @@ export const PetCreateInputSchema: z.ZodType<Prisma.PetCreateInput> = z.object({
   parents: z.lazy(() => PetCreateNestedManyWithoutChildrenInputSchema).optional(),
   children: z.lazy(() => PetCreateNestedManyWithoutParentsInputSchema).optional(),
   avatar: z.lazy(() => FileCreateNestedOneWithoutAvatarOfInputSchema).optional(),
-  images: z.lazy(() => FileCreateNestedManyWithoutImageOfInputSchema).optional()
+  img: z.lazy(() => FileCreateNestedOneWithoutImgOfInputSchema).optional()
 }).strict();
 
 export const PetUncheckedCreateInputSchema: z.ZodType<Prisma.PetUncheckedCreateInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string(),
+  name: z.string().min(2).max(12),
   nameEn: z.string().optional().nullable(),
-  ownerName: z.string(),
+  ownerName: z.string().optional().nullable(),
   type: z.lazy(() => PetTypeSchema).optional(),
   gender: z.lazy(() => GenderSchema),
   birthDate: z.coerce.date(),
@@ -2146,14 +2225,14 @@ export const PetUncheckedCreateInputSchema: z.ZodType<Prisma.PetUncheckedCreateI
   parents: z.lazy(() => PetUncheckedCreateNestedManyWithoutChildrenInputSchema).optional(),
   children: z.lazy(() => PetUncheckedCreateNestedManyWithoutParentsInputSchema).optional(),
   avatar: z.lazy(() => FileUncheckedCreateNestedOneWithoutAvatarOfInputSchema).optional(),
-  images: z.lazy(() => FileUncheckedCreateNestedManyWithoutImageOfInputSchema).optional()
+  img: z.lazy(() => FileUncheckedCreateNestedOneWithoutImgOfInputSchema).optional()
 }).strict();
 
 export const PetUpdateInputSchema: z.ZodType<Prisma.PetUpdateInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  ownerName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   type: z.union([ z.lazy(() => PetTypeSchema),z.lazy(() => EnumPetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   gender: z.union([ z.lazy(() => GenderSchema),z.lazy(() => EnumGenderFieldUpdateOperationsInputSchema) ]).optional(),
   birthDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2167,14 +2246,14 @@ export const PetUpdateInputSchema: z.ZodType<Prisma.PetUpdateInput> = z.object({
   parents: z.lazy(() => PetUpdateManyWithoutChildrenNestedInputSchema).optional(),
   children: z.lazy(() => PetUpdateManyWithoutParentsNestedInputSchema).optional(),
   avatar: z.lazy(() => FileUpdateOneWithoutAvatarOfNestedInputSchema).optional(),
-  images: z.lazy(() => FileUpdateManyWithoutImageOfNestedInputSchema).optional()
+  img: z.lazy(() => FileUpdateOneWithoutImgOfNestedInputSchema).optional()
 }).strict();
 
 export const PetUncheckedUpdateInputSchema: z.ZodType<Prisma.PetUncheckedUpdateInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  ownerName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   type: z.union([ z.lazy(() => PetTypeSchema),z.lazy(() => EnumPetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   gender: z.union([ z.lazy(() => GenderSchema),z.lazy(() => EnumGenderFieldUpdateOperationsInputSchema) ]).optional(),
   birthDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2188,14 +2267,14 @@ export const PetUncheckedUpdateInputSchema: z.ZodType<Prisma.PetUncheckedUpdateI
   parents: z.lazy(() => PetUncheckedUpdateManyWithoutChildrenNestedInputSchema).optional(),
   children: z.lazy(() => PetUncheckedUpdateManyWithoutParentsNestedInputSchema).optional(),
   avatar: z.lazy(() => FileUncheckedUpdateOneWithoutAvatarOfNestedInputSchema).optional(),
-  images: z.lazy(() => FileUncheckedUpdateManyWithoutImageOfNestedInputSchema).optional()
+  img: z.lazy(() => FileUncheckedUpdateOneWithoutImgOfNestedInputSchema).optional()
 }).strict();
 
 export const PetCreateManyInputSchema: z.ZodType<Prisma.PetCreateManyInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string(),
+  name: z.string().min(2).max(12),
   nameEn: z.string().optional().nullable(),
-  ownerName: z.string(),
+  ownerName: z.string().optional().nullable(),
   type: z.lazy(() => PetTypeSchema).optional(),
   gender: z.lazy(() => GenderSchema),
   birthDate: z.coerce.date(),
@@ -2209,9 +2288,9 @@ export const PetCreateManyInputSchema: z.ZodType<Prisma.PetCreateManyInput> = z.
 
 export const PetUpdateManyMutationInputSchema: z.ZodType<Prisma.PetUpdateManyMutationInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  ownerName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   type: z.union([ z.lazy(() => PetTypeSchema),z.lazy(() => EnumPetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   gender: z.union([ z.lazy(() => GenderSchema),z.lazy(() => EnumGenderFieldUpdateOperationsInputSchema) ]).optional(),
   birthDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2223,9 +2302,9 @@ export const PetUpdateManyMutationInputSchema: z.ZodType<Prisma.PetUpdateManyMut
 
 export const PetUncheckedUpdateManyInputSchema: z.ZodType<Prisma.PetUncheckedUpdateManyInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  ownerName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   type: z.union([ z.lazy(() => PetTypeSchema),z.lazy(() => EnumPetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   gender: z.union([ z.lazy(() => GenderSchema),z.lazy(() => EnumGenderFieldUpdateOperationsInputSchema) ]).optional(),
   birthDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2329,7 +2408,7 @@ export const FileCreateInputSchema: z.ZodType<Prisma.FileCreateInput> = z.object
   updatedAt: z.coerce.date().optional(),
   status: z.lazy(() => FileStatusSchema).optional(),
   kennel: z.lazy(() => KennelCreateNestedOneWithoutImgInputSchema).optional(),
-  imageOf: z.lazy(() => PetCreateNestedOneWithoutImagesInputSchema).optional(),
+  imgOf: z.lazy(() => PetCreateNestedOneWithoutImgInputSchema).optional(),
   avatarOf: z.lazy(() => PetCreateNestedOneWithoutAvatarInputSchema).optional()
 }).strict();
 
@@ -2340,7 +2419,7 @@ export const FileUncheckedCreateInputSchema: z.ZodType<Prisma.FileUncheckedCreat
   name: z.string(),
   size: z.number().int(),
   kennelId: z.string().optional().nullable(),
-  imageOfId: z.string().optional().nullable(),
+  imgOfId: z.string().optional().nullable(),
   avatarOfId: z.string().optional().nullable(),
   crceatedAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -2357,7 +2436,7 @@ export const FileUpdateInputSchema: z.ZodType<Prisma.FileUpdateInput> = z.object
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => FileStatusSchema),z.lazy(() => EnumFileStatusFieldUpdateOperationsInputSchema) ]).optional(),
   kennel: z.lazy(() => KennelUpdateOneWithoutImgNestedInputSchema).optional(),
-  imageOf: z.lazy(() => PetUpdateOneWithoutImagesNestedInputSchema).optional(),
+  imgOf: z.lazy(() => PetUpdateOneWithoutImgNestedInputSchema).optional(),
   avatarOf: z.lazy(() => PetUpdateOneWithoutAvatarNestedInputSchema).optional()
 }).strict();
 
@@ -2368,7 +2447,7 @@ export const FileUncheckedUpdateInputSchema: z.ZodType<Prisma.FileUncheckedUpdat
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   size: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   kennelId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  imageOfId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  imgOfId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   avatarOfId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   crceatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2382,7 +2461,7 @@ export const FileCreateManyInputSchema: z.ZodType<Prisma.FileCreateManyInput> = 
   name: z.string(),
   size: z.number().int(),
   kennelId: z.string().optional().nullable(),
-  imageOfId: z.string().optional().nullable(),
+  imgOfId: z.string().optional().nullable(),
   avatarOfId: z.string().optional().nullable(),
   crceatedAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -2407,7 +2486,7 @@ export const FileUncheckedUpdateManyInputSchema: z.ZodType<Prisma.FileUncheckedU
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   size: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   kennelId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  imageOfId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  imgOfId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   avatarOfId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   crceatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2829,16 +2908,6 @@ export const RegistrationNullableRelationFilterSchema: z.ZodType<Prisma.Registra
   isNot: z.lazy(() => RegistrationWhereInputSchema).optional().nullable()
 }).strict();
 
-export const FileListRelationFilterSchema: z.ZodType<Prisma.FileListRelationFilter> = z.object({
-  every: z.lazy(() => FileWhereInputSchema).optional(),
-  some: z.lazy(() => FileWhereInputSchema).optional(),
-  none: z.lazy(() => FileWhereInputSchema).optional()
-}).strict();
-
-export const FileOrderByRelationAggregateInputSchema: z.ZodType<Prisma.FileOrderByRelationAggregateInput> = z.object({
-  _count: z.lazy(() => SortOrderSchema).optional()
-}).strict();
-
 export const PetCountOrderByAggregateInputSchema: z.ZodType<Prisma.PetCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
@@ -2990,7 +3059,7 @@ export const FileCountOrderByAggregateInputSchema: z.ZodType<Prisma.FileCountOrd
   name: z.lazy(() => SortOrderSchema).optional(),
   size: z.lazy(() => SortOrderSchema).optional(),
   kennelId: z.lazy(() => SortOrderSchema).optional(),
-  imageOfId: z.lazy(() => SortOrderSchema).optional(),
+  imgOfId: z.lazy(() => SortOrderSchema).optional(),
   avatarOfId: z.lazy(() => SortOrderSchema).optional(),
   crceatedAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
@@ -3008,7 +3077,7 @@ export const FileMaxOrderByAggregateInputSchema: z.ZodType<Prisma.FileMaxOrderBy
   name: z.lazy(() => SortOrderSchema).optional(),
   size: z.lazy(() => SortOrderSchema).optional(),
   kennelId: z.lazy(() => SortOrderSchema).optional(),
-  imageOfId: z.lazy(() => SortOrderSchema).optional(),
+  imgOfId: z.lazy(() => SortOrderSchema).optional(),
   avatarOfId: z.lazy(() => SortOrderSchema).optional(),
   crceatedAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
@@ -3022,7 +3091,7 @@ export const FileMinOrderByAggregateInputSchema: z.ZodType<Prisma.FileMinOrderBy
   name: z.lazy(() => SortOrderSchema).optional(),
   size: z.lazy(() => SortOrderSchema).optional(),
   kennelId: z.lazy(() => SortOrderSchema).optional(),
-  imageOfId: z.lazy(() => SortOrderSchema).optional(),
+  imgOfId: z.lazy(() => SortOrderSchema).optional(),
   avatarOfId: z.lazy(() => SortOrderSchema).optional(),
   crceatedAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
@@ -3485,11 +3554,10 @@ export const FileCreateNestedOneWithoutAvatarOfInputSchema: z.ZodType<Prisma.Fil
   connect: z.lazy(() => FileWhereUniqueInputSchema).optional()
 }).strict();
 
-export const FileCreateNestedManyWithoutImageOfInputSchema: z.ZodType<Prisma.FileCreateNestedManyWithoutImageOfInput> = z.object({
-  create: z.union([ z.lazy(() => FileCreateWithoutImageOfInputSchema),z.lazy(() => FileCreateWithoutImageOfInputSchema).array(),z.lazy(() => FileUncheckedCreateWithoutImageOfInputSchema),z.lazy(() => FileUncheckedCreateWithoutImageOfInputSchema).array() ]).optional(),
-  connectOrCreate: z.union([ z.lazy(() => FileCreateOrConnectWithoutImageOfInputSchema),z.lazy(() => FileCreateOrConnectWithoutImageOfInputSchema).array() ]).optional(),
-  createMany: z.lazy(() => FileCreateManyImageOfInputEnvelopeSchema).optional(),
-  connect: z.union([ z.lazy(() => FileWhereUniqueInputSchema),z.lazy(() => FileWhereUniqueInputSchema).array() ]).optional(),
+export const FileCreateNestedOneWithoutImgOfInputSchema: z.ZodType<Prisma.FileCreateNestedOneWithoutImgOfInput> = z.object({
+  create: z.union([ z.lazy(() => FileCreateWithoutImgOfInputSchema),z.lazy(() => FileUncheckedCreateWithoutImgOfInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => FileCreateOrConnectWithoutImgOfInputSchema).optional(),
+  connect: z.lazy(() => FileWhereUniqueInputSchema).optional()
 }).strict();
 
 export const RegistrationUncheckedCreateNestedOneWithoutPetInputSchema: z.ZodType<Prisma.RegistrationUncheckedCreateNestedOneWithoutPetInput> = z.object({
@@ -3516,11 +3584,10 @@ export const FileUncheckedCreateNestedOneWithoutAvatarOfInputSchema: z.ZodType<P
   connect: z.lazy(() => FileWhereUniqueInputSchema).optional()
 }).strict();
 
-export const FileUncheckedCreateNestedManyWithoutImageOfInputSchema: z.ZodType<Prisma.FileUncheckedCreateNestedManyWithoutImageOfInput> = z.object({
-  create: z.union([ z.lazy(() => FileCreateWithoutImageOfInputSchema),z.lazy(() => FileCreateWithoutImageOfInputSchema).array(),z.lazy(() => FileUncheckedCreateWithoutImageOfInputSchema),z.lazy(() => FileUncheckedCreateWithoutImageOfInputSchema).array() ]).optional(),
-  connectOrCreate: z.union([ z.lazy(() => FileCreateOrConnectWithoutImageOfInputSchema),z.lazy(() => FileCreateOrConnectWithoutImageOfInputSchema).array() ]).optional(),
-  createMany: z.lazy(() => FileCreateManyImageOfInputEnvelopeSchema).optional(),
-  connect: z.union([ z.lazy(() => FileWhereUniqueInputSchema),z.lazy(() => FileWhereUniqueInputSchema).array() ]).optional(),
+export const FileUncheckedCreateNestedOneWithoutImgOfInputSchema: z.ZodType<Prisma.FileUncheckedCreateNestedOneWithoutImgOfInput> = z.object({
+  create: z.union([ z.lazy(() => FileCreateWithoutImgOfInputSchema),z.lazy(() => FileUncheckedCreateWithoutImgOfInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => FileCreateOrConnectWithoutImgOfInputSchema).optional(),
+  connect: z.lazy(() => FileWhereUniqueInputSchema).optional()
 }).strict();
 
 export const EnumPetTypeFieldUpdateOperationsInputSchema: z.ZodType<Prisma.EnumPetTypeFieldUpdateOperationsInput> = z.object({
@@ -3595,18 +3662,14 @@ export const FileUpdateOneWithoutAvatarOfNestedInputSchema: z.ZodType<Prisma.Fil
   update: z.union([ z.lazy(() => FileUpdateToOneWithWhereWithoutAvatarOfInputSchema),z.lazy(() => FileUpdateWithoutAvatarOfInputSchema),z.lazy(() => FileUncheckedUpdateWithoutAvatarOfInputSchema) ]).optional(),
 }).strict();
 
-export const FileUpdateManyWithoutImageOfNestedInputSchema: z.ZodType<Prisma.FileUpdateManyWithoutImageOfNestedInput> = z.object({
-  create: z.union([ z.lazy(() => FileCreateWithoutImageOfInputSchema),z.lazy(() => FileCreateWithoutImageOfInputSchema).array(),z.lazy(() => FileUncheckedCreateWithoutImageOfInputSchema),z.lazy(() => FileUncheckedCreateWithoutImageOfInputSchema).array() ]).optional(),
-  connectOrCreate: z.union([ z.lazy(() => FileCreateOrConnectWithoutImageOfInputSchema),z.lazy(() => FileCreateOrConnectWithoutImageOfInputSchema).array() ]).optional(),
-  upsert: z.union([ z.lazy(() => FileUpsertWithWhereUniqueWithoutImageOfInputSchema),z.lazy(() => FileUpsertWithWhereUniqueWithoutImageOfInputSchema).array() ]).optional(),
-  createMany: z.lazy(() => FileCreateManyImageOfInputEnvelopeSchema).optional(),
-  set: z.union([ z.lazy(() => FileWhereUniqueInputSchema),z.lazy(() => FileWhereUniqueInputSchema).array() ]).optional(),
-  disconnect: z.union([ z.lazy(() => FileWhereUniqueInputSchema),z.lazy(() => FileWhereUniqueInputSchema).array() ]).optional(),
-  delete: z.union([ z.lazy(() => FileWhereUniqueInputSchema),z.lazy(() => FileWhereUniqueInputSchema).array() ]).optional(),
-  connect: z.union([ z.lazy(() => FileWhereUniqueInputSchema),z.lazy(() => FileWhereUniqueInputSchema).array() ]).optional(),
-  update: z.union([ z.lazy(() => FileUpdateWithWhereUniqueWithoutImageOfInputSchema),z.lazy(() => FileUpdateWithWhereUniqueWithoutImageOfInputSchema).array() ]).optional(),
-  updateMany: z.union([ z.lazy(() => FileUpdateManyWithWhereWithoutImageOfInputSchema),z.lazy(() => FileUpdateManyWithWhereWithoutImageOfInputSchema).array() ]).optional(),
-  deleteMany: z.union([ z.lazy(() => FileScalarWhereInputSchema),z.lazy(() => FileScalarWhereInputSchema).array() ]).optional(),
+export const FileUpdateOneWithoutImgOfNestedInputSchema: z.ZodType<Prisma.FileUpdateOneWithoutImgOfNestedInput> = z.object({
+  create: z.union([ z.lazy(() => FileCreateWithoutImgOfInputSchema),z.lazy(() => FileUncheckedCreateWithoutImgOfInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => FileCreateOrConnectWithoutImgOfInputSchema).optional(),
+  upsert: z.lazy(() => FileUpsertWithoutImgOfInputSchema).optional(),
+  disconnect: z.union([ z.boolean(),z.lazy(() => FileWhereInputSchema) ]).optional(),
+  delete: z.union([ z.boolean(),z.lazy(() => FileWhereInputSchema) ]).optional(),
+  connect: z.lazy(() => FileWhereUniqueInputSchema).optional(),
+  update: z.union([ z.lazy(() => FileUpdateToOneWithWhereWithoutImgOfInputSchema),z.lazy(() => FileUpdateWithoutImgOfInputSchema),z.lazy(() => FileUncheckedUpdateWithoutImgOfInputSchema) ]).optional(),
 }).strict();
 
 export const RegistrationUncheckedUpdateOneWithoutPetNestedInputSchema: z.ZodType<Prisma.RegistrationUncheckedUpdateOneWithoutPetNestedInput> = z.object({
@@ -3655,18 +3718,14 @@ export const FileUncheckedUpdateOneWithoutAvatarOfNestedInputSchema: z.ZodType<P
   update: z.union([ z.lazy(() => FileUpdateToOneWithWhereWithoutAvatarOfInputSchema),z.lazy(() => FileUpdateWithoutAvatarOfInputSchema),z.lazy(() => FileUncheckedUpdateWithoutAvatarOfInputSchema) ]).optional(),
 }).strict();
 
-export const FileUncheckedUpdateManyWithoutImageOfNestedInputSchema: z.ZodType<Prisma.FileUncheckedUpdateManyWithoutImageOfNestedInput> = z.object({
-  create: z.union([ z.lazy(() => FileCreateWithoutImageOfInputSchema),z.lazy(() => FileCreateWithoutImageOfInputSchema).array(),z.lazy(() => FileUncheckedCreateWithoutImageOfInputSchema),z.lazy(() => FileUncheckedCreateWithoutImageOfInputSchema).array() ]).optional(),
-  connectOrCreate: z.union([ z.lazy(() => FileCreateOrConnectWithoutImageOfInputSchema),z.lazy(() => FileCreateOrConnectWithoutImageOfInputSchema).array() ]).optional(),
-  upsert: z.union([ z.lazy(() => FileUpsertWithWhereUniqueWithoutImageOfInputSchema),z.lazy(() => FileUpsertWithWhereUniqueWithoutImageOfInputSchema).array() ]).optional(),
-  createMany: z.lazy(() => FileCreateManyImageOfInputEnvelopeSchema).optional(),
-  set: z.union([ z.lazy(() => FileWhereUniqueInputSchema),z.lazy(() => FileWhereUniqueInputSchema).array() ]).optional(),
-  disconnect: z.union([ z.lazy(() => FileWhereUniqueInputSchema),z.lazy(() => FileWhereUniqueInputSchema).array() ]).optional(),
-  delete: z.union([ z.lazy(() => FileWhereUniqueInputSchema),z.lazy(() => FileWhereUniqueInputSchema).array() ]).optional(),
-  connect: z.union([ z.lazy(() => FileWhereUniqueInputSchema),z.lazy(() => FileWhereUniqueInputSchema).array() ]).optional(),
-  update: z.union([ z.lazy(() => FileUpdateWithWhereUniqueWithoutImageOfInputSchema),z.lazy(() => FileUpdateWithWhereUniqueWithoutImageOfInputSchema).array() ]).optional(),
-  updateMany: z.union([ z.lazy(() => FileUpdateManyWithWhereWithoutImageOfInputSchema),z.lazy(() => FileUpdateManyWithWhereWithoutImageOfInputSchema).array() ]).optional(),
-  deleteMany: z.union([ z.lazy(() => FileScalarWhereInputSchema),z.lazy(() => FileScalarWhereInputSchema).array() ]).optional(),
+export const FileUncheckedUpdateOneWithoutImgOfNestedInputSchema: z.ZodType<Prisma.FileUncheckedUpdateOneWithoutImgOfNestedInput> = z.object({
+  create: z.union([ z.lazy(() => FileCreateWithoutImgOfInputSchema),z.lazy(() => FileUncheckedCreateWithoutImgOfInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => FileCreateOrConnectWithoutImgOfInputSchema).optional(),
+  upsert: z.lazy(() => FileUpsertWithoutImgOfInputSchema).optional(),
+  disconnect: z.union([ z.boolean(),z.lazy(() => FileWhereInputSchema) ]).optional(),
+  delete: z.union([ z.boolean(),z.lazy(() => FileWhereInputSchema) ]).optional(),
+  connect: z.lazy(() => FileWhereUniqueInputSchema).optional(),
+  update: z.union([ z.lazy(() => FileUpdateToOneWithWhereWithoutImgOfInputSchema),z.lazy(() => FileUpdateWithoutImgOfInputSchema),z.lazy(() => FileUncheckedUpdateWithoutImgOfInputSchema) ]).optional(),
 }).strict();
 
 export const UserCreateNestedOneWithoutRegistrationInputSchema: z.ZodType<Prisma.UserCreateNestedOneWithoutRegistrationInput> = z.object({
@@ -3711,9 +3770,9 @@ export const KennelCreateNestedOneWithoutImgInputSchema: z.ZodType<Prisma.Kennel
   connect: z.lazy(() => KennelWhereUniqueInputSchema).optional()
 }).strict();
 
-export const PetCreateNestedOneWithoutImagesInputSchema: z.ZodType<Prisma.PetCreateNestedOneWithoutImagesInput> = z.object({
-  create: z.union([ z.lazy(() => PetCreateWithoutImagesInputSchema),z.lazy(() => PetUncheckedCreateWithoutImagesInputSchema) ]).optional(),
-  connectOrCreate: z.lazy(() => PetCreateOrConnectWithoutImagesInputSchema).optional(),
+export const PetCreateNestedOneWithoutImgInputSchema: z.ZodType<Prisma.PetCreateNestedOneWithoutImgInput> = z.object({
+  create: z.union([ z.lazy(() => PetCreateWithoutImgInputSchema),z.lazy(() => PetUncheckedCreateWithoutImgInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => PetCreateOrConnectWithoutImgInputSchema).optional(),
   connect: z.lazy(() => PetWhereUniqueInputSchema).optional()
 }).strict();
 
@@ -3745,14 +3804,14 @@ export const KennelUpdateOneWithoutImgNestedInputSchema: z.ZodType<Prisma.Kennel
   update: z.union([ z.lazy(() => KennelUpdateToOneWithWhereWithoutImgInputSchema),z.lazy(() => KennelUpdateWithoutImgInputSchema),z.lazy(() => KennelUncheckedUpdateWithoutImgInputSchema) ]).optional(),
 }).strict();
 
-export const PetUpdateOneWithoutImagesNestedInputSchema: z.ZodType<Prisma.PetUpdateOneWithoutImagesNestedInput> = z.object({
-  create: z.union([ z.lazy(() => PetCreateWithoutImagesInputSchema),z.lazy(() => PetUncheckedCreateWithoutImagesInputSchema) ]).optional(),
-  connectOrCreate: z.lazy(() => PetCreateOrConnectWithoutImagesInputSchema).optional(),
-  upsert: z.lazy(() => PetUpsertWithoutImagesInputSchema).optional(),
+export const PetUpdateOneWithoutImgNestedInputSchema: z.ZodType<Prisma.PetUpdateOneWithoutImgNestedInput> = z.object({
+  create: z.union([ z.lazy(() => PetCreateWithoutImgInputSchema),z.lazy(() => PetUncheckedCreateWithoutImgInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => PetCreateOrConnectWithoutImgInputSchema).optional(),
+  upsert: z.lazy(() => PetUpsertWithoutImgInputSchema).optional(),
   disconnect: z.union([ z.boolean(),z.lazy(() => PetWhereInputSchema) ]).optional(),
   delete: z.union([ z.boolean(),z.lazy(() => PetWhereInputSchema) ]).optional(),
   connect: z.lazy(() => PetWhereUniqueInputSchema).optional(),
-  update: z.union([ z.lazy(() => PetUpdateToOneWithWhereWithoutImagesInputSchema),z.lazy(() => PetUpdateWithoutImagesInputSchema),z.lazy(() => PetUncheckedUpdateWithoutImagesInputSchema) ]).optional(),
+  update: z.union([ z.lazy(() => PetUpdateToOneWithWhereWithoutImgInputSchema),z.lazy(() => PetUpdateWithoutImgInputSchema),z.lazy(() => PetUncheckedUpdateWithoutImgInputSchema) ]).optional(),
 }).strict();
 
 export const PetUpdateOneWithoutAvatarNestedInputSchema: z.ZodType<Prisma.PetUpdateOneWithoutAvatarNestedInput> = z.object({
@@ -4266,9 +4325,9 @@ export const ProfileCreateOrConnectWithoutUserInputSchema: z.ZodType<Prisma.Prof
 
 export const PetCreateWithoutCreatedByInputSchema: z.ZodType<Prisma.PetCreateWithoutCreatedByInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string(),
+  name: z.string().min(2).max(12),
   nameEn: z.string().optional().nullable(),
-  ownerName: z.string(),
+  ownerName: z.string().optional().nullable(),
   type: z.lazy(() => PetTypeSchema).optional(),
   gender: z.lazy(() => GenderSchema),
   birthDate: z.coerce.date(),
@@ -4281,14 +4340,14 @@ export const PetCreateWithoutCreatedByInputSchema: z.ZodType<Prisma.PetCreateWit
   parents: z.lazy(() => PetCreateNestedManyWithoutChildrenInputSchema).optional(),
   children: z.lazy(() => PetCreateNestedManyWithoutParentsInputSchema).optional(),
   avatar: z.lazy(() => FileCreateNestedOneWithoutAvatarOfInputSchema).optional(),
-  images: z.lazy(() => FileCreateNestedManyWithoutImageOfInputSchema).optional()
+  img: z.lazy(() => FileCreateNestedOneWithoutImgOfInputSchema).optional()
 }).strict();
 
 export const PetUncheckedCreateWithoutCreatedByInputSchema: z.ZodType<Prisma.PetUncheckedCreateWithoutCreatedByInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string(),
+  name: z.string().min(2).max(12),
   nameEn: z.string().optional().nullable(),
-  ownerName: z.string(),
+  ownerName: z.string().optional().nullable(),
   type: z.lazy(() => PetTypeSchema).optional(),
   gender: z.lazy(() => GenderSchema),
   birthDate: z.coerce.date(),
@@ -4301,7 +4360,7 @@ export const PetUncheckedCreateWithoutCreatedByInputSchema: z.ZodType<Prisma.Pet
   parents: z.lazy(() => PetUncheckedCreateNestedManyWithoutChildrenInputSchema).optional(),
   children: z.lazy(() => PetUncheckedCreateNestedManyWithoutParentsInputSchema).optional(),
   avatar: z.lazy(() => FileUncheckedCreateNestedOneWithoutAvatarOfInputSchema).optional(),
-  images: z.lazy(() => FileUncheckedCreateNestedManyWithoutImageOfInputSchema).optional()
+  img: z.lazy(() => FileUncheckedCreateNestedOneWithoutImgOfInputSchema).optional()
 }).strict();
 
 export const PetCreateOrConnectWithoutCreatedByInputSchema: z.ZodType<Prisma.PetCreateOrConnectWithoutCreatedByInput> = z.object({
@@ -4457,7 +4516,7 @@ export const PetScalarWhereInputSchema: z.ZodType<Prisma.PetScalarWhereInput> = 
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   nameEn: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  ownerName: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  ownerName: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   type: z.union([ z.lazy(() => EnumPetTypeFilterSchema),z.lazy(() => PetTypeSchema) ]).optional(),
   gender: z.union([ z.lazy(() => EnumGenderFilterSchema),z.lazy(() => GenderSchema) ]).optional(),
   birthDate: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
@@ -4471,9 +4530,9 @@ export const PetScalarWhereInputSchema: z.ZodType<Prisma.PetScalarWhereInput> = 
 
 export const PetCreateWithoutKennelInputSchema: z.ZodType<Prisma.PetCreateWithoutKennelInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string(),
+  name: z.string().min(2).max(12),
   nameEn: z.string().optional().nullable(),
-  ownerName: z.string(),
+  ownerName: z.string().optional().nullable(),
   type: z.lazy(() => PetTypeSchema).optional(),
   gender: z.lazy(() => GenderSchema),
   birthDate: z.coerce.date(),
@@ -4486,14 +4545,14 @@ export const PetCreateWithoutKennelInputSchema: z.ZodType<Prisma.PetCreateWithou
   parents: z.lazy(() => PetCreateNestedManyWithoutChildrenInputSchema).optional(),
   children: z.lazy(() => PetCreateNestedManyWithoutParentsInputSchema).optional(),
   avatar: z.lazy(() => FileCreateNestedOneWithoutAvatarOfInputSchema).optional(),
-  images: z.lazy(() => FileCreateNestedManyWithoutImageOfInputSchema).optional()
+  img: z.lazy(() => FileCreateNestedOneWithoutImgOfInputSchema).optional()
 }).strict();
 
 export const PetUncheckedCreateWithoutKennelInputSchema: z.ZodType<Prisma.PetUncheckedCreateWithoutKennelInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string(),
+  name: z.string().min(2).max(12),
   nameEn: z.string().optional().nullable(),
-  ownerName: z.string(),
+  ownerName: z.string().optional().nullable(),
   type: z.lazy(() => PetTypeSchema).optional(),
   gender: z.lazy(() => GenderSchema),
   birthDate: z.coerce.date(),
@@ -4506,7 +4565,7 @@ export const PetUncheckedCreateWithoutKennelInputSchema: z.ZodType<Prisma.PetUnc
   parents: z.lazy(() => PetUncheckedCreateNestedManyWithoutChildrenInputSchema).optional(),
   children: z.lazy(() => PetUncheckedCreateNestedManyWithoutParentsInputSchema).optional(),
   avatar: z.lazy(() => FileUncheckedCreateNestedOneWithoutAvatarOfInputSchema).optional(),
-  images: z.lazy(() => FileUncheckedCreateNestedManyWithoutImageOfInputSchema).optional()
+  img: z.lazy(() => FileUncheckedCreateNestedOneWithoutImgOfInputSchema).optional()
 }).strict();
 
 export const PetCreateOrConnectWithoutKennelInputSchema: z.ZodType<Prisma.PetCreateOrConnectWithoutKennelInput> = z.object({
@@ -4551,7 +4610,7 @@ export const FileCreateWithoutKennelInputSchema: z.ZodType<Prisma.FileCreateWith
   crceatedAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   status: z.lazy(() => FileStatusSchema).optional(),
-  imageOf: z.lazy(() => PetCreateNestedOneWithoutImagesInputSchema).optional(),
+  imgOf: z.lazy(() => PetCreateNestedOneWithoutImgInputSchema).optional(),
   avatarOf: z.lazy(() => PetCreateNestedOneWithoutAvatarInputSchema).optional()
 }).strict();
 
@@ -4561,7 +4620,7 @@ export const FileUncheckedCreateWithoutKennelInputSchema: z.ZodType<Prisma.FileU
   url: z.string(),
   name: z.string(),
   size: z.number().int(),
-  imageOfId: z.string().optional().nullable(),
+  imgOfId: z.string().optional().nullable(),
   avatarOfId: z.string().optional().nullable(),
   crceatedAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -4638,7 +4697,7 @@ export const FileUpdateWithoutKennelInputSchema: z.ZodType<Prisma.FileUpdateWith
   crceatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => FileStatusSchema),z.lazy(() => EnumFileStatusFieldUpdateOperationsInputSchema) ]).optional(),
-  imageOf: z.lazy(() => PetUpdateOneWithoutImagesNestedInputSchema).optional(),
+  imgOf: z.lazy(() => PetUpdateOneWithoutImgNestedInputSchema).optional(),
   avatarOf: z.lazy(() => PetUpdateOneWithoutAvatarNestedInputSchema).optional()
 }).strict();
 
@@ -4648,7 +4707,7 @@ export const FileUncheckedUpdateWithoutKennelInputSchema: z.ZodType<Prisma.FileU
   url: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   size: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  imageOfId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  imgOfId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   avatarOfId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   crceatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -4864,9 +4923,9 @@ export const KennelCreateOrConnectWithoutPetsInputSchema: z.ZodType<Prisma.Kenne
 
 export const PetCreateWithoutChildrenInputSchema: z.ZodType<Prisma.PetCreateWithoutChildrenInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string(),
+  name: z.string().min(2).max(12),
   nameEn: z.string().optional().nullable(),
-  ownerName: z.string(),
+  ownerName: z.string().optional().nullable(),
   type: z.lazy(() => PetTypeSchema).optional(),
   gender: z.lazy(() => GenderSchema),
   birthDate: z.coerce.date(),
@@ -4879,14 +4938,14 @@ export const PetCreateWithoutChildrenInputSchema: z.ZodType<Prisma.PetCreateWith
   kennel: z.lazy(() => KennelCreateNestedOneWithoutPetsInputSchema).optional(),
   parents: z.lazy(() => PetCreateNestedManyWithoutChildrenInputSchema).optional(),
   avatar: z.lazy(() => FileCreateNestedOneWithoutAvatarOfInputSchema).optional(),
-  images: z.lazy(() => FileCreateNestedManyWithoutImageOfInputSchema).optional()
+  img: z.lazy(() => FileCreateNestedOneWithoutImgOfInputSchema).optional()
 }).strict();
 
 export const PetUncheckedCreateWithoutChildrenInputSchema: z.ZodType<Prisma.PetUncheckedCreateWithoutChildrenInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string(),
+  name: z.string().min(2).max(12),
   nameEn: z.string().optional().nullable(),
-  ownerName: z.string(),
+  ownerName: z.string().optional().nullable(),
   type: z.lazy(() => PetTypeSchema).optional(),
   gender: z.lazy(() => GenderSchema),
   birthDate: z.coerce.date(),
@@ -4899,7 +4958,7 @@ export const PetUncheckedCreateWithoutChildrenInputSchema: z.ZodType<Prisma.PetU
   registration: z.lazy(() => RegistrationUncheckedCreateNestedOneWithoutPetInputSchema).optional(),
   parents: z.lazy(() => PetUncheckedCreateNestedManyWithoutChildrenInputSchema).optional(),
   avatar: z.lazy(() => FileUncheckedCreateNestedOneWithoutAvatarOfInputSchema).optional(),
-  images: z.lazy(() => FileUncheckedCreateNestedManyWithoutImageOfInputSchema).optional()
+  img: z.lazy(() => FileUncheckedCreateNestedOneWithoutImgOfInputSchema).optional()
 }).strict();
 
 export const PetCreateOrConnectWithoutChildrenInputSchema: z.ZodType<Prisma.PetCreateOrConnectWithoutChildrenInput> = z.object({
@@ -4909,9 +4968,9 @@ export const PetCreateOrConnectWithoutChildrenInputSchema: z.ZodType<Prisma.PetC
 
 export const PetCreateWithoutParentsInputSchema: z.ZodType<Prisma.PetCreateWithoutParentsInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string(),
+  name: z.string().min(2).max(12),
   nameEn: z.string().optional().nullable(),
-  ownerName: z.string(),
+  ownerName: z.string().optional().nullable(),
   type: z.lazy(() => PetTypeSchema).optional(),
   gender: z.lazy(() => GenderSchema),
   birthDate: z.coerce.date(),
@@ -4924,14 +4983,14 @@ export const PetCreateWithoutParentsInputSchema: z.ZodType<Prisma.PetCreateWitho
   kennel: z.lazy(() => KennelCreateNestedOneWithoutPetsInputSchema).optional(),
   children: z.lazy(() => PetCreateNestedManyWithoutParentsInputSchema).optional(),
   avatar: z.lazy(() => FileCreateNestedOneWithoutAvatarOfInputSchema).optional(),
-  images: z.lazy(() => FileCreateNestedManyWithoutImageOfInputSchema).optional()
+  img: z.lazy(() => FileCreateNestedOneWithoutImgOfInputSchema).optional()
 }).strict();
 
 export const PetUncheckedCreateWithoutParentsInputSchema: z.ZodType<Prisma.PetUncheckedCreateWithoutParentsInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string(),
+  name: z.string().min(2).max(12),
   nameEn: z.string().optional().nullable(),
-  ownerName: z.string(),
+  ownerName: z.string().optional().nullable(),
   type: z.lazy(() => PetTypeSchema).optional(),
   gender: z.lazy(() => GenderSchema),
   birthDate: z.coerce.date(),
@@ -4944,7 +5003,7 @@ export const PetUncheckedCreateWithoutParentsInputSchema: z.ZodType<Prisma.PetUn
   registration: z.lazy(() => RegistrationUncheckedCreateNestedOneWithoutPetInputSchema).optional(),
   children: z.lazy(() => PetUncheckedCreateNestedManyWithoutParentsInputSchema).optional(),
   avatar: z.lazy(() => FileUncheckedCreateNestedOneWithoutAvatarOfInputSchema).optional(),
-  images: z.lazy(() => FileUncheckedCreateNestedManyWithoutImageOfInputSchema).optional()
+  img: z.lazy(() => FileUncheckedCreateNestedOneWithoutImgOfInputSchema).optional()
 }).strict();
 
 export const PetCreateOrConnectWithoutParentsInputSchema: z.ZodType<Prisma.PetCreateOrConnectWithoutParentsInput> = z.object({
@@ -4962,7 +5021,7 @@ export const FileCreateWithoutAvatarOfInputSchema: z.ZodType<Prisma.FileCreateWi
   updatedAt: z.coerce.date().optional(),
   status: z.lazy(() => FileStatusSchema).optional(),
   kennel: z.lazy(() => KennelCreateNestedOneWithoutImgInputSchema).optional(),
-  imageOf: z.lazy(() => PetCreateNestedOneWithoutImagesInputSchema).optional()
+  imgOf: z.lazy(() => PetCreateNestedOneWithoutImgInputSchema).optional()
 }).strict();
 
 export const FileUncheckedCreateWithoutAvatarOfInputSchema: z.ZodType<Prisma.FileUncheckedCreateWithoutAvatarOfInput> = z.object({
@@ -4972,7 +5031,7 @@ export const FileUncheckedCreateWithoutAvatarOfInputSchema: z.ZodType<Prisma.Fil
   name: z.string(),
   size: z.number().int(),
   kennelId: z.string().optional().nullable(),
-  imageOfId: z.string().optional().nullable(),
+  imgOfId: z.string().optional().nullable(),
   crceatedAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   status: z.lazy(() => FileStatusSchema).optional()
@@ -4983,7 +5042,7 @@ export const FileCreateOrConnectWithoutAvatarOfInputSchema: z.ZodType<Prisma.Fil
   create: z.union([ z.lazy(() => FileCreateWithoutAvatarOfInputSchema),z.lazy(() => FileUncheckedCreateWithoutAvatarOfInputSchema) ]),
 }).strict();
 
-export const FileCreateWithoutImageOfInputSchema: z.ZodType<Prisma.FileCreateWithoutImageOfInput> = z.object({
+export const FileCreateWithoutImgOfInputSchema: z.ZodType<Prisma.FileCreateWithoutImgOfInput> = z.object({
   id: z.string().cuid().optional(),
   key: z.string(),
   url: z.string(),
@@ -4996,7 +5055,7 @@ export const FileCreateWithoutImageOfInputSchema: z.ZodType<Prisma.FileCreateWit
   avatarOf: z.lazy(() => PetCreateNestedOneWithoutAvatarInputSchema).optional()
 }).strict();
 
-export const FileUncheckedCreateWithoutImageOfInputSchema: z.ZodType<Prisma.FileUncheckedCreateWithoutImageOfInput> = z.object({
+export const FileUncheckedCreateWithoutImgOfInputSchema: z.ZodType<Prisma.FileUncheckedCreateWithoutImgOfInput> = z.object({
   id: z.string().cuid().optional(),
   key: z.string(),
   url: z.string(),
@@ -5009,14 +5068,9 @@ export const FileUncheckedCreateWithoutImageOfInputSchema: z.ZodType<Prisma.File
   status: z.lazy(() => FileStatusSchema).optional()
 }).strict();
 
-export const FileCreateOrConnectWithoutImageOfInputSchema: z.ZodType<Prisma.FileCreateOrConnectWithoutImageOfInput> = z.object({
+export const FileCreateOrConnectWithoutImgOfInputSchema: z.ZodType<Prisma.FileCreateOrConnectWithoutImgOfInput> = z.object({
   where: z.lazy(() => FileWhereUniqueInputSchema),
-  create: z.union([ z.lazy(() => FileCreateWithoutImageOfInputSchema),z.lazy(() => FileUncheckedCreateWithoutImageOfInputSchema) ]),
-}).strict();
-
-export const FileCreateManyImageOfInputEnvelopeSchema: z.ZodType<Prisma.FileCreateManyImageOfInputEnvelope> = z.object({
-  data: z.union([ z.lazy(() => FileCreateManyImageOfInputSchema),z.lazy(() => FileCreateManyImageOfInputSchema).array() ]),
-  skipDuplicates: z.boolean().optional()
+  create: z.union([ z.lazy(() => FileCreateWithoutImgOfInputSchema),z.lazy(() => FileUncheckedCreateWithoutImgOfInputSchema) ]),
 }).strict();
 
 export const UserUpsertWithoutPetInputSchema: z.ZodType<Prisma.UserUpsertWithoutPetInput> = z.object({
@@ -5173,7 +5227,7 @@ export const FileUpdateWithoutAvatarOfInputSchema: z.ZodType<Prisma.FileUpdateWi
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => FileStatusSchema),z.lazy(() => EnumFileStatusFieldUpdateOperationsInputSchema) ]).optional(),
   kennel: z.lazy(() => KennelUpdateOneWithoutImgNestedInputSchema).optional(),
-  imageOf: z.lazy(() => PetUpdateOneWithoutImagesNestedInputSchema).optional()
+  imgOf: z.lazy(() => PetUpdateOneWithoutImgNestedInputSchema).optional()
 }).strict();
 
 export const FileUncheckedUpdateWithoutAvatarOfInputSchema: z.ZodType<Prisma.FileUncheckedUpdateWithoutAvatarOfInput> = z.object({
@@ -5183,43 +5237,47 @@ export const FileUncheckedUpdateWithoutAvatarOfInputSchema: z.ZodType<Prisma.Fil
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   size: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   kennelId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  imageOfId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  imgOfId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   crceatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => FileStatusSchema),z.lazy(() => EnumFileStatusFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
-export const FileUpsertWithWhereUniqueWithoutImageOfInputSchema: z.ZodType<Prisma.FileUpsertWithWhereUniqueWithoutImageOfInput> = z.object({
-  where: z.lazy(() => FileWhereUniqueInputSchema),
-  update: z.union([ z.lazy(() => FileUpdateWithoutImageOfInputSchema),z.lazy(() => FileUncheckedUpdateWithoutImageOfInputSchema) ]),
-  create: z.union([ z.lazy(() => FileCreateWithoutImageOfInputSchema),z.lazy(() => FileUncheckedCreateWithoutImageOfInputSchema) ]),
+export const FileUpsertWithoutImgOfInputSchema: z.ZodType<Prisma.FileUpsertWithoutImgOfInput> = z.object({
+  update: z.union([ z.lazy(() => FileUpdateWithoutImgOfInputSchema),z.lazy(() => FileUncheckedUpdateWithoutImgOfInputSchema) ]),
+  create: z.union([ z.lazy(() => FileCreateWithoutImgOfInputSchema),z.lazy(() => FileUncheckedCreateWithoutImgOfInputSchema) ]),
+  where: z.lazy(() => FileWhereInputSchema).optional()
 }).strict();
 
-export const FileUpdateWithWhereUniqueWithoutImageOfInputSchema: z.ZodType<Prisma.FileUpdateWithWhereUniqueWithoutImageOfInput> = z.object({
-  where: z.lazy(() => FileWhereUniqueInputSchema),
-  data: z.union([ z.lazy(() => FileUpdateWithoutImageOfInputSchema),z.lazy(() => FileUncheckedUpdateWithoutImageOfInputSchema) ]),
+export const FileUpdateToOneWithWhereWithoutImgOfInputSchema: z.ZodType<Prisma.FileUpdateToOneWithWhereWithoutImgOfInput> = z.object({
+  where: z.lazy(() => FileWhereInputSchema).optional(),
+  data: z.union([ z.lazy(() => FileUpdateWithoutImgOfInputSchema),z.lazy(() => FileUncheckedUpdateWithoutImgOfInputSchema) ]),
 }).strict();
 
-export const FileUpdateManyWithWhereWithoutImageOfInputSchema: z.ZodType<Prisma.FileUpdateManyWithWhereWithoutImageOfInput> = z.object({
-  where: z.lazy(() => FileScalarWhereInputSchema),
-  data: z.union([ z.lazy(() => FileUpdateManyMutationInputSchema),z.lazy(() => FileUncheckedUpdateManyWithoutImageOfInputSchema) ]),
+export const FileUpdateWithoutImgOfInputSchema: z.ZodType<Prisma.FileUpdateWithoutImgOfInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  key: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  url: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  size: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  crceatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  status: z.union([ z.lazy(() => FileStatusSchema),z.lazy(() => EnumFileStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  kennel: z.lazy(() => KennelUpdateOneWithoutImgNestedInputSchema).optional(),
+  avatarOf: z.lazy(() => PetUpdateOneWithoutAvatarNestedInputSchema).optional()
 }).strict();
 
-export const FileScalarWhereInputSchema: z.ZodType<Prisma.FileScalarWhereInput> = z.object({
-  AND: z.union([ z.lazy(() => FileScalarWhereInputSchema),z.lazy(() => FileScalarWhereInputSchema).array() ]).optional(),
-  OR: z.lazy(() => FileScalarWhereInputSchema).array().optional(),
-  NOT: z.union([ z.lazy(() => FileScalarWhereInputSchema),z.lazy(() => FileScalarWhereInputSchema).array() ]).optional(),
-  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  key: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  url: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  size: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
-  kennelId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  imageOfId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  avatarOfId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  crceatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  status: z.union([ z.lazy(() => EnumFileStatusFilterSchema),z.lazy(() => FileStatusSchema) ]).optional(),
+export const FileUncheckedUpdateWithoutImgOfInputSchema: z.ZodType<Prisma.FileUncheckedUpdateWithoutImgOfInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  key: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  url: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  size: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  kennelId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  avatarOfId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  crceatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  status: z.union([ z.lazy(() => FileStatusSchema),z.lazy(() => EnumFileStatusFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const UserCreateWithoutRegistrationInputSchema: z.ZodType<Prisma.UserCreateWithoutRegistrationInput> = z.object({
@@ -5253,9 +5311,9 @@ export const UserCreateOrConnectWithoutRegistrationInputSchema: z.ZodType<Prisma
 
 export const PetCreateWithoutRegistrationInputSchema: z.ZodType<Prisma.PetCreateWithoutRegistrationInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string(),
+  name: z.string().min(2).max(12),
   nameEn: z.string().optional().nullable(),
-  ownerName: z.string(),
+  ownerName: z.string().optional().nullable(),
   type: z.lazy(() => PetTypeSchema).optional(),
   gender: z.lazy(() => GenderSchema),
   birthDate: z.coerce.date(),
@@ -5268,14 +5326,14 @@ export const PetCreateWithoutRegistrationInputSchema: z.ZodType<Prisma.PetCreate
   parents: z.lazy(() => PetCreateNestedManyWithoutChildrenInputSchema).optional(),
   children: z.lazy(() => PetCreateNestedManyWithoutParentsInputSchema).optional(),
   avatar: z.lazy(() => FileCreateNestedOneWithoutAvatarOfInputSchema).optional(),
-  images: z.lazy(() => FileCreateNestedManyWithoutImageOfInputSchema).optional()
+  img: z.lazy(() => FileCreateNestedOneWithoutImgOfInputSchema).optional()
 }).strict();
 
 export const PetUncheckedCreateWithoutRegistrationInputSchema: z.ZodType<Prisma.PetUncheckedCreateWithoutRegistrationInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string(),
+  name: z.string().min(2).max(12),
   nameEn: z.string().optional().nullable(),
-  ownerName: z.string(),
+  ownerName: z.string().optional().nullable(),
   type: z.lazy(() => PetTypeSchema).optional(),
   gender: z.lazy(() => GenderSchema),
   birthDate: z.coerce.date(),
@@ -5288,7 +5346,7 @@ export const PetUncheckedCreateWithoutRegistrationInputSchema: z.ZodType<Prisma.
   parents: z.lazy(() => PetUncheckedCreateNestedManyWithoutChildrenInputSchema).optional(),
   children: z.lazy(() => PetUncheckedCreateNestedManyWithoutParentsInputSchema).optional(),
   avatar: z.lazy(() => FileUncheckedCreateNestedOneWithoutAvatarOfInputSchema).optional(),
-  images: z.lazy(() => FileUncheckedCreateNestedManyWithoutImageOfInputSchema).optional()
+  img: z.lazy(() => FileUncheckedCreateNestedOneWithoutImgOfInputSchema).optional()
 }).strict();
 
 export const PetCreateOrConnectWithoutRegistrationInputSchema: z.ZodType<Prisma.PetCreateOrConnectWithoutRegistrationInput> = z.object({
@@ -5344,9 +5402,9 @@ export const PetUpdateToOneWithWhereWithoutRegistrationInputSchema: z.ZodType<Pr
 
 export const PetUpdateWithoutRegistrationInputSchema: z.ZodType<Prisma.PetUpdateWithoutRegistrationInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  ownerName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   type: z.union([ z.lazy(() => PetTypeSchema),z.lazy(() => EnumPetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   gender: z.union([ z.lazy(() => GenderSchema),z.lazy(() => EnumGenderFieldUpdateOperationsInputSchema) ]).optional(),
   birthDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5359,14 +5417,14 @@ export const PetUpdateWithoutRegistrationInputSchema: z.ZodType<Prisma.PetUpdate
   parents: z.lazy(() => PetUpdateManyWithoutChildrenNestedInputSchema).optional(),
   children: z.lazy(() => PetUpdateManyWithoutParentsNestedInputSchema).optional(),
   avatar: z.lazy(() => FileUpdateOneWithoutAvatarOfNestedInputSchema).optional(),
-  images: z.lazy(() => FileUpdateManyWithoutImageOfNestedInputSchema).optional()
+  img: z.lazy(() => FileUpdateOneWithoutImgOfNestedInputSchema).optional()
 }).strict();
 
 export const PetUncheckedUpdateWithoutRegistrationInputSchema: z.ZodType<Prisma.PetUncheckedUpdateWithoutRegistrationInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  ownerName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   type: z.union([ z.lazy(() => PetTypeSchema),z.lazy(() => EnumPetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   gender: z.union([ z.lazy(() => GenderSchema),z.lazy(() => EnumGenderFieldUpdateOperationsInputSchema) ]).optional(),
   birthDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5379,7 +5437,7 @@ export const PetUncheckedUpdateWithoutRegistrationInputSchema: z.ZodType<Prisma.
   parents: z.lazy(() => PetUncheckedUpdateManyWithoutChildrenNestedInputSchema).optional(),
   children: z.lazy(() => PetUncheckedUpdateManyWithoutParentsNestedInputSchema).optional(),
   avatar: z.lazy(() => FileUncheckedUpdateOneWithoutAvatarOfNestedInputSchema).optional(),
-  images: z.lazy(() => FileUncheckedUpdateManyWithoutImageOfNestedInputSchema).optional()
+  img: z.lazy(() => FileUncheckedUpdateOneWithoutImgOfNestedInputSchema).optional()
 }).strict();
 
 export const KennelCreateWithoutImgInputSchema: z.ZodType<Prisma.KennelCreateWithoutImgInput> = z.object({
@@ -5409,11 +5467,11 @@ export const KennelCreateOrConnectWithoutImgInputSchema: z.ZodType<Prisma.Kennel
   create: z.union([ z.lazy(() => KennelCreateWithoutImgInputSchema),z.lazy(() => KennelUncheckedCreateWithoutImgInputSchema) ]),
 }).strict();
 
-export const PetCreateWithoutImagesInputSchema: z.ZodType<Prisma.PetCreateWithoutImagesInput> = z.object({
+export const PetCreateWithoutImgInputSchema: z.ZodType<Prisma.PetCreateWithoutImgInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string(),
+  name: z.string().min(2).max(12),
   nameEn: z.string().optional().nullable(),
-  ownerName: z.string(),
+  ownerName: z.string().optional().nullable(),
   type: z.lazy(() => PetTypeSchema).optional(),
   gender: z.lazy(() => GenderSchema),
   birthDate: z.coerce.date(),
@@ -5429,11 +5487,11 @@ export const PetCreateWithoutImagesInputSchema: z.ZodType<Prisma.PetCreateWithou
   avatar: z.lazy(() => FileCreateNestedOneWithoutAvatarOfInputSchema).optional()
 }).strict();
 
-export const PetUncheckedCreateWithoutImagesInputSchema: z.ZodType<Prisma.PetUncheckedCreateWithoutImagesInput> = z.object({
+export const PetUncheckedCreateWithoutImgInputSchema: z.ZodType<Prisma.PetUncheckedCreateWithoutImgInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string(),
+  name: z.string().min(2).max(12),
   nameEn: z.string().optional().nullable(),
-  ownerName: z.string(),
+  ownerName: z.string().optional().nullable(),
   type: z.lazy(() => PetTypeSchema).optional(),
   gender: z.lazy(() => GenderSchema),
   birthDate: z.coerce.date(),
@@ -5449,16 +5507,16 @@ export const PetUncheckedCreateWithoutImagesInputSchema: z.ZodType<Prisma.PetUnc
   avatar: z.lazy(() => FileUncheckedCreateNestedOneWithoutAvatarOfInputSchema).optional()
 }).strict();
 
-export const PetCreateOrConnectWithoutImagesInputSchema: z.ZodType<Prisma.PetCreateOrConnectWithoutImagesInput> = z.object({
+export const PetCreateOrConnectWithoutImgInputSchema: z.ZodType<Prisma.PetCreateOrConnectWithoutImgInput> = z.object({
   where: z.lazy(() => PetWhereUniqueInputSchema),
-  create: z.union([ z.lazy(() => PetCreateWithoutImagesInputSchema),z.lazy(() => PetUncheckedCreateWithoutImagesInputSchema) ]),
+  create: z.union([ z.lazy(() => PetCreateWithoutImgInputSchema),z.lazy(() => PetUncheckedCreateWithoutImgInputSchema) ]),
 }).strict();
 
 export const PetCreateWithoutAvatarInputSchema: z.ZodType<Prisma.PetCreateWithoutAvatarInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string(),
+  name: z.string().min(2).max(12),
   nameEn: z.string().optional().nullable(),
-  ownerName: z.string(),
+  ownerName: z.string().optional().nullable(),
   type: z.lazy(() => PetTypeSchema).optional(),
   gender: z.lazy(() => GenderSchema),
   birthDate: z.coerce.date(),
@@ -5471,14 +5529,14 @@ export const PetCreateWithoutAvatarInputSchema: z.ZodType<Prisma.PetCreateWithou
   kennel: z.lazy(() => KennelCreateNestedOneWithoutPetsInputSchema).optional(),
   parents: z.lazy(() => PetCreateNestedManyWithoutChildrenInputSchema).optional(),
   children: z.lazy(() => PetCreateNestedManyWithoutParentsInputSchema).optional(),
-  images: z.lazy(() => FileCreateNestedManyWithoutImageOfInputSchema).optional()
+  img: z.lazy(() => FileCreateNestedOneWithoutImgOfInputSchema).optional()
 }).strict();
 
 export const PetUncheckedCreateWithoutAvatarInputSchema: z.ZodType<Prisma.PetUncheckedCreateWithoutAvatarInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string(),
+  name: z.string().min(2).max(12),
   nameEn: z.string().optional().nullable(),
-  ownerName: z.string(),
+  ownerName: z.string().optional().nullable(),
   type: z.lazy(() => PetTypeSchema).optional(),
   gender: z.lazy(() => GenderSchema),
   birthDate: z.coerce.date(),
@@ -5491,7 +5549,7 @@ export const PetUncheckedCreateWithoutAvatarInputSchema: z.ZodType<Prisma.PetUnc
   registration: z.lazy(() => RegistrationUncheckedCreateNestedOneWithoutPetInputSchema).optional(),
   parents: z.lazy(() => PetUncheckedCreateNestedManyWithoutChildrenInputSchema).optional(),
   children: z.lazy(() => PetUncheckedCreateNestedManyWithoutParentsInputSchema).optional(),
-  images: z.lazy(() => FileUncheckedCreateNestedManyWithoutImageOfInputSchema).optional()
+  img: z.lazy(() => FileUncheckedCreateNestedOneWithoutImgOfInputSchema).optional()
 }).strict();
 
 export const PetCreateOrConnectWithoutAvatarInputSchema: z.ZodType<Prisma.PetCreateOrConnectWithoutAvatarInput> = z.object({
@@ -5532,22 +5590,22 @@ export const KennelUncheckedUpdateWithoutImgInputSchema: z.ZodType<Prisma.Kennel
   profile: z.lazy(() => ProfileUncheckedUpdateOneWithoutKennelNestedInputSchema).optional()
 }).strict();
 
-export const PetUpsertWithoutImagesInputSchema: z.ZodType<Prisma.PetUpsertWithoutImagesInput> = z.object({
-  update: z.union([ z.lazy(() => PetUpdateWithoutImagesInputSchema),z.lazy(() => PetUncheckedUpdateWithoutImagesInputSchema) ]),
-  create: z.union([ z.lazy(() => PetCreateWithoutImagesInputSchema),z.lazy(() => PetUncheckedCreateWithoutImagesInputSchema) ]),
+export const PetUpsertWithoutImgInputSchema: z.ZodType<Prisma.PetUpsertWithoutImgInput> = z.object({
+  update: z.union([ z.lazy(() => PetUpdateWithoutImgInputSchema),z.lazy(() => PetUncheckedUpdateWithoutImgInputSchema) ]),
+  create: z.union([ z.lazy(() => PetCreateWithoutImgInputSchema),z.lazy(() => PetUncheckedCreateWithoutImgInputSchema) ]),
   where: z.lazy(() => PetWhereInputSchema).optional()
 }).strict();
 
-export const PetUpdateToOneWithWhereWithoutImagesInputSchema: z.ZodType<Prisma.PetUpdateToOneWithWhereWithoutImagesInput> = z.object({
+export const PetUpdateToOneWithWhereWithoutImgInputSchema: z.ZodType<Prisma.PetUpdateToOneWithWhereWithoutImgInput> = z.object({
   where: z.lazy(() => PetWhereInputSchema).optional(),
-  data: z.union([ z.lazy(() => PetUpdateWithoutImagesInputSchema),z.lazy(() => PetUncheckedUpdateWithoutImagesInputSchema) ]),
+  data: z.union([ z.lazy(() => PetUpdateWithoutImgInputSchema),z.lazy(() => PetUncheckedUpdateWithoutImgInputSchema) ]),
 }).strict();
 
-export const PetUpdateWithoutImagesInputSchema: z.ZodType<Prisma.PetUpdateWithoutImagesInput> = z.object({
+export const PetUpdateWithoutImgInputSchema: z.ZodType<Prisma.PetUpdateWithoutImgInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  ownerName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   type: z.union([ z.lazy(() => PetTypeSchema),z.lazy(() => EnumPetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   gender: z.union([ z.lazy(() => GenderSchema),z.lazy(() => EnumGenderFieldUpdateOperationsInputSchema) ]).optional(),
   birthDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5563,11 +5621,11 @@ export const PetUpdateWithoutImagesInputSchema: z.ZodType<Prisma.PetUpdateWithou
   avatar: z.lazy(() => FileUpdateOneWithoutAvatarOfNestedInputSchema).optional()
 }).strict();
 
-export const PetUncheckedUpdateWithoutImagesInputSchema: z.ZodType<Prisma.PetUncheckedUpdateWithoutImagesInput> = z.object({
+export const PetUncheckedUpdateWithoutImgInputSchema: z.ZodType<Prisma.PetUncheckedUpdateWithoutImgInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  ownerName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   type: z.union([ z.lazy(() => PetTypeSchema),z.lazy(() => EnumPetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   gender: z.union([ z.lazy(() => GenderSchema),z.lazy(() => EnumGenderFieldUpdateOperationsInputSchema) ]).optional(),
   birthDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5596,9 +5654,9 @@ export const PetUpdateToOneWithWhereWithoutAvatarInputSchema: z.ZodType<Prisma.P
 
 export const PetUpdateWithoutAvatarInputSchema: z.ZodType<Prisma.PetUpdateWithoutAvatarInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  ownerName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   type: z.union([ z.lazy(() => PetTypeSchema),z.lazy(() => EnumPetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   gender: z.union([ z.lazy(() => GenderSchema),z.lazy(() => EnumGenderFieldUpdateOperationsInputSchema) ]).optional(),
   birthDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5611,14 +5669,14 @@ export const PetUpdateWithoutAvatarInputSchema: z.ZodType<Prisma.PetUpdateWithou
   kennel: z.lazy(() => KennelUpdateOneWithoutPetsNestedInputSchema).optional(),
   parents: z.lazy(() => PetUpdateManyWithoutChildrenNestedInputSchema).optional(),
   children: z.lazy(() => PetUpdateManyWithoutParentsNestedInputSchema).optional(),
-  images: z.lazy(() => FileUpdateManyWithoutImageOfNestedInputSchema).optional()
+  img: z.lazy(() => FileUpdateOneWithoutImgOfNestedInputSchema).optional()
 }).strict();
 
 export const PetUncheckedUpdateWithoutAvatarInputSchema: z.ZodType<Prisma.PetUncheckedUpdateWithoutAvatarInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  ownerName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   type: z.union([ z.lazy(() => PetTypeSchema),z.lazy(() => EnumPetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   gender: z.union([ z.lazy(() => GenderSchema),z.lazy(() => EnumGenderFieldUpdateOperationsInputSchema) ]).optional(),
   birthDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5631,7 +5689,7 @@ export const PetUncheckedUpdateWithoutAvatarInputSchema: z.ZodType<Prisma.PetUnc
   registration: z.lazy(() => RegistrationUncheckedUpdateOneWithoutPetNestedInputSchema).optional(),
   parents: z.lazy(() => PetUncheckedUpdateManyWithoutChildrenNestedInputSchema).optional(),
   children: z.lazy(() => PetUncheckedUpdateManyWithoutParentsNestedInputSchema).optional(),
-  images: z.lazy(() => FileUncheckedUpdateManyWithoutImageOfNestedInputSchema).optional()
+  img: z.lazy(() => FileUncheckedUpdateOneWithoutImgOfNestedInputSchema).optional()
 }).strict();
 
 export const AccountCreateManyUserInputSchema: z.ZodType<Prisma.AccountCreateManyUserInput> = z.object({
@@ -5667,9 +5725,9 @@ export const RegistrationCreateManyReviewedByInputSchema: z.ZodType<Prisma.Regis
 
 export const PetCreateManyCreatedByInputSchema: z.ZodType<Prisma.PetCreateManyCreatedByInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string(),
+  name: z.string().min(2).max(12),
   nameEn: z.string().optional().nullable(),
-  ownerName: z.string(),
+  ownerName: z.string().optional().nullable(),
   type: z.lazy(() => PetTypeSchema).optional(),
   gender: z.lazy(() => GenderSchema),
   birthDate: z.coerce.date(),
@@ -5775,9 +5833,9 @@ export const RegistrationUncheckedUpdateManyWithoutReviewedByInputSchema: z.ZodT
 
 export const PetUpdateWithoutCreatedByInputSchema: z.ZodType<Prisma.PetUpdateWithoutCreatedByInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  ownerName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   type: z.union([ z.lazy(() => PetTypeSchema),z.lazy(() => EnumPetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   gender: z.union([ z.lazy(() => GenderSchema),z.lazy(() => EnumGenderFieldUpdateOperationsInputSchema) ]).optional(),
   birthDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5790,14 +5848,14 @@ export const PetUpdateWithoutCreatedByInputSchema: z.ZodType<Prisma.PetUpdateWit
   parents: z.lazy(() => PetUpdateManyWithoutChildrenNestedInputSchema).optional(),
   children: z.lazy(() => PetUpdateManyWithoutParentsNestedInputSchema).optional(),
   avatar: z.lazy(() => FileUpdateOneWithoutAvatarOfNestedInputSchema).optional(),
-  images: z.lazy(() => FileUpdateManyWithoutImageOfNestedInputSchema).optional()
+  img: z.lazy(() => FileUpdateOneWithoutImgOfNestedInputSchema).optional()
 }).strict();
 
 export const PetUncheckedUpdateWithoutCreatedByInputSchema: z.ZodType<Prisma.PetUncheckedUpdateWithoutCreatedByInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  ownerName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   type: z.union([ z.lazy(() => PetTypeSchema),z.lazy(() => EnumPetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   gender: z.union([ z.lazy(() => GenderSchema),z.lazy(() => EnumGenderFieldUpdateOperationsInputSchema) ]).optional(),
   birthDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5810,14 +5868,14 @@ export const PetUncheckedUpdateWithoutCreatedByInputSchema: z.ZodType<Prisma.Pet
   parents: z.lazy(() => PetUncheckedUpdateManyWithoutChildrenNestedInputSchema).optional(),
   children: z.lazy(() => PetUncheckedUpdateManyWithoutParentsNestedInputSchema).optional(),
   avatar: z.lazy(() => FileUncheckedUpdateOneWithoutAvatarOfNestedInputSchema).optional(),
-  images: z.lazy(() => FileUncheckedUpdateManyWithoutImageOfNestedInputSchema).optional()
+  img: z.lazy(() => FileUncheckedUpdateOneWithoutImgOfNestedInputSchema).optional()
 }).strict();
 
 export const PetUncheckedUpdateManyWithoutCreatedByInputSchema: z.ZodType<Prisma.PetUncheckedUpdateManyWithoutCreatedByInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  ownerName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   type: z.union([ z.lazy(() => PetTypeSchema),z.lazy(() => EnumPetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   gender: z.union([ z.lazy(() => GenderSchema),z.lazy(() => EnumGenderFieldUpdateOperationsInputSchema) ]).optional(),
   birthDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5830,9 +5888,9 @@ export const PetUncheckedUpdateManyWithoutCreatedByInputSchema: z.ZodType<Prisma
 
 export const PetCreateManyKennelInputSchema: z.ZodType<Prisma.PetCreateManyKennelInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string(),
+  name: z.string().min(2).max(12),
   nameEn: z.string().optional().nullable(),
-  ownerName: z.string(),
+  ownerName: z.string().optional().nullable(),
   type: z.lazy(() => PetTypeSchema).optional(),
   gender: z.lazy(() => GenderSchema),
   birthDate: z.coerce.date(),
@@ -5845,9 +5903,9 @@ export const PetCreateManyKennelInputSchema: z.ZodType<Prisma.PetCreateManyKenne
 
 export const PetUpdateWithoutKennelInputSchema: z.ZodType<Prisma.PetUpdateWithoutKennelInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  ownerName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   type: z.union([ z.lazy(() => PetTypeSchema),z.lazy(() => EnumPetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   gender: z.union([ z.lazy(() => GenderSchema),z.lazy(() => EnumGenderFieldUpdateOperationsInputSchema) ]).optional(),
   birthDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5860,14 +5918,14 @@ export const PetUpdateWithoutKennelInputSchema: z.ZodType<Prisma.PetUpdateWithou
   parents: z.lazy(() => PetUpdateManyWithoutChildrenNestedInputSchema).optional(),
   children: z.lazy(() => PetUpdateManyWithoutParentsNestedInputSchema).optional(),
   avatar: z.lazy(() => FileUpdateOneWithoutAvatarOfNestedInputSchema).optional(),
-  images: z.lazy(() => FileUpdateManyWithoutImageOfNestedInputSchema).optional()
+  img: z.lazy(() => FileUpdateOneWithoutImgOfNestedInputSchema).optional()
 }).strict();
 
 export const PetUncheckedUpdateWithoutKennelInputSchema: z.ZodType<Prisma.PetUncheckedUpdateWithoutKennelInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  ownerName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   type: z.union([ z.lazy(() => PetTypeSchema),z.lazy(() => EnumPetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   gender: z.union([ z.lazy(() => GenderSchema),z.lazy(() => EnumGenderFieldUpdateOperationsInputSchema) ]).optional(),
   birthDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5880,14 +5938,14 @@ export const PetUncheckedUpdateWithoutKennelInputSchema: z.ZodType<Prisma.PetUnc
   parents: z.lazy(() => PetUncheckedUpdateManyWithoutChildrenNestedInputSchema).optional(),
   children: z.lazy(() => PetUncheckedUpdateManyWithoutParentsNestedInputSchema).optional(),
   avatar: z.lazy(() => FileUncheckedUpdateOneWithoutAvatarOfNestedInputSchema).optional(),
-  images: z.lazy(() => FileUncheckedUpdateManyWithoutImageOfNestedInputSchema).optional()
+  img: z.lazy(() => FileUncheckedUpdateOneWithoutImgOfNestedInputSchema).optional()
 }).strict();
 
 export const PetUncheckedUpdateManyWithoutKennelInputSchema: z.ZodType<Prisma.PetUncheckedUpdateManyWithoutKennelInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  ownerName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   type: z.union([ z.lazy(() => PetTypeSchema),z.lazy(() => EnumPetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   gender: z.union([ z.lazy(() => GenderSchema),z.lazy(() => EnumGenderFieldUpdateOperationsInputSchema) ]).optional(),
   birthDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5898,24 +5956,11 @@ export const PetUncheckedUpdateManyWithoutKennelInputSchema: z.ZodType<Prisma.Pe
   createdById: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
-export const FileCreateManyImageOfInputSchema: z.ZodType<Prisma.FileCreateManyImageOfInput> = z.object({
-  id: z.string().cuid().optional(),
-  key: z.string(),
-  url: z.string(),
-  name: z.string(),
-  size: z.number().int(),
-  kennelId: z.string().optional().nullable(),
-  avatarOfId: z.string().optional().nullable(),
-  crceatedAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional(),
-  status: z.lazy(() => FileStatusSchema).optional()
-}).strict();
-
 export const PetUpdateWithoutChildrenInputSchema: z.ZodType<Prisma.PetUpdateWithoutChildrenInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  ownerName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   type: z.union([ z.lazy(() => PetTypeSchema),z.lazy(() => EnumPetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   gender: z.union([ z.lazy(() => GenderSchema),z.lazy(() => EnumGenderFieldUpdateOperationsInputSchema) ]).optional(),
   birthDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5928,14 +5973,14 @@ export const PetUpdateWithoutChildrenInputSchema: z.ZodType<Prisma.PetUpdateWith
   kennel: z.lazy(() => KennelUpdateOneWithoutPetsNestedInputSchema).optional(),
   parents: z.lazy(() => PetUpdateManyWithoutChildrenNestedInputSchema).optional(),
   avatar: z.lazy(() => FileUpdateOneWithoutAvatarOfNestedInputSchema).optional(),
-  images: z.lazy(() => FileUpdateManyWithoutImageOfNestedInputSchema).optional()
+  img: z.lazy(() => FileUpdateOneWithoutImgOfNestedInputSchema).optional()
 }).strict();
 
 export const PetUncheckedUpdateWithoutChildrenInputSchema: z.ZodType<Prisma.PetUncheckedUpdateWithoutChildrenInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  ownerName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   type: z.union([ z.lazy(() => PetTypeSchema),z.lazy(() => EnumPetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   gender: z.union([ z.lazy(() => GenderSchema),z.lazy(() => EnumGenderFieldUpdateOperationsInputSchema) ]).optional(),
   birthDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5948,14 +5993,14 @@ export const PetUncheckedUpdateWithoutChildrenInputSchema: z.ZodType<Prisma.PetU
   registration: z.lazy(() => RegistrationUncheckedUpdateOneWithoutPetNestedInputSchema).optional(),
   parents: z.lazy(() => PetUncheckedUpdateManyWithoutChildrenNestedInputSchema).optional(),
   avatar: z.lazy(() => FileUncheckedUpdateOneWithoutAvatarOfNestedInputSchema).optional(),
-  images: z.lazy(() => FileUncheckedUpdateManyWithoutImageOfNestedInputSchema).optional()
+  img: z.lazy(() => FileUncheckedUpdateOneWithoutImgOfNestedInputSchema).optional()
 }).strict();
 
 export const PetUncheckedUpdateManyWithoutChildrenInputSchema: z.ZodType<Prisma.PetUncheckedUpdateManyWithoutChildrenInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  ownerName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   type: z.union([ z.lazy(() => PetTypeSchema),z.lazy(() => EnumPetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   gender: z.union([ z.lazy(() => GenderSchema),z.lazy(() => EnumGenderFieldUpdateOperationsInputSchema) ]).optional(),
   birthDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5969,9 +6014,9 @@ export const PetUncheckedUpdateManyWithoutChildrenInputSchema: z.ZodType<Prisma.
 
 export const PetUpdateWithoutParentsInputSchema: z.ZodType<Prisma.PetUpdateWithoutParentsInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  ownerName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   type: z.union([ z.lazy(() => PetTypeSchema),z.lazy(() => EnumPetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   gender: z.union([ z.lazy(() => GenderSchema),z.lazy(() => EnumGenderFieldUpdateOperationsInputSchema) ]).optional(),
   birthDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5984,14 +6029,14 @@ export const PetUpdateWithoutParentsInputSchema: z.ZodType<Prisma.PetUpdateWitho
   kennel: z.lazy(() => KennelUpdateOneWithoutPetsNestedInputSchema).optional(),
   children: z.lazy(() => PetUpdateManyWithoutParentsNestedInputSchema).optional(),
   avatar: z.lazy(() => FileUpdateOneWithoutAvatarOfNestedInputSchema).optional(),
-  images: z.lazy(() => FileUpdateManyWithoutImageOfNestedInputSchema).optional()
+  img: z.lazy(() => FileUpdateOneWithoutImgOfNestedInputSchema).optional()
 }).strict();
 
 export const PetUncheckedUpdateWithoutParentsInputSchema: z.ZodType<Prisma.PetUncheckedUpdateWithoutParentsInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  ownerName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   type: z.union([ z.lazy(() => PetTypeSchema),z.lazy(() => EnumPetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   gender: z.union([ z.lazy(() => GenderSchema),z.lazy(() => EnumGenderFieldUpdateOperationsInputSchema) ]).optional(),
   birthDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -6004,14 +6049,14 @@ export const PetUncheckedUpdateWithoutParentsInputSchema: z.ZodType<Prisma.PetUn
   registration: z.lazy(() => RegistrationUncheckedUpdateOneWithoutPetNestedInputSchema).optional(),
   children: z.lazy(() => PetUncheckedUpdateManyWithoutParentsNestedInputSchema).optional(),
   avatar: z.lazy(() => FileUncheckedUpdateOneWithoutAvatarOfNestedInputSchema).optional(),
-  images: z.lazy(() => FileUncheckedUpdateManyWithoutImageOfNestedInputSchema).optional()
+  img: z.lazy(() => FileUncheckedUpdateOneWithoutImgOfNestedInputSchema).optional()
 }).strict();
 
 export const PetUncheckedUpdateManyWithoutParentsInputSchema: z.ZodType<Prisma.PetUncheckedUpdateManyWithoutParentsInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  ownerName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   type: z.union([ z.lazy(() => PetTypeSchema),z.lazy(() => EnumPetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   gender: z.union([ z.lazy(() => GenderSchema),z.lazy(() => EnumGenderFieldUpdateOperationsInputSchema) ]).optional(),
   birthDate: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -6021,45 +6066,6 @@ export const PetUncheckedUpdateManyWithoutParentsInputSchema: z.ZodType<Prisma.P
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   createdById: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   kennelId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-}).strict();
-
-export const FileUpdateWithoutImageOfInputSchema: z.ZodType<Prisma.FileUpdateWithoutImageOfInput> = z.object({
-  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  key: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  url: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  size: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  crceatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  status: z.union([ z.lazy(() => FileStatusSchema),z.lazy(() => EnumFileStatusFieldUpdateOperationsInputSchema) ]).optional(),
-  kennel: z.lazy(() => KennelUpdateOneWithoutImgNestedInputSchema).optional(),
-  avatarOf: z.lazy(() => PetUpdateOneWithoutAvatarNestedInputSchema).optional()
-}).strict();
-
-export const FileUncheckedUpdateWithoutImageOfInputSchema: z.ZodType<Prisma.FileUncheckedUpdateWithoutImageOfInput> = z.object({
-  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  key: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  url: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  size: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  kennelId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  avatarOfId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  crceatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  status: z.union([ z.lazy(() => FileStatusSchema),z.lazy(() => EnumFileStatusFieldUpdateOperationsInputSchema) ]).optional(),
-}).strict();
-
-export const FileUncheckedUpdateManyWithoutImageOfInputSchema: z.ZodType<Prisma.FileUncheckedUpdateManyWithoutImageOfInput> = z.object({
-  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  key: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  url: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  size: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  kennelId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  avatarOfId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  crceatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  status: z.union([ z.lazy(() => FileStatusSchema),z.lazy(() => EnumFileStatusFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 /////////////////////////////////////////
