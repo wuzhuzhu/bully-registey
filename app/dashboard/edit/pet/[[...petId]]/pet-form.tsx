@@ -81,11 +81,9 @@ export default function Page({ pet: petDirty, session }: {
     const { toast } = useToast()
     const pathname = usePathname()
 
+
     // const pet = omit(petDirty, ['createdById', 'kennel', 'parents', 'children', 'registration'])
-    const pet = InputSchema
-        .strip()
-        .parse(petDirty)
-    delete pet.kennelId
+    const pet = petDirty?.id ? InputSchema.strip().parse(omit(petDirty, ['kennelId'])) : undefined
     const defaultValues: Partial<Nullable<Pet>> = petDirty?.id
         ? pet // 更新，使用清理过的数据
         : { // 创建，使用默认值
