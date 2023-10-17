@@ -4,7 +4,7 @@ import { formatInTimeZone } from 'date-fns-tz'
 import { isEmpty, omit } from 'lodash-es'
 import { CalendarIcon } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
-import { useEffect, useState, useTransition } from "react"
+import { Suspense, useEffect, useState, useTransition } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
 
 import { DevTool } from "@hookform/devtools"
@@ -469,7 +469,10 @@ export default function Page({ pet: petDirty, session }: {
                         <Separator />
                         <div className="space-y-4">
                             <h4 className="text-sm font-medium">父母</h4>
-                            <RelatedPets pet={petDirty} />
+                            <Suspense fallback={<div>Loading..</div>}>
+                                <RelatedPets pet={petDirty} />
+                            </Suspense>
+
                             <Separator />
                         </div>
 
@@ -483,10 +486,10 @@ export default function Page({ pet: petDirty, session }: {
                         isSubmitting ? '提交中...' : '提交'
                     }</Button>
             </form>
-            {
+            {/* {
                 process.env.NODE_ENV === 'development' &&
                 <DevTool control={control} />
-            }
+            } */}
         </Form >
     )
 }

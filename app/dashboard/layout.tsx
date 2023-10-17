@@ -8,6 +8,7 @@ import { ourFileRouter } from '@/app/api/uploadthing/core';
 import { Toaster } from "@/components/ui/toaster";
 import { getServerSessionWithOption } from '@/lib/utils';
 import { redirect } from 'next/navigation';
+import Providers from '@/components/providers/dashboard-provider'
 
 const DashboardLayout = async ({ children }: {
     children: React.ReactNode;
@@ -32,7 +33,9 @@ const DashboardLayout = async ({ children }: {
                      */
                     routerConfig={extractRouterConfig(ourFileRouter)}
                 />
-                {children}
+                <Providers>
+                    {children}
+                </Providers>
             </div>
             <Toaster />
         </div>

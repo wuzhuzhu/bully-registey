@@ -14,6 +14,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
+import HardRefreshBtn from "@/components/shared/hard-refresh-btn"
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>
@@ -25,6 +26,7 @@ export function DataTableViewOptions<TData>({
   return (
     <div className="flex gap-2">
       <DropdownMenu>
+        <HardRefreshBtn />
         <DropdownMenuTrigger asChild>
           <Button
             variant="outline"

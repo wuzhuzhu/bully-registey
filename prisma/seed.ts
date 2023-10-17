@@ -97,133 +97,6 @@ async function main() {
             totalGenerations: 3,
         })
     })
-    /*     const relatedPet = await prisma.pet.create({
-            data: {
-                name: '绿巨人浩克',
-                nameEn: 'Hulk',
-                ownerName: 'Tony Stark',
-                type: 'DOG' as PetType, // 处理enum
-                gender: f.person.sex().toUpperCase() as Gender, // 处理enum
-                birthDate: f.date.past(),
-                breed: '恶霸犬',
-                color: f.color.human(),
-                createdById: adminUserId,
-                kennelId: marverlKennel.id,
-                avatar: {
-                    connect: {
-                        id: avatar1.id
-                    }
-                },
-                images: {
-                    connect: [
-                        { id: img1.id },
-                        { id: img2.id }
-                    ]
-                },
-                registration: {
-                    create: {
-                        readableId: '2021-0001',
-                        status: 'APPROVED' as RegistrationStatus,
-                        registeredAt: f.date.past(),
-                        registerEnd: f.date.future(),
-                    }
-                },
-                parents: {
-                    create: [
-                        {
-                            name: '浩克妈妈',
-                            nameEn: 'Mother',
-                            ownerName: 'Tony Stark',
-                            type: 'DOG' as PetType, // 处理enum
-                            gender: 'FEMALE' as Gender, // 处理enum
-                            birthDate: f.date.past(),
-                            breed: '恶霸犬',
-                            color: f.color.human(),
-                            createdById: adminUserId,
-                            avatar: {
-                                connect: {
-                                    id: avatar2.id
-                                }
-                            },
-                            images: {
-                                connect: [
-                                    { id: img1.id },
-                                ]
-                            },
-                        },
-                        {
-                            name: '浩克爸爸',
-                            nameEn: 'Father',
-                            ownerName: 'Tony Stark',
-                            type: 'DOG' as PetType, // 处理enum
-                            gender: 'FEMALE' as Gender, // 处理enum
-                            birthDate: f.date.past(),
-                            breed: '恶霸犬',
-                            color: f.color.human(),
-                            createdById: adminUserId,
-                            avatar: {
-                                connect: {
-                                    id: avatar2.id
-                                }
-                            },
-                            images: {
-                                connect: [
-                                    { id: img1.id },
-                                ]
-                            },
-                        }
-                    ]
-                },
-                children: {
-                    create: [
-                        {
-                            name: '浩克孩子1',
-                            nameEn: 'Hulk Child1',
-                            ownerName: 'Tony Stark',
-                            type: 'DOG' as PetType, // 处理enum
-                            gender: f.person.sex().toUpperCase() as Gender, // 处理enum
-                            birthDate: f.date.past(),
-                            breed: '恶霸犬',
-                            color: f.color.human(),
-                            createdById: adminUserId,
-                            avatar: {
-                                connect: {
-                                    id: avatar1.id
-                                }
-                            },
-                            images: {
-                                connect: [
-                                    { id: img1.id },
-                                    { id: img2.id }
-                                ]
-                            },
-                        },
-                        {
-                            name: '浩克孩子2',
-                            nameEn: 'Hulk Child1',
-                            ownerName: 'Tony Stark',
-                            type: 'DOG' as PetType, // 处理enum
-                            gender: f.person.sex().toUpperCase() as Gender, // 处理enum
-                            birthDate: f.date.past(),
-                            breed: '恶霸犬',
-                            color: f.color.human(),
-                            createdById: adminUserId,
-                            avatar: {
-                                connect: {
-                                    id: avatar1.id
-                                }
-                            },
-                            images: {
-                                connect: [
-                                    { id: img1.id },
-                                    { id: img2.id }
-                                ]
-                            },
-                        },
-                    ]
-                },
-            }
-        }) */
     console.log('@@@@@@@Related Pet CREATED, ID IS: @@@@@@@', relatedPet.id, '@@@@@')
 }
 
@@ -293,11 +166,10 @@ function generateBasicPetData({ adminUserId, kennelId, avatarId, img1Id, img2Id,
                 id: avatarId
             }
         },
-        images: {
-            connect: [
-                { id: img1Id },
-                { id: img2Id }
-            ]
+        img: {
+            connect: {
+                id: img1Id
+            }
         },
         registration: {
             create: {
@@ -325,11 +197,8 @@ function generateBasicPetData({ adminUserId, kennelId, avatarId, img1Id, img2Id,
                         id: avatarId
                     }
                 },
-                images: {
-                    connect: [
-                        { id: img1Id },
-                        { id: img2Id }
-                    ]
+                img: {
+                    connect: { id: img1Id },
                 },
             },
             {
@@ -347,11 +216,8 @@ function generateBasicPetData({ adminUserId, kennelId, avatarId, img1Id, img2Id,
                         id: avatarId
                     }
                 },
-                images: {
-                    connect: [
-                        { id: img1Id },
-                        { id: img2Id }
-                    ]
+                img: {
+                    connect: { id: img2Id },
                 },
             },]
         }
