@@ -43,7 +43,7 @@ import { createPetAction, deleteUploadedPetAvatar, deleteUploadedPetImg, updateP
 //     KennelOptionalDefaultsSchema, // 没有关联关系，且自动字段为可选的schema，手动合并profile字段
 //     KennelCreateOrConnectWithoutPetsInputSchema // 最终的输出到action的结构，在这个页面创建kennel只不创建pets
 // } from '@/prisma/generated/zod'
-import { Pet, PetCreateManyCreatedByInputSchema } from '@/prisma/generated/zod'
+import { Pet, PetCreateManyCreatedByInputSchema, PetWithRelations } from '@/prisma/generated/zod'
 import FileUpload from './components/file-upload'
 
 // 表单输入结构为扁平的object
@@ -57,7 +57,7 @@ type InputType = Prisma.PetCreateManyCreatedByInput
 
 
 export default function Page({ pet: petDirty, session }: {
-    pet?: Nullable<InputType>,
+    pet?: Nullable<PetWithRelations>,
     session: { user?: { id: string } }
 }) {
     const router = useRouter()
@@ -106,7 +106,7 @@ export default function Page({ pet: petDirty, session }: {
 
     // https://scastiel.dev/server-components-actions-react-nextjs
     // https://github.com/orgs/react-hook-form/discussions/10757
-    const onSubmit: SubmitHandler<InputType> = (data) => {
+    const onSubmit: SubmitHandler<Prisma.PetCreateInput> = (data) => {
         // 准备server action参数
         const isUpdate = !!petDirty?.id
         const hasOriginalImg = !isDeepEmpty(petDirty?.img)
@@ -178,9 +178,9 @@ export default function Page({ pet: petDirty, session }: {
                         ? undefined // 上传的图片和原来的一样，不更新
                         : {
                             upsert: {
-                                create: img,
+                                create: uploadedImg,
                                 update: {
-                                    ...img,
+                                    ...uploadedImg,
                                     updatedAt: new Date().toISOString()
                                 },
                                 where: {
@@ -193,7 +193,7 @@ export default function Page({ pet: petDirty, session }: {
                     }
                 : hasImg
                     ? {
-                        create: img
+                        create: uploadedImg
                     }
                     : undefined
             const avatarInput = hasOriginalAvatar
@@ -202,9 +202,9 @@ export default function Page({ pet: petDirty, session }: {
                         ? undefined // 有旧有新相等
                         : {
                             upsert: { // 有旧有新不相等
-                                create: avatar,
+                                create: uploadedAvatar,
                                 update: {
-                                    ...avatar,
+                                    ...uploadedAvatar,
                                     updatedAt: new Date().toISOString()
                                 },
                                 where: {
@@ -217,7 +217,7 @@ export default function Page({ pet: petDirty, session }: {
                     }
                 : hasAvatar
                     ? { // 无旧有新
-                        create: avatar
+                        create: uploadedAvatar
                     } // 无旧无新
                     : undefined
 
@@ -461,7 +461,7 @@ export default function Page({ pet: petDirty, session }: {
                             <FileUpload
                                 {...{
                                     uploadedImg, setUploadedImg, petDirty, getValues,
-                                    onSubmit: handleSubmit(onSubmit),
+                                    submit: handleSubmit(onSubmit),
                                     type: 'img',
                                     deleteUploaded: deleteUploadedPetImg,
                                 }} />
@@ -469,7 +469,7 @@ export default function Page({ pet: petDirty, session }: {
                         <Separator />
                         <div className="space-y-4">
                             <h4 className="text-sm font-medium">父母</h4>
-                            <RelatedPets />
+                            <RelatedPets pet={petDirty} />
                             <Separator />
                         </div>
 

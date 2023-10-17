@@ -8,8 +8,12 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Pet } from '@prisma/client'
+import { PetWithRelations } from '@/prisma/generated/zod'
 
-const RelatedPets = () => {
+const RelatedPets = ({ pet }: {
+    pet?: Nullable<PetWithRelations>
+}) => {
     return (
         <div className="grid gap-6">
             <div className="flex items-center justify-between space-x-4">
