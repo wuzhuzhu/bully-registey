@@ -3,37 +3,29 @@ import { unstable_cache } from "next/cache"
 
 import db from '@/lib/prisma'
 import { get } from "http"
+import type { Prisma } from "@prisma/client"
 
 export const revalidate = 3600 // revalidate the data at most every hour
 
-export const getPetsNoCache = async ({ skip = 0, take = 10, filter }: {
-    skip?: number
-    take?: number
-    filter?: {
-        kennelId?: string
-        registrationId?: string
-        petName?: string
-    }
-} = {}) => {
+export const getPetsNoCache = async ({
+    skip = 0,
+    take = 10,
+    include,
+    orderBy = { createdAt: 'desc' },
+    ...args
+}: Prisma.PetFindManyArgs = {}) => {
     const pets = await db.pet.findMany({
-        where: {
-            kennelId: filter?.kennelId,
-            registration: {
-                id: filter?.registrationId
-            },
-            name: filter?.petName,
-        },
+        ...args,
         skip,
         take,
-        include: {
+        include: args.select ? undefined : {
             kennel: true,
             registration: true,
             createdBy: true,
             parents: true,
+            ...include,
         },
-        orderBy: {
-            createdAt: 'desc'
-        }
+        orderBy
     })
     console.log('getPets', pets)
     return pets

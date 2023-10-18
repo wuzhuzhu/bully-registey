@@ -26,3 +26,5 @@ export const REGISTRATION_STATUS = {
         icon: Pause,
     },
 }
+
+export const DEFAULT_PET_AVATAR_URL = '/img/male-avatar.svg';

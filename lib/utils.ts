@@ -4,6 +4,9 @@ import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import authOptions from '@/app/api/auth/[...nextauth]/auth-options';
 import type { Kennel } from '@prisma/client';
+import { NextApiRequest } from 'next';
+import { find } from 'lodash-es';
+import { Pet } from '@prisma/client';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -104,4 +107,13 @@ function excludeKennel<Kennel, Key extends keyof Kennel>(
   return Object.fromEntries(
     Object.entries(user).filter(([key]) => !keys.includes(key))
   )
+}
+export function getSearchParamsFromRequest(request: NextApiRequest, keys: string[]) {
+  const url = new URL(request?.url)
+
+  return keys?.map(key => url.searchParams.get(key))
+}
+
+export function getParentFromParents(parents: Pet[], gender = 'MALE') {
+  return find(parents, { 'gender': gender });
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from "react"
+import { useState } from "react"
 import {
     CaretSortIcon,
     CheckIcon,
@@ -14,15 +14,7 @@ import {
     AvatarImage,
 } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-    CommandSeparator,
-} from "@/components/ui/command"
+
 import {
     Dialog,
     DialogContent,
@@ -46,54 +38,42 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-
-const groups = [
-    {
-        label: "Personal Account",
-        teams: [
-            {
-                label: "Alicia Koch",
-                value: "personal",
-            },
-        ],
-    },
-    {
-        label: "Teams",
-        teams: [
-            {
-                label: "Acme Inc.",
-                value: "acme-inc",
-            },
-            {
-                label: "Monsters Inc.",
-                value: "monsters",
-            },
-        ],
-    },
-]
-
-type Team = (typeof groups)[number]["teams"][number]
+import { Pet } from "@prisma/client"
+import { GenderType, PetWithRelations } from "@/prisma/generated/zod"
+import { DEFAULT_PET_AVATAR_URL } from "@/lib/constants"
+import { getParentFromParents } from "@/lib/utils"
+import { AutoComplete } from "@/components/ui/autocomplete"
+import { X } from "lucide-react"
+import { find, set } from "lodash-es"
+import { useCommandState } from 'cmdk'
+import CommandContent from "./command-content"
+import { Command } from "@/components/ui/command"
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
 
-interface TeamSwitcherProps extends PopoverTriggerProps { }
+interface PetSwitcherProps extends PopoverTriggerProps { }
 
-export default function TeamSwitcher({
-    className,
-    currentPet,
-    pets,
-}: TeamSwitcherProps & {
+export default function ParentSelect(props: PetSwitcherProps & {
     currentPet: PetWithRelations | undefined
     pets: PetWithRelations[]
+    gender: GenderType
 }) {
-    const [open, setOpen] = React.useState(false)
-    const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false)
-    const [selectedTeam, setSelectedTeam] = React.useState<Team>(
-        groups[0].teams[0]
+    const {
+        className,
+        currentPet,
+        pets,
+        gender
+    } = props
+
+    const [selectedPet, setSelectedPet] = useState<PetWithRelations>(
+        currentPet || undefined
     )
+    const [open, setOpen] = useState(false)
+
+    const [showNewPetDialog, setshowNewPetDialog] = useState(false)
 
     return (
-        <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
+        <Dialog open={showNewPetDialog} onOpenChange={setshowNewPetDialog}>
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                     <Button
@@ -103,71 +83,24 @@ export default function TeamSwitcher({
                         aria-label="Select a team"
                         className={cn("w-[200px] justify-between", className)}
                     >
-                        <Avatar className="mr-2 h-5 w-5">
-                            <AvatarImage
-                                src={`https://avatar.vercel.sh/${selectedTeam.value}.png`}
-                                alt={selectedTeam.label}
-                            />
-                            <AvatarFallback>SC</AvatarFallback>
-                        </Avatar>
-                        {selectedTeam.label}
+                        {selectedPet?.label || '选择/创建'}
                         <CaretSortIcon className="ml-auto h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-[200px] p-0">
-                    <Command>
-                        <CommandList>
-                            <CommandInput placeholder="Search team..." />
-                            <CommandEmpty>No team found.</CommandEmpty>
-                            {groups.map((group) => (
-                                <CommandGroup key={group.label} heading={group.label}>
-                                    {group.teams.map((team) => (
-                                        <CommandItem
-                                            key={team.value}
-                                            onSelect={() => {
-                                                setSelectedTeam(team)
-                                                setOpen(false)
-                                            }}
-                                            className="text-sm"
-                                        >
-                                            <Avatar className="mr-2 h-5 w-5">
-                                                <AvatarImage
-                                                    src={`https://avatar.vercel.sh/${team.value}.png`}
-                                                    alt={team.label}
-                                                    className="grayscale"
-                                                />
-                                                <AvatarFallback>SC</AvatarFallback>
-                                            </Avatar>
-                                            {team.label}
-                                            <CheckIcon
-                                                className={cn(
-                                                    "ml-auto h-4 w-4",
-                                                    selectedTeam.value === team.value
-                                                        ? "opacity-100"
-                                                        : "opacity-0"
-                                                )}
-                                            />
-                                        </CommandItem>
-                                    ))}
-                                </CommandGroup>
-                            ))}
-                        </CommandList>
-                        <CommandSeparator />
-                        <CommandList>
-                            <CommandGroup>
-                                <DialogTrigger asChild>
-                                    <CommandItem
-                                        onSelect={() => {
-                                            setOpen(false)
-                                            setShowNewTeamDialog(true)
-                                        }}
-                                    >
-                                        <PlusCircledIcon className="mr-2 h-5 w-5" />
-                                        Create Team
-                                    </CommandItem>
-                                </DialogTrigger>
-                            </CommandGroup>
-                        </CommandList>
+                    <Command
+                        shouldFilter={false}
+                    >
+                        <CommandContent {...props} {
+                            ...{
+                                setshowNewPetDialog,
+                                setSelectedPet,
+                                selectedPet,
+                                open,
+                                setOpen
+                            }
+                        }
+                        />
                     </Command>
                 </PopoverContent>
             </Popover>
@@ -209,7 +142,7 @@ export default function TeamSwitcher({
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button variant="outline" onClick={() => setShowNewTeamDialog(false)}>
+                    <Button variant="outline" onClick={() => setshowNewPetDialog(false)}>
                         Cancel
                     </Button>
                     <Button type="submit">Continue</Button>
