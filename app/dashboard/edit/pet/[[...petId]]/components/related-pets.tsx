@@ -2,19 +2,17 @@
 // import { useQuery } from '@tanstack/react-query'
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Pet, type Prisma } from '@prisma/client'
 import type { GenderType } from '@/prisma/generated/zod'
 import { PetWithRelations } from '@/prisma/generated/zod'
-import { find, get, pickBy } from 'lodash-es'
-import ParentSelect from "./parent-select"
+import { Pet } from '@prisma/client'
 import { useQuery } from "@tanstack/react-query"
+import ParentSelect from "./parent-select"
 
 import { getParentFromParents } from "@/lib/utils"
-import CommandMenu from "./example"
+import { X } from "lucide-react"
 
 // fetch in client component with react query
 // https://codevoweb.com/setup-react-query-in-nextjs-13-app-directory/
-// TODO: 区分pets的性别，分别查询
 async function getPets(gender: GenderType) {
     // get current host and combine with api path
     // const res = await fetch(`${window.location.origin}/api/pets`)
@@ -61,7 +59,7 @@ const RelatedPets = ({ pet }: {
                         <AvatarImage src={dad?.avatar?.url || "/img/male-avatar.svg"} />
                         <AvatarFallback>OM</AvatarFallback>
                     </Avatar>
-                    <ParentSelect currentPet={pet} pets={malePets} gender='MALE' />
+                    <ParentSelect currentPet={pet} parent={dad} pets={malePets} gender='MALE' />
                 </div>
             </div>
             {/* 妈妈 */}
@@ -71,7 +69,7 @@ const RelatedPets = ({ pet }: {
                         <AvatarImage src={dad?.avatar?.url || "/img/female-avatar.svg"} />
                         <AvatarFallback>IN</AvatarFallback>
                     </Avatar>
-                    <ParentSelect currentPet={pet} pets={femalePets} gender='FEMALE' />
+                    <ParentSelect currentPet={pet} parent={mom} pets={femalePets} gender='FEMALE' />
                 </div>
 
             </div>

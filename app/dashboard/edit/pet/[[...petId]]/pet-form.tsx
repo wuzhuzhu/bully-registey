@@ -45,6 +45,7 @@ import { createPetAction, deleteUploadedPetAvatar, deleteUploadedPetImg, updateP
 // } from '@/prisma/generated/zod'
 import { Pet, PetCreateManyCreatedByInputSchema, PetWithRelations } from '@/prisma/generated/zod'
 import FileUpload from './components/file-upload'
+import { Skeleton } from "@/components/ui/skeleton"
 
 // 表单输入结构为扁平的object
 // 赋予可空内容可选属性
@@ -468,12 +469,19 @@ export default function Page({ pet: petDirty, session }: {
                         </div>
                         <Separator />
                         <div className="space-y-4">
-                            <h4 className="text-sm font-medium">父母</h4>
-                            <Suspense fallback={<div>Loading..</div>}>
-                                <RelatedPets pet={petDirty} />
-                            </Suspense>
+                            <h4 className="text-sm font-medium">{petDirty?.id ? '父母' : '未保存无法选择父母'}</h4>
+                            {
+                                petDirty?.id && <Suspense fallback={<div className="flex items-center space-x-4">
+                                    <Skeleton className="h-12 w-12 rounded-full" />
+                                    <div className="space-y-2">
+                                        <Skeleton className="h-4 w-[250px]" />
+                                        <Skeleton className="h-4 w-[200px]" />
+                                    </div>
+                                </div>}>
+                                    <RelatedPets pet={petDirty} />
+                                </Suspense>
+                            }
 
-                            <Separator />
                         </div>
 
                     </div>

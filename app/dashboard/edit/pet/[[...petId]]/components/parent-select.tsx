@@ -54,19 +54,21 @@ type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
 interface PetSwitcherProps extends PopoverTriggerProps { }
 
 export default function ParentSelect(props: PetSwitcherProps & {
-    currentPet: PetWithRelations | undefined
-    pets: PetWithRelations[]
+    currentPet?: PetWithRelations | undefined
+    pets?: PetWithRelations[] | []
     gender: GenderType
+    parent?: PetWithRelations | undefined
 }) {
     const {
         className,
         currentPet,
         pets,
-        gender
+        gender,
+        parent
     } = props
 
     const [selectedPet, setSelectedPet] = useState<PetWithRelations>(
-        currentPet || undefined
+        parent?.id ? { label: parent?.name, value: parent?.id } : undefined
     )
     const [open, setOpen] = useState(false)
 

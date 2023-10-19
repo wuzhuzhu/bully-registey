@@ -19,7 +19,7 @@ import {
     CommandList,
     CommandSeparator
 } from "@/components/ui/command"
-import { cn, getParentFromParents } from "@/lib/utils"
+import { cn, getParentFromParents, post } from "@/lib/utils"
 import { useCommandState } from 'cmdk'
 
 import {
@@ -31,7 +31,8 @@ import {
 import { DEFAULT_PET_AVATAR_URL } from "@/lib/constants"
 import { X } from "lucide-react"
 import { GenderType, Pet, PetWithRelations } from "@/prisma/generated/zod"
-import { find } from "lodash-es"
+import { find, pick } from "lodash-es"
+import { useMutation } from "@tanstack/react-query"
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
 
@@ -46,6 +47,7 @@ const CommandContent = (props: PetSwitcherProps & {
     selectedPet: PetWithRelations | undefined
     open: boolean
     setOpen: (open: boolean) => void
+    parent?: PetWithRelations | undefined
 }) => {
     const {
         className,
@@ -56,12 +58,18 @@ const CommandContent = (props: PetSwitcherProps & {
         setSelectedPet,
         selectedPet,
         open,
-        setOpen
+        setOpen,
+        parent
     } = props
     const search = useCommandState((state) => state.search)
     const [listPets, setListPets] = useState<{ value?: string, label?: string }[]>([])
 
-    const parent = getParentFromParents(currentPet?.parents, gender);
+    const connectMutation = useMutation({
+        mutationFn: async ({ pet, parent }) => {
+            console.log('connectMutation', { parent, pet })
+            return post(`/api/pets/${pet?.value}/connect`, { parent: pick(parent, ['id', 'gender']) });
+        },
+    });
 
     useEffect(() => {
         console.log('#######3 重新过滤', { pets, search })
@@ -86,7 +94,7 @@ const CommandContent = (props: PetSwitcherProps & {
                         <CommandItem
                             key={pet.value}
                             onSelect={() => {
-                                setSelectedPet(pet.value)
+                                setSelectedPet(connectMutation.mutate({ pet, parent }))
                                 setOpen(false)
                             }}
                             className="text-sm"

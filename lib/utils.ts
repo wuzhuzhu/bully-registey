@@ -117,3 +117,17 @@ export function getSearchParamsFromRequest(request: NextApiRequest, keys: string
 export function getParentFromParents(parents: Pet[], gender = 'MALE') {
   return find(parents, { 'gender': gender });
 }
+
+export async function post(url: string, body?: any) {
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'API-Key': process.env.DATA_API_KEY,
+    },
+    body: JSON.stringify(body),
+  })
+
+  const data = await res.json()
+
+}
