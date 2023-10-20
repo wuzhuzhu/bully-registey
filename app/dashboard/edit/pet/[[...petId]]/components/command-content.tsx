@@ -19,7 +19,7 @@ import {
     CommandList,
     CommandSeparator
 } from "@/components/ui/command"
-import { cn, getParentFromParents, post } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 import { useCommandState } from 'cmdk'
 
 import {
@@ -29,47 +29,58 @@ import {
     PopoverTrigger
 } from "@/components/ui/popover"
 import { DEFAULT_PET_AVATAR_URL } from "@/lib/constants"
-import { X } from "lucide-react"
-import { GenderType, Pet, PetWithRelations } from "@/prisma/generated/zod"
-import { find, pick } from "lodash-es"
+import { GenderType, PetWithRelations } from "@/prisma/generated/zod"
 import { useMutation } from "@tanstack/react-query"
+import { X } from "lucide-react"
+import { el } from "date-fns/locale"
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
-
+type petOption = { value: string, label: string }
 interface PetSwitcherProps extends PopoverTriggerProps { }
 
 const CommandContent = (props: PetSwitcherProps & {
     currentPet: PetWithRelations | undefined
     pets: PetWithRelations[]
     gender: GenderType
-    setshowNewPetDialog: (show: boolean) => void
-    setSelectedPet: (pet: PetWithRelations | undefined) => void
+    setShowNewPetDialog: (show: boolean) => void
+    setSelectedPet: (pet: petOption | undefined) => void
     selectedPet: PetWithRelations | undefined
     open: boolean
     setOpen: (open: boolean) => void
     parent?: PetWithRelations | undefined
+    connectMutation: ReturnType<typeof useMutation>
+    removeConnectMutation: ReturnType<typeof useMutation>
 }) => {
     const {
         className,
         currentPet,
         pets,
         gender,
-        setshowNewPetDialog,
+        setShowNewPetDialog,
         setSelectedPet,
         selectedPet,
         open,
         setOpen,
-        parent
+        parent,
+        connectMutation,
+        removeConnectMutation
     } = props
     const search = useCommandState((state) => state.search)
-    const [listPets, setListPets] = useState<{ value?: string, label?: string }[]>([])
+    const [listPets, setListPets] = useState<petOption[]>([])
 
-    const connectMutation = useMutation({
-        mutationFn: async ({ pet, parent }) => {
-            console.log('connectMutation', { parent, pet })
-            return post(`/api/pets/${pet?.value}/connect`, { parent: pick(parent, ['id', 'gender']) });
-        },
-    });
+    // const connectMutation = useMutation({
+    //     mutationFn: async (newParentOption: petOption) => {
+    //         console.log('connectMutation', { currentPet, newParentOption, gender })
+    //         return post(`/api/pets/${currentPet?.id}/connect`, {
+    //             parent: {
+    //                 id: newParentOption.value,
+    //                 gender
+    //             }
+    //         })
+    //     },
+    // });
+
+    console.log('!!!!!!!!!!!!1', gender)
 
     useEffect(() => {
         console.log('#######3 重新过滤', { pets, search })
@@ -90,21 +101,32 @@ const CommandContent = (props: PetSwitcherProps & {
                 <CommandInput placeholder="搜索名字..." />
                 <CommandEmpty>没有找到.</CommandEmpty>
                 <CommandGroup key='all' heading='可选的'>
-                    {listPets?.length > 0 && listPets.map((pet) => (
+                    {listPets?.length > 0 && listPets.map((petOption) => (
                         <CommandItem
-                            key={pet.value}
+                            key={petOption.value}
                             onSelect={() => {
-                                setSelectedPet(connectMutation.mutate({ pet, parent }))
+                                if (petOption.value === 'DELETE') {
+                                    removeConnectMutation.mutate({
+                                        gender
+                                    })
+
+                                } else {
+                                    connectMutation.mutate({
+                                        newParentOption: petOption,
+                                        gender
+                                    })
+                                    setSelectedPet(petOption)
+                                }
                                 setOpen(false)
                             }}
                             className="text-sm"
                         >
                             <Avatar className="mr-2 h-5 w-5">
-                                {pet?.value !== 'DELETE'
+                                {petOption?.value !== 'DELETE'
                                     ? <>
                                         <AvatarImage
-                                            src={pet?.avatar?.url || DEFAULT_PET_AVATAR_URL}
-                                            alt={pet.label}
+                                            src={petOption?.avatar?.url || DEFAULT_PET_AVATAR_URL}
+                                            alt={petOption.label}
                                             className="grayscale"
                                         />
                                         <AvatarFallback>图</AvatarFallback>
@@ -112,11 +134,11 @@ const CommandContent = (props: PetSwitcherProps & {
                                     : <X />}
 
                             </Avatar>
-                            {pet.label}
+                            {petOption.label}
                             <CheckIcon
                                 className={cn(
                                     "ml-auto h-4 w-4",
-                                    selectedPet?.value === pet.value
+                                    selectedPet?.value === petOption.value
                                         ? "opacity-100"
                                         : "opacity-0"
                                 )}
@@ -124,7 +146,7 @@ const CommandContent = (props: PetSwitcherProps & {
                         </CommandItem>
                     ))}
                 </CommandGroup>
-            </CommandList>
+            </CommandList >
             <CommandSeparator />
             <CommandList>
                 <CommandGroup>
@@ -132,7 +154,7 @@ const CommandContent = (props: PetSwitcherProps & {
                         <CommandItem
                             onSelect={() => {
                                 setOpen(false)
-                                setshowNewPetDialog(true)
+                                setShowNewPetDialog(true)
                             }}
                         >
                             <PlusCircledIcon className="mr-2 h-5 w-5" />

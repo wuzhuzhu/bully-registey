@@ -13,7 +13,7 @@ export async function GET(request: NextApiRequest, response: NextApiResponse) {
     try {
         if (scene === 'parent-list') {
             gender = GenderSchema.parse(gender)
-            console.log('fetching' + gender + ' pets')
+            // console.log('fetching' + gender + ' pets')
             const data = await getPets({
                 where: {
                     gender: gender as Gender

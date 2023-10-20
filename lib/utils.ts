@@ -129,5 +129,20 @@ export async function post(url: string, body?: any) {
   })
 
   const data = await res.json()
+  return data
 
+}
+
+export async function deleteFetch(url: string, body?: any) {
+  const res = await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'API-Key': process.env.DATA_API_KEY,
+    },
+    body: JSON.stringify(body),
+  })
+
+  const data = await res.json()
+  return data
 }

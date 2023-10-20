@@ -57,14 +57,13 @@ const InputSchema = PetCreateManyCreatedByInputSchema
 type InputType = Prisma.PetCreateManyCreatedByInput
 
 
-export default function Page({ pet: petDirty, session }: {
+export default function PetForm({ pet: petDirty, session }: {
     pet?: Nullable<PetWithRelations>,
     session: { user?: { id: string } }
 }) {
     const router = useRouter()
     const { toast } = useToast()
     const pathname = usePathname()
-
 
     // const pet = omit(petDirty, ['createdById', 'kennel', 'parents', 'children', 'registration'])
     const pet = petDirty?.id ? InputSchema.strip().parse(omit(petDirty, ['kennelId'])) : undefined
@@ -80,7 +79,7 @@ export default function Page({ pet: petDirty, session }: {
             breed: '',
             color: '',
         }
-    console.log({ petDirty })
+    // console.log({ petDirty })
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
@@ -277,7 +276,7 @@ export default function Page({ pet: petDirty, session }: {
 
     return (
         <Form {...hookedForm}>
-            <p>value: {JSON.stringify(getValues())}, error: {JSON.stringify(errors)}, isSubmitSuccessful: {isSubmitSuccessful.toString()}</p>
+            {/* <p>value: {JSON.stringify(getValues())}, error: {JSON.stringify(errors)}, isSubmitSuccessful: {isSubmitSuccessful.toString()}</p> */}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                 <div className="flex gap-8">
                     <div id="left" className="flex-1 space-y-8 border-border pr-8 border-r">

@@ -1,28 +1,21 @@
 "use client"
 
-import { useState } from "react"
 import {
-    CaretSortIcon,
-    CheckIcon,
-    PlusCircledIcon,
+    CaretSortIcon
 } from "@radix-ui/react-icons"
+import { useState } from "react"
 
-import { cn } from "@/lib/utils"
-import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-} from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
+import { Command } from "@/components/ui/command"
 import {
     Dialog,
     DialogContent,
     DialogDescription,
     DialogFooter,
     DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+    DialogTitle
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -38,16 +31,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { Pet } from "@prisma/client"
 import { GenderType, PetWithRelations } from "@/prisma/generated/zod"
-import { DEFAULT_PET_AVATAR_URL } from "@/lib/constants"
-import { getParentFromParents } from "@/lib/utils"
-import { AutoComplete } from "@/components/ui/autocomplete"
-import { X } from "lucide-react"
-import { find, set } from "lodash-es"
-import { useCommandState } from 'cmdk'
+import { useMutation } from "@tanstack/react-query"
 import CommandContent from "./command-content"
-import { Command } from "@/components/ui/command"
+
+import { post } from "@/lib/utils"
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
 
@@ -58,6 +46,7 @@ export default function ParentSelect(props: PetSwitcherProps & {
     pets?: PetWithRelations[] | []
     gender: GenderType
     parent?: PetWithRelations | undefined
+    connectMutation: ReturnType<typeof useMutation>
 }) {
     const {
         className,
@@ -72,10 +61,10 @@ export default function ParentSelect(props: PetSwitcherProps & {
     )
     const [open, setOpen] = useState(false)
 
-    const [showNewPetDialog, setshowNewPetDialog] = useState(false)
+    const [showNewPetDialog, setShowNewPetDialog] = useState(false)
 
     return (
-        <Dialog open={showNewPetDialog} onOpenChange={setshowNewPetDialog}>
+        <Dialog open={showNewPetDialog} onOpenChange={setShowNewPetDialog}>
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                     <Button
@@ -95,7 +84,7 @@ export default function ParentSelect(props: PetSwitcherProps & {
                     >
                         <CommandContent {...props} {
                             ...{
-                                setshowNewPetDialog,
+                                setShowNewPetDialog,
                                 setSelectedPet,
                                 selectedPet,
                                 open,
@@ -144,7 +133,7 @@ export default function ParentSelect(props: PetSwitcherProps & {
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button variant="outline" onClick={() => setshowNewPetDialog(false)}>
+                    <Button variant="outline" onClick={() => setShowNewPetDialog(false)}>
                         Cancel
                     </Button>
                     <Button type="submit">Continue</Button>

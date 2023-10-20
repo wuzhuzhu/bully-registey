@@ -22,7 +22,11 @@ export const getPetsNoCache = async ({
             kennel: true,
             registration: true,
             createdBy: true,
-            parents: true,
+            parents: {
+                include: {
+                    avatar: true,
+                }
+            },
             ...include,
         },
         orderBy
@@ -63,7 +67,15 @@ export const getPetById = unstable_cache(async (id: string) => {
         },
         include: {
             kennel: true,
-            parents: true,
+            parents: {
+                include: {
+                    avatar: {
+                        select: {
+                            url: true
+                        }
+                    },
+                }
+            },
             children: true,
             avatar: true,
             img: true,
