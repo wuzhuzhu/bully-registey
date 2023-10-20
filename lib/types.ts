@@ -1,0 +1,1 @@
+export type PetOption = { value: string, label: string } | {}

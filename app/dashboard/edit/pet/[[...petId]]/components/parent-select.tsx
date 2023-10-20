@@ -31,11 +31,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import type { PetOption } from "@/lib/types"
 import { GenderType, PetWithRelations } from "@/prisma/generated/zod"
 import { useMutation } from "@tanstack/react-query"
 import CommandContent from "./command-content"
 
-import { post } from "@/lib/utils"
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
 
@@ -47,6 +47,7 @@ export default function ParentSelect(props: PetSwitcherProps & {
     gender: GenderType
     parent?: PetWithRelations | undefined
     connectMutation: ReturnType<typeof useMutation>
+    removeConnectMutation: ReturnType<typeof useMutation>
 }) {
     const {
         className,
@@ -56,7 +57,7 @@ export default function ParentSelect(props: PetSwitcherProps & {
         parent
     } = props
 
-    const [selectedPet, setSelectedPet] = useState<PetWithRelations>(
+    const [selectedPet, setSelectedPet] = useState<PetOption>(
         parent?.id ? { label: parent?.name, value: parent?.id } : undefined
     )
     const [open, setOpen] = useState(false)
@@ -74,7 +75,7 @@ export default function ParentSelect(props: PetSwitcherProps & {
                         aria-label="Select a team"
                         className={cn("w-[200px] justify-between", className)}
                     >
-                        {selectedPet?.label || '选择/创建'}
+                        {selectedPet?.label || '选择'}
                         <CaretSortIcon className="ml-auto h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                 </PopoverTrigger>
@@ -97,16 +98,16 @@ export default function ParentSelect(props: PetSwitcherProps & {
             </Popover>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Create team</DialogTitle>
+                    <DialogTitle>此处为潜在优化项示例</DialogTitle>
                     <DialogDescription>
-                        Add a new team to manage products and customers.
+                        在这里快捷添加一个新的犬只注册,并关联到当前犬只的父母
                     </DialogDescription>
                 </DialogHeader>
                 <div>
                     <div className="space-y-4 py-2 pb-4">
                         <div className="space-y-2">
-                            <Label htmlFor="name">Team name</Label>
-                            <Input id="name" placeholder="Acme Inc." />
+                            <Label htmlFor="name">名字</Label>
+                            <Input id="name" placeholder="输入名字" />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="plan">Subscription plan</Label>
@@ -134,9 +135,9 @@ export default function ParentSelect(props: PetSwitcherProps & {
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => setShowNewPetDialog(false)}>
-                        Cancel
+                        取消
                     </Button>
-                    <Button type="submit">Continue</Button>
+                    <Button type="submit" disabled>继续</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

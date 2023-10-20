@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server'
 export async function POST(request: Request, ctx: { params: { petId: string } }) {
     const petId = ctx?.params?.petId
     const { gender } = await request.json()
-    console.log('use parent updating petId parents', { parent, petId })
+    // console.log('use parent updating petId parents', { parent, petId })
 
     const pet = await db.pet.findUnique({
         where: {
@@ -18,7 +18,7 @@ export async function POST(request: Request, ctx: { params: { petId: string } })
     })
     const preParents = pet?.parents || []
     const keepedParents = preParents
-        .filter((p) => p.gender !== parent?.gender)
+        .filter((p) => p.gender !== gender)
         .map((p) => pick(p, ['id']))
         .splice(0, 1) // only keep one parent or none
     const update = await db.pet.update({

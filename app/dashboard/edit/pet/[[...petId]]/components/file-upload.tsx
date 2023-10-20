@@ -54,7 +54,7 @@ const FileUpload = ({ uploadedImg, setUploadedImg, petDirty, submit, getValues, 
     deleteUploaded: typeof deleteUploadedPetAvatar
 }) => {
     const { toast } = useToast()
-    console.log({ type, uploadedImg })
+    // console.log({ type, uploadedImg })
     // debugger
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const defaultImg = type === 'avatar'

@@ -29,13 +29,12 @@ import {
     PopoverTrigger
 } from "@/components/ui/popover"
 import { DEFAULT_PET_AVATAR_URL } from "@/lib/constants"
+import type { PetOption } from "@/lib/types"
 import { GenderType, PetWithRelations } from "@/prisma/generated/zod"
 import { useMutation } from "@tanstack/react-query"
 import { X } from "lucide-react"
-import { el } from "date-fns/locale"
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
-type petOption = { value: string, label: string }
 interface PetSwitcherProps extends PopoverTriggerProps { }
 
 const CommandContent = (props: PetSwitcherProps & {
@@ -66,21 +65,9 @@ const CommandContent = (props: PetSwitcherProps & {
         removeConnectMutation
     } = props
     const search = useCommandState((state) => state.search)
-    const [listPets, setListPets] = useState<petOption[]>([])
+    const [listPets, setListPets] = useState<PetOption[]>([])
 
-    // const connectMutation = useMutation({
-    //     mutationFn: async (newParentOption: petOption) => {
-    //         console.log('connectMutation', { currentPet, newParentOption, gender })
-    //         return post(`/api/pets/${currentPet?.id}/connect`, {
-    //             parent: {
-    //                 id: newParentOption.value,
-    //                 gender
-    //             }
-    //         })
-    //     },
-    // });
-
-    console.log('!!!!!!!!!!!!1', gender)
+    const deletePetOption = { value: 'DELETE', label: '删除关联' }
 
     useEffect(() => {
         console.log('#######3 重新过滤', { pets, search })
@@ -89,7 +76,7 @@ const CommandContent = (props: PetSwitcherProps & {
             const newListPets = pets
                 .filter(pet => pet?.name?.includes(search))
                 .map((pet) => ({ value: pet.id, label: pet.name }))
-            newListPets.unshift({ value: 'DELETE', label: '删除关联' })
+            newListPets.unshift(deletePetOption)
             setListPets(newListPets)
         }
     }, [search])
@@ -109,7 +96,7 @@ const CommandContent = (props: PetSwitcherProps & {
                                     removeConnectMutation.mutate({
                                         gender
                                     })
-
+                                    setSelectedPet({})
                                 } else {
                                     connectMutation.mutate({
                                         newParentOption: petOption,
@@ -158,7 +145,7 @@ const CommandContent = (props: PetSwitcherProps & {
                             }}
                         >
                             <PlusCircledIcon className="mr-2 h-5 w-5" />
-                            Create Team
+                            新创建(未做)
                         </CommandItem>
                     </DialogTrigger>
                 </CommandGroup>

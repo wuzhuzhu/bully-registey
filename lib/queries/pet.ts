@@ -31,7 +31,7 @@ export const getPetsNoCache = async ({
         },
         orderBy
     })
-    console.log('getPets', pets)
+    // console.log('getPets', pets)
     return pets
 }
 

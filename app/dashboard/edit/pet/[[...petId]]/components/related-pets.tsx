@@ -93,7 +93,7 @@ const RelatedPets = ({ pet }: {
     const dad = getParentFromParents(pet?.parents, 'MALE');
     const mom = getParentFromParents(pet?.parents, 'FEMALE');
     // debugger
-    console.log({ dad, mom, femalePets, malePets })
+    // console.log({ dad, mom, femalePets, malePets })
     return (
         <div className="grid gap-6">
             {/* <p className="w-[200px] flex-wrap">{JSON.stringify(pet?.parents)}</p> */}

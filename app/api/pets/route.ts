@@ -9,7 +9,7 @@ import { NextResponse } from 'next/server';
 export async function GET(request: NextApiRequest, response: NextApiResponse) {
     const searchParams = request.query
     let [gender, scene] = getSearchParamsFromRequest(request, ['gender', 'scene'])
-    console.log({ scene, gender })
+    // console.log({ scene, gender })
     try {
         if (scene === 'parent-list') {
             gender = GenderSchema.parse(gender)
