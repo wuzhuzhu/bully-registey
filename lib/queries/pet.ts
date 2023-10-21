@@ -14,6 +14,7 @@ export const getPetsNoCache = async ({
     orderBy = { createdAt: 'desc' },
     ...args
 }: Prisma.PetFindManyArgs = {}) => {
+    console.log('getPetsNoCache', args)
     const pets = await db.pet.findMany({
         ...args,
         skip,

@@ -11,16 +11,20 @@ import { IconsMale3 } from "../../icons/IconsMale3";
 export const GenderIcon = ({ gender }) => {
   return (
     <div
-      className={`w-[40px] h-[40px] overflow-hidden rounded-[20px] relative ${
-        gender === "female" ? "bg-m-3referrorerror-70" : "bg-m-3sysdarkprimary"
-      }`}
+      className={`relative h-[40px] w-[40px] overflow-hidden rounded-[20px] bg-m-3sysdarkprimary`}
     >
       {gender === "male" && (
-        <IconsMale3 className="!absolute !w-[24px] !h-[24px] !top-[8px] !left-[8px]" color="#211F1A" />
+        <IconsMale3
+          className="!absolute !left-[8px] !top-[8px] !h-[24px] !w-[24px]"
+          color="#211F1A"
+        />
       )}
 
       {gender === "female" && (
-        <IconsFemap24Px2 className="!absolute !w-[24px] !h-[24px] !top-[8px] !left-[8px]" color="#211F1A" />
+        <IconsFemap24Px2
+          className="!absolute !left-[8px] !top-[8px] !h-[24px] !w-[24px]"
+          color="#211F1A"
+        />
       )}
     </div>
   );

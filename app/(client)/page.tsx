@@ -1,32 +1,29 @@
 
 
-import { GenderedCardDark } from "@/components/generated/GenderedCardDark";
+import { PageProps } from "@/.next/types/app/page";
+import FilteredPetCard from '@/app/(client)/registry/components/filtered-pet-card';
 import { SegmentedButton } from "@/components/generated/SegmentedButton/SegmentedButton";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DEFAULT_PET_AVATAR_URL } from "@/lib/constants";
+import { getPets } from "@/lib/queries/pet";
 import { cn } from "@/lib/utils";
 import { PetWithRelations } from "@/prisma/generated/zod";
 import { AlignJustify, Search } from "lucide-react";
-import { redirect } from "next/navigation";
-import db from '@/lib/prisma'
-import { Button } from "@/components/ui/button";
-import { PageProps } from "@/.next/types/app/page";
-import { getPets } from "@/lib/queries/pet";
-import FilteredPetCard from '@/app/registry/components/filtered-pet-card'
 
-const SearchPage = async ({ searchParams }: PageProps) => {
+const SearchPage = async ({ searchParams, mode = "name" }: PageProps & { mode: 'chip' | 'name' }) => {
     let pets = [] as PetWithRelations[]
     if (searchParams?.keyword) {
         // get all pets that match the keyword name and whom registration status approved
         pets = await getPets({
             where: {
-                name: searchParams.keyword,
+                name: mode === 'name' ? searchParams.keyword : undefined,
                 // 模糊搜索需要分页 暂时不做
                 // name: {
                 //     contains: searchParams.keyword 
                 // },
                 registration: {
-                    status: 'APPROVED'
+                    status: 'APPROVED',
+                    readableId: mode === 'chip' ? searchParams.keyword : undefined
                 }
             },
             include: {
@@ -45,7 +42,7 @@ const SearchPage = async ({ searchParams }: PageProps) => {
             <div className="flex flex-col w-full items-center">
                 <SegmentedButton
                     className=""
-                    isSelectLeft={true}
+                    isSelectLeft={mode === 'name'}
                 />
                 <form className="w-full" onSubmit={onSubmit}>
                     <div

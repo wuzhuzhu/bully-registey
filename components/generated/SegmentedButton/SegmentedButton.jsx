@@ -11,7 +11,7 @@ export const SegmentedButton = ({ className, isSelectLeft }) => {
     <div
       className={`relative flex h-[48px] w-[207px] items-center justify-center ${className}`}
     >
-      <Link className="w-[108px]" href="/registry">
+      <Link className="w-[108px]" href="/">
         <BuildingBlocks
           className="!w-[unset] !flex-1 !grow"
           configuration="label-only"
@@ -23,7 +23,7 @@ export const SegmentedButton = ({ className, isSelectLeft }) => {
           stateProp="enabled"
         />
       </Link>
-      <Link className="w-[108px]" href="/registry/search/chip">
+      <Link className="w-[108px]" href="/chip">
         <BuildingBlocks
           className="!w-[unset] !flex-1 !grow"
           configuration="label-only"
