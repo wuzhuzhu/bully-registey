@@ -1,71 +1,83 @@
-import React from "react";
-import { GenderedCardDark } from "@/components/generated/GenderedCardDark";
-import { HorizontalDarkWith } from "@/components/generated/HorizontalDarkWith";
-import { SearchBarDark } from "@/components/generated/SearchBarDark";
-import { SegmentedButton } from "@/components/generated/SegmentedButton";
-import { IconsMenu24Px } from "@/components/icons/IconsMenu24Px";
-import { IconsSearch24Px } from "@/components/icons/IconsSearch24Px";
 
-const SearchPage = () => {
+
+import { GenderedCardDark } from "@/components/generated/GenderedCardDark";
+import { SegmentedButton } from "@/components/generated/SegmentedButton/SegmentedButton";
+import { Input } from "@/components/ui/input";
+import { DEFAULT_PET_AVATAR_URL } from "@/lib/constants";
+import { cn } from "@/lib/utils";
+import { PetWithRelations } from "@/prisma/generated/zod";
+import { AlignJustify, Search } from "lucide-react";
+import { redirect } from "next/navigation";
+import db from '@/lib/prisma'
+import { Button } from "@/components/ui/button";
+import { PageProps } from "@/.next/types/app/page";
+import { getPets } from "@/lib/queries/pet";
+import FilteredPetCard from '@/app/registry/components/filtered-pet-card'
+
+const SearchPage = async ({ searchParams }: PageProps) => {
+    let pets = [] as PetWithRelations[]
+    if (searchParams?.keyword) {
+        // get all pets that match the keyword name and whom registration status approved
+        pets = await getPets({
+            where: {
+                name: searchParams.keyword,
+                // 模糊搜索需要分页 暂时不做
+                // name: {
+                //     contains: searchParams.keyword 
+                // },
+                registration: {
+                    status: 'APPROVED'
+                }
+            },
+            include: {
+                registration: true,
+                avatar: true
+            }
+        })
+    }
+    async function onSubmit(formData: FormData) {
+        'use server'
+        // we just use form behavior to get the value of the input
+        console.log({ formData })
+    }
     return (
         <>
             <div className="flex flex-col w-full items-center">
                 <SegmentedButton
-                    buildingBlocksLabelText="宠物名"
                     className=""
-                    density="zero"
-                    segments="two_1"
-                    stateDisabledWrapperLabelText="芯片号"
+                    isSelectLeft={true}
                 />
-                <SearchBarDark
-                    className="mt-6"
-                    iconButtonDarkIcon={<IconsMenu24Px className="!relative !w-[24px] !h-[24px]" color="#BFC8CB" />}
-                    override={<IconsSearch24Px className="!relative !w-[24px] !h-[24px]" color="#BFC8CB" />}
-                    placeholderText="绿巨人"
-                    showAvatar
-                    stateProp="enabled"
-                    userImagesUserText="名"
-                />
+                <form className="w-full" onSubmit={onSubmit}>
+                    <div
+                        className={cn(
+                            'mt-4 relative flex h-[56px] w-full items-center gap-[4px] overflow-hidden rounded-[28px] bg-m3sysdarksurface-container-high',
+                        )}
+                    >
+                        <AlignJustify className='text-m3sysdarkon-surface-variant my-2 ml-4' />
+
+                        <Input className="" placeholder='输入完整关键字..' type="text" name="keyword" mode='client'
+                        />
+                        <Button type="submit" variant="ghost" size="icon" className="mr-4">
+                            <Search className='text-m3sysdarkon-surface-variant' />
+                        </Button>
+
+                    </div>
+                </form>
                 <div className="w-full inline-flex flex-col items-center gap-[8px] mt-6">
-                    <GenderedCardDark
-                        mediaClassName="bg-[url(/img/media-3.png)]"
-                        style="filled"
-                        subheadClassName="!whitespace-nowrap ![text-align:unset] !w-fit"
-                        text="绿巨人 Hulk Smash"
-                        text1="CBR No.: 1231231233"
-                    />
-                    <GenderedCardDark
-                        genderIconGender="female"
-                        mediaClassName="bg-[url(/img/media-3.png)]"
-                        style="filled"
-                        subheadClassName="!whitespace-nowrap ![text-align:unset] !w-fit"
-                        text="勇猛小旋风 Brave Tornado"
-                        text1="CBR No.: 1231231234"
-                    />
-                    <GenderedCardDark
-                        genderIconGender="female"
-                        mediaClassName="bg-[url(/img/media.png)]"
-                        style="filled"
-                        subheadClassName="!whitespace-nowrap ![text-align:unset] !w-fit"
-                        text="钟无艳 Ms. Zhong"
-                        text1="CBR No.: 1231231254"
-                    />
+                    {pets.length > 0 && pets.map((pet) => (
+                        <FilteredPetCard key={`filtered-pet-${pet.id}`} pet={pet} />
+                        // <GenderedCardDark
+                        //     key={`filtered-pet-${pet.id}`}
+                        //     mediaClassName={`bg-[url(${pet?.avatar?.url || DEFAULT_PET_AVATAR_URL})]`}
+                        //     style="filled"
+                        //     subheadClassName="!whitespace-nowrap ![text-align:unset] !w-fit"
+                        //     text={pet?.name}
+                        //     text1={`CBR No.: ${pet?.registration?.readableId}`}
+                        // />
+                    ))}
                 </div>
             </div>
-            <div className="inline-flex flex-col items-center relative flex-[0_0_auto]">
-                <img className="relative flex-[0_0_auto]" alt="Partners" src="/img/partners.svg" />
-                <HorizontalDarkWith
-                    className="!flex-[0_0_auto]"
-                    divider="/img/divider.svg"
-                    text={
-                        <>
-                            中国恶霸犬注册协会
-                            <br />
-                            2023 版权所有（自定义配置）
-                        </>
-                    }
-                />
-            </div>
+
         </>
     );
 };

@@ -2,6 +2,7 @@ import Image from "next/image"
 
 import { rockSalt } from "@/app/fonts";
 import { cn } from "@/lib/utils";
+import { HorizontalDarkWith } from "@/components/generated/HorizontalDarkWith";
 
 export default function RegistryLayout({
     children,
@@ -40,6 +41,20 @@ export default function RegistryLayout({
                 {/* 纹理背景容器 */}
                 <main className="flex flex-1 flex-col items-center justify-between pt-[16px] pb-[24px] px-[16px] relative self-stretch w-full rounded-[16px_16px_0px_0px] overflow-hidden shadow-m3-elevation-dark-1 mix-blend-lighten bg-[url(/img/main-content.png)] bg-cover bg-[50%_50%] gap-4">
                     {children}
+                    <div className="inline-flex flex-col items-center relative flex-[0_0_auto]">
+                        <img className="relative flex-[0_0_auto]" alt="Partners" src="/img/partners.svg" />
+                        <HorizontalDarkWith
+                            className="!flex-[0_0_auto]"
+                            divider="/img/divider.svg"
+                            text={
+                                <>
+                                    中国恶霸犬注册协会
+                                    <br />
+                                    2023 版权所有（自定义配置）
+                                </>
+                            }
+                        />
+                    </div>
                 </main>
             </div>
         </div>)

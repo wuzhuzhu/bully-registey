@@ -87,31 +87,6 @@ export const SearchBarDark = ({
             </div>
           </>
         )}
-
-        <div className="relative inline-flex flex-[0_0_auto] items-center justify-end">
-          {show1StTrailingIcon && (
-            <IconButtonDark
-              icon={
-                ["enabled", "hovered"].includes(state.state)
-                  ? override
-                  : undefined
-              }
-              stateProp="enabled"
-              style="standard"
-            />
-          )}
-
-          {state.showAvatar && (
-            <div className="relative flex h-[48px] w-[48px] items-center justify-center gap-[10px]">
-              <UserImagesUser
-                initialClassName="!text-m3sysdarkon-primary !tracking-[0.15px] !left-[-5px] !top-[-6px]"
-                style="monogram"
-                styleCheckClassName="!rounded-[15px] !h-[30px] !bg-m-3sysdarkprimary !w-[30px]"
-                text={state.state === "pressed" ? "A" : userImagesUserText}
-              />
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );
