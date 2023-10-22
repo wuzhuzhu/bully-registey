@@ -7,6 +7,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { Suspense, useEffect, useState, useTransition } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
 
+import z from 'zod'
 import { DevTool } from "@hookform/devtools"
 import type { Prisma } from '@prisma/client'
 import { type UploadFileResponse } from 'uploadthing/next'
@@ -33,7 +34,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { useToast } from "@/components/ui/use-toast"
-import { cn, isDeepEmpty } from '@/lib/utils'
+import { cn, isDeepEmpty, makeNullablePropsOptional } from '@/lib/utils'
 import { zodResolver } from "@hookform/resolvers/zod"
 import RelatedPets from './components/related-pets'
 
@@ -43,18 +44,25 @@ import { createPetAction, deleteUploadedPetAvatar, deleteUploadedPetImg, updateP
 //     KennelOptionalDefaultsSchema, // 没有关联关系，且自动字段为可选的schema，手动合并profile字段
 //     KennelCreateOrConnectWithoutPetsInputSchema // 最终的输出到action的结构，在这个页面创建kennel只不创建pets
 // } from '@/prisma/generated/zod'
-import { Pet, PetCreateManyCreatedByInputSchema, PetWithRelations } from '@/prisma/generated/zod'
+import { Pet, PetCreateInputSchema, PetOptionalDefaultsSchema, PetCreateManyCreatedByInputSchema, PetOptionalDefaultsWithRelationsSchema, PetWithRelationsSchema } from '@/prisma/generated/zod'
+import type { PetWithRelations } from '@/prisma/generated/zod'
 import FileUpload from './components/file-upload'
 import { Skeleton } from "@/components/ui/skeleton"
 
-// 表单输入结构为扁平的object
-// 赋予可空内容可选属性
-// const InputSchema = z.object({
-//     ...PetOptionalDefaultsSchema.shape,
-//     ...PetOptionalDefaultsWithRelationsSchema.shape,
-// })
-const InputSchema = PetCreateManyCreatedByInputSchema
-type InputType = Prisma.PetCreateManyCreatedByInput
+const InputSchema = makeNullablePropsOptional(PetOptionalDefaultsSchema)
+    .omit({
+        kennelId: true,
+        createdById: true,
+    })
+    .merge(z.object({
+        registration: z.object({
+            readableId: z.string().optional(),
+        }).optional().nullable(),
+        kennel: z.object({
+            id: z.string().optional(),
+        }).optional().nullable(),
+    }))
+type InputType = z.infer<typeof InputSchema>
 
 
 export default function PetForm({ pet: petDirty, session }: {
@@ -66,7 +74,8 @@ export default function PetForm({ pet: petDirty, session }: {
     const pathname = usePathname()
 
     // const pet = omit(petDirty, ['createdById', 'kennel', 'parents', 'children', 'registration'])
-    const pet = petDirty?.id ? InputSchema.strip().parse(omit(petDirty, ['kennelId'])) : undefined
+    const pet = petDirty?.id ? InputSchema.strip().parse(omit(petDirty, ['kennelId', 'createdById'])) : undefined
+    console.log('!!!!更新pet', pet, petDirty)
     const defaultValues: Partial<Nullable<Pet>> = petDirty?.id
         ? pet // 更新，使用清理过的数据
         : { // 创建，使用默认值
@@ -78,6 +87,12 @@ export default function PetForm({ pet: petDirty, session }: {
             birthDate: startOfDay(new Date()),
             breed: '',
             color: '',
+            registration: {
+                readableId: '',
+            },
+            kennel: {
+                id: ''
+            },
         }
     // console.log({ petDirty })
 
@@ -106,7 +121,7 @@ export default function PetForm({ pet: petDirty, session }: {
 
     // https://scastiel.dev/server-components-actions-react-nextjs
     // https://github.com/orgs/react-hook-form/discussions/10757
-    const onSubmit: SubmitHandler<Prisma.PetCreateInput> = (data) => {
+    const onSubmit: SubmitHandler<InputType> = ({ registration, kennel, ...data }) => {
         // 准备server action参数
         const isUpdate = !!petDirty?.id
         const hasOriginalImg = !isDeepEmpty(petDirty?.img)
@@ -114,8 +129,51 @@ export default function PetForm({ pet: petDirty, session }: {
         const hasImg = !isEmpty(uploadedImg)
         const hasAvatar = !isEmpty(uploadedAvatar)
         // prepare create data
-        const createData = data
-        const updateData = data
+        const createData = { ...data }
+        const updateData = { ...data }
+
+
+        // 如果有readableId，就创建registration
+        if (registration?.readableId && registration?.readableId !== petDirty?.registration?.readableId) {
+            const registraionConnectOrCreate = {
+                connectOrCreate: {
+                    create: {
+                        readableId: registration?.readableId,
+                        status: 'APPROVED',
+                        reviewedBy: {
+                            connect: {
+                                id: session.user?.id
+                            }
+                        }
+                    },
+                    where: {
+                        readableId: registration?.readableId
+                    }
+                }
+            }
+            const registrationUpsert = {
+                upsert: {
+                    where: {
+                        petId: petDirty?.id
+                    },
+                    create: {
+                        readableId: registration?.readableId,
+                        status: 'APPROVED',
+                        reviewedBy: {
+                            connect: {
+                                id: session.user?.id
+                            }
+                        }
+                    },
+                    update: {
+                        readableId: registration?.readableId,
+                    }
+                }
+            }
+            createData.registration = registraionConnectOrCreate
+            updateData.registration = registrationUpsert
+            // debugger
+        }
 
         // const img = pick(uploadedImg, ['key', 'url', 'name', 'size'])
         // const avatar = pick(uploadedAvatar, ['key', 'url', 'name', 'size'])
@@ -155,9 +213,11 @@ export default function PetForm({ pet: petDirty, session }: {
                     img: true,
                 }
             }
+
             // debugger
             startTransition(async () => {
                 console.log('在transition中整理好了actionParams：', { createParams })
+                // debugger
                 const { succeed, data: newPet, error } = await createPetAction(createParams)
                 if (succeed === 'ok') {
                     toast({
@@ -278,6 +338,7 @@ export default function PetForm({ pet: petDirty, session }: {
         <Form {...hookedForm}>
             {/* <p>value: {JSON.stringify(getValues())}, error: {JSON.stringify(errors)}, isSubmitSuccessful: {isSubmitSuccessful.toString()}</p> */}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+                <p>{JSON.stringify(errors)}</p>
                 <div className="flex gap-8">
                     <div id="left" className="flex-1 space-y-8 border-border pr-8 border-r">
                         <FormField
@@ -307,6 +368,21 @@ export default function PetForm({ pet: petDirty, session }: {
                                         <Input placeholder="英文名" {...field} />
                                     </FormControl>
                                     <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={control}
+                            name="registration.readableId"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>芯片ID(唯一)</FormLabel>
+                                    <FormControl>
+                                        {/* @ts-ignore */}
+                                        <Input placeholder="输入完整芯片编号.." {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                    <FormDescription>在犬列表中确认注册状态</FormDescription>
                                 </FormItem>
                             )}
                         />
@@ -390,7 +466,7 @@ export default function PetForm({ pet: petDirty, session }: {
                                                 value={formatInTimeZone(field.value, 'Asia/Shanghai', 'yyyy/MM/dd')}
                                                 onBlur={(v) => {
                                                     console.log(field, control)
-                                                    debugger
+                                                    // debugger
                                                     field.onChange(new Date(v?.currentTarget?.value))
                                                 }}
                                             />

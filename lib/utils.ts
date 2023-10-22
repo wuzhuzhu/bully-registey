@@ -7,6 +7,7 @@ import type { Kennel } from '@prisma/client';
 import { NextApiRequest } from 'next';
 import { find } from 'lodash-es';
 import { Pet } from '@prisma/client';
+import z from 'zod'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -145,4 +146,21 @@ export async function deleteFetch(url: string, body?: any) {
 
   const data = await res.json()
   return data
+}
+
+// https://github.com/colinhacks/zod/discussions/2050
+export function makeNullablePropsOptional<Schema extends z.AnyZodObject>(schema: Schema) {
+  const entries = Object.entries(schema.shape) as
+    [keyof Schema['shape'], z.ZodTypeAny][]
+  const newProps = entries.reduce((acc, [key, value]) => {
+    acc[key] = value instanceof z.ZodNullable
+      ? value.unwrap().optional().nullish()
+      : value
+    return acc
+  }, {} as {
+    [key in keyof Schema['shape']]: Schema['shape'][key] extends z.ZodOptional<infer T>
+    ? z.ZodNullable<T>
+    : Schema['shape'][key]
+  })
+  return z.object(newProps)
 }

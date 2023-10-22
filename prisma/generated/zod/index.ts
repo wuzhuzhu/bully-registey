@@ -26,7 +26,7 @@ export const VerificationTokenScalarFieldEnumSchema = z.enum(['identifier','toke
 
 export const PetScalarFieldEnumSchema = z.enum(['id','name','nameEn','ownerName','type','gender','birthDate','breed','color','createdAt','updatedAt','createdById','kennelId']);
 
-export const RegistrationScalarFieldEnumSchema = z.enum(['id','readableId','status','registeredAt','registerEnd','reviewedAt','reviewedById','attachments','petId']);
+export const RegistrationScalarFieldEnumSchema = z.enum(['id','readableId','status','registeredAt','registerEnd','reviewedAt','updatedAt','reviewedById','attachments','petId']);
 
 export const FileScalarFieldEnumSchema = z.enum(['id','key','url','name','size','kennelId','imgOfId','avatarOfId','createdAt','updatedAt','status']);
 
@@ -455,6 +455,7 @@ export const RegistrationSchema = z.object({
   registeredAt: z.coerce.date(),
   registerEnd: z.coerce.date().nullable(),
   reviewedAt: z.coerce.date().nullable(),
+  updatedAt: z.coerce.date(),
   reviewedById: z.string().nullable(),
   attachments: z.string().nullable(),
   petId: z.string().nullable(),
@@ -469,6 +470,7 @@ export const RegistrationOptionalDefaultsSchema = RegistrationSchema.merge(z.obj
   status: RegistrationStatusSchema.optional(),
   id: z.string().cuid().optional(),
   registeredAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
 }))
 
 export type RegistrationOptionalDefaults = z.infer<typeof RegistrationOptionalDefaultsSchema>
@@ -805,6 +807,7 @@ export const RegistrationSelectSchema: z.ZodType<Prisma.RegistrationSelect> = z.
   registeredAt: z.boolean().optional(),
   registerEnd: z.boolean().optional(),
   reviewedAt: z.boolean().optional(),
+  updatedAt: z.boolean().optional(),
   reviewedById: z.boolean().optional(),
   attachments: z.boolean().optional(),
   petId: z.boolean().optional(),
@@ -1440,6 +1443,7 @@ export const RegistrationWhereInputSchema: z.ZodType<Prisma.RegistrationWhereInp
   registeredAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   registerEnd: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
   reviewedAt: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
+  updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   reviewedById: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   attachments: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   petId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
@@ -1454,6 +1458,7 @@ export const RegistrationOrderByWithRelationInputSchema: z.ZodType<Prisma.Regist
   registeredAt: z.lazy(() => SortOrderSchema).optional(),
   registerEnd: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   reviewedAt: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional(),
   reviewedById: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   attachments: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   petId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
@@ -1500,6 +1505,7 @@ export const RegistrationWhereUniqueInputSchema: z.ZodType<Prisma.RegistrationWh
   registeredAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   registerEnd: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
   reviewedAt: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
+  updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   reviewedById: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   attachments: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   reviewedBy: z.union([ z.lazy(() => UserNullableRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional().nullable(),
@@ -1513,6 +1519,7 @@ export const RegistrationOrderByWithAggregationInputSchema: z.ZodType<Prisma.Reg
   registeredAt: z.lazy(() => SortOrderSchema).optional(),
   registerEnd: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   reviewedAt: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional(),
   reviewedById: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   attachments: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   petId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
@@ -1531,6 +1538,7 @@ export const RegistrationScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.
   registeredAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   registerEnd: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema),z.coerce.date() ]).optional().nullable(),
   reviewedAt: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema),z.coerce.date() ]).optional().nullable(),
+  updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   reviewedById: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   attachments: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   petId: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
@@ -2323,6 +2331,7 @@ export const RegistrationCreateInputSchema: z.ZodType<Prisma.RegistrationCreateI
   registeredAt: z.coerce.date().optional(),
   registerEnd: z.coerce.date().optional().nullable(),
   reviewedAt: z.coerce.date().optional().nullable(),
+  updatedAt: z.coerce.date().optional(),
   attachments: z.string().optional().nullable(),
   reviewedBy: z.lazy(() => UserCreateNestedOneWithoutRegistrationInputSchema).optional(),
   pet: z.lazy(() => PetCreateNestedOneWithoutRegistrationInputSchema).optional()
@@ -2335,6 +2344,7 @@ export const RegistrationUncheckedCreateInputSchema: z.ZodType<Prisma.Registrati
   registeredAt: z.coerce.date().optional(),
   registerEnd: z.coerce.date().optional().nullable(),
   reviewedAt: z.coerce.date().optional().nullable(),
+  updatedAt: z.coerce.date().optional(),
   reviewedById: z.string().optional().nullable(),
   attachments: z.string().optional().nullable(),
   petId: z.string().optional().nullable()
@@ -2347,6 +2357,7 @@ export const RegistrationUpdateInputSchema: z.ZodType<Prisma.RegistrationUpdateI
   registeredAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   registerEnd: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   reviewedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   attachments: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   reviewedBy: z.lazy(() => UserUpdateOneWithoutRegistrationNestedInputSchema).optional(),
   pet: z.lazy(() => PetUpdateOneWithoutRegistrationNestedInputSchema).optional()
@@ -2359,6 +2370,7 @@ export const RegistrationUncheckedUpdateInputSchema: z.ZodType<Prisma.Registrati
   registeredAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   registerEnd: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   reviewedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   reviewedById: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   attachments: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   petId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -2371,6 +2383,7 @@ export const RegistrationCreateManyInputSchema: z.ZodType<Prisma.RegistrationCre
   registeredAt: z.coerce.date().optional(),
   registerEnd: z.coerce.date().optional().nullable(),
   reviewedAt: z.coerce.date().optional().nullable(),
+  updatedAt: z.coerce.date().optional(),
   reviewedById: z.string().optional().nullable(),
   attachments: z.string().optional().nullable(),
   petId: z.string().optional().nullable()
@@ -2383,6 +2396,7 @@ export const RegistrationUpdateManyMutationInputSchema: z.ZodType<Prisma.Registr
   registeredAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   registerEnd: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   reviewedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   attachments: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
@@ -2393,6 +2407,7 @@ export const RegistrationUncheckedUpdateManyInputSchema: z.ZodType<Prisma.Regist
   registeredAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   registerEnd: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   reviewedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   reviewedById: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   attachments: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   petId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -2995,6 +3010,7 @@ export const RegistrationCountOrderByAggregateInputSchema: z.ZodType<Prisma.Regi
   registeredAt: z.lazy(() => SortOrderSchema).optional(),
   registerEnd: z.lazy(() => SortOrderSchema).optional(),
   reviewedAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional(),
   reviewedById: z.lazy(() => SortOrderSchema).optional(),
   attachments: z.lazy(() => SortOrderSchema).optional(),
   petId: z.lazy(() => SortOrderSchema).optional()
@@ -3007,6 +3023,7 @@ export const RegistrationMaxOrderByAggregateInputSchema: z.ZodType<Prisma.Regist
   registeredAt: z.lazy(() => SortOrderSchema).optional(),
   registerEnd: z.lazy(() => SortOrderSchema).optional(),
   reviewedAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional(),
   reviewedById: z.lazy(() => SortOrderSchema).optional(),
   attachments: z.lazy(() => SortOrderSchema).optional(),
   petId: z.lazy(() => SortOrderSchema).optional()
@@ -3019,6 +3036,7 @@ export const RegistrationMinOrderByAggregateInputSchema: z.ZodType<Prisma.Regist
   registeredAt: z.lazy(() => SortOrderSchema).optional(),
   registerEnd: z.lazy(() => SortOrderSchema).optional(),
   reviewedAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional(),
   reviewedById: z.lazy(() => SortOrderSchema).optional(),
   attachments: z.lazy(() => SortOrderSchema).optional(),
   petId: z.lazy(() => SortOrderSchema).optional()
@@ -4275,6 +4293,7 @@ export const RegistrationCreateWithoutReviewedByInputSchema: z.ZodType<Prisma.Re
   registeredAt: z.coerce.date().optional(),
   registerEnd: z.coerce.date().optional().nullable(),
   reviewedAt: z.coerce.date().optional().nullable(),
+  updatedAt: z.coerce.date().optional(),
   attachments: z.string().optional().nullable(),
   pet: z.lazy(() => PetCreateNestedOneWithoutRegistrationInputSchema).optional()
 }).strict();
@@ -4286,6 +4305,7 @@ export const RegistrationUncheckedCreateWithoutReviewedByInputSchema: z.ZodType<
   registeredAt: z.coerce.date().optional(),
   registerEnd: z.coerce.date().optional().nullable(),
   reviewedAt: z.coerce.date().optional().nullable(),
+  updatedAt: z.coerce.date().optional(),
   attachments: z.string().optional().nullable(),
   petId: z.string().optional().nullable()
 }).strict();
@@ -4459,6 +4479,7 @@ export const RegistrationScalarWhereInputSchema: z.ZodType<Prisma.RegistrationSc
   registeredAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   registerEnd: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
   reviewedAt: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
+  updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   reviewedById: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   attachments: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   petId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
@@ -4874,6 +4895,7 @@ export const RegistrationCreateWithoutPetInputSchema: z.ZodType<Prisma.Registrat
   registeredAt: z.coerce.date().optional(),
   registerEnd: z.coerce.date().optional().nullable(),
   reviewedAt: z.coerce.date().optional().nullable(),
+  updatedAt: z.coerce.date().optional(),
   attachments: z.string().optional().nullable(),
   reviewedBy: z.lazy(() => UserCreateNestedOneWithoutRegistrationInputSchema).optional()
 }).strict();
@@ -4885,6 +4907,7 @@ export const RegistrationUncheckedCreateWithoutPetInputSchema: z.ZodType<Prisma.
   registeredAt: z.coerce.date().optional(),
   registerEnd: z.coerce.date().optional().nullable(),
   reviewedAt: z.coerce.date().optional().nullable(),
+  updatedAt: z.coerce.date().optional(),
   reviewedById: z.string().optional().nullable(),
   attachments: z.string().optional().nullable()
 }).strict();
@@ -5126,6 +5149,7 @@ export const RegistrationUpdateWithoutPetInputSchema: z.ZodType<Prisma.Registrat
   registeredAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   registerEnd: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   reviewedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   attachments: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   reviewedBy: z.lazy(() => UserUpdateOneWithoutRegistrationNestedInputSchema).optional()
 }).strict();
@@ -5137,6 +5161,7 @@ export const RegistrationUncheckedUpdateWithoutPetInputSchema: z.ZodType<Prisma.
   registeredAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   registerEnd: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   reviewedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   reviewedById: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   attachments: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
@@ -5719,6 +5744,7 @@ export const RegistrationCreateManyReviewedByInputSchema: z.ZodType<Prisma.Regis
   registeredAt: z.coerce.date().optional(),
   registerEnd: z.coerce.date().optional().nullable(),
   reviewedAt: z.coerce.date().optional().nullable(),
+  updatedAt: z.coerce.date().optional(),
   attachments: z.string().optional().nullable(),
   petId: z.string().optional().nullable()
 }).strict();
@@ -5805,6 +5831,7 @@ export const RegistrationUpdateWithoutReviewedByInputSchema: z.ZodType<Prisma.Re
   registeredAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   registerEnd: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   reviewedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   attachments: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   pet: z.lazy(() => PetUpdateOneWithoutRegistrationNestedInputSchema).optional()
 }).strict();
@@ -5816,6 +5843,7 @@ export const RegistrationUncheckedUpdateWithoutReviewedByInputSchema: z.ZodType<
   registeredAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   registerEnd: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   reviewedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   attachments: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   petId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
@@ -5827,6 +5855,7 @@ export const RegistrationUncheckedUpdateManyWithoutReviewedByInputSchema: z.ZodT
   registeredAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   registerEnd: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   reviewedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   attachments: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   petId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();

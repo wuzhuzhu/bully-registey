@@ -151,6 +151,7 @@ model Registration {
   registeredAt DateTime           @default(now())
   registerEnd  DateTime?
   reviewedAt   DateTime?
+  updatedAt    DateTime           @updatedAt
   reviewedBy   User?              @relation(fields: [reviewedById], references: [id])
   reviewedById String?
   attachments  String? // 可以存储文件路径或其他相关信息

@@ -17,13 +17,14 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import Link from "next/link"
 
-import { statuses } from "../data/data"
-import { PetSchema, RegistrationStatusSchema } from "@/prisma/generated/zod"
-import { object, z } from "zod"
-import { REGISTRATION_STATUS } from "@/lib/constants"
-import { startTransition, useMemo } from "react"
 import { deletePetById } from "@/lib/actions"
+import { REGISTRATION_STATUS } from "@/lib/constants"
+import { PetSchema, RegistrationStatusSchema } from "@/prisma/generated/zod"
+import { startTransition, useMemo } from "react"
+import { z } from "zod"
+import { useRouter } from "next/navigation"
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -40,6 +41,7 @@ export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
   const pet = useMemo(() => PetSchemaWithStatus.parse(row.original), [row])
+  const router = useRouter()
 
   console.log('在操作按钮里面的pet行', { row })
 
@@ -55,7 +57,7 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>编辑</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push(`/dashboard/edit/pet/${pet?.id}`)}>编辑</DropdownMenuItem>
         <DropdownMenuItem disabled>复制</DropdownMenuItem>
         <DropdownMenuItem disabled>收藏</DropdownMenuItem>
         <DropdownMenuSeparator />
