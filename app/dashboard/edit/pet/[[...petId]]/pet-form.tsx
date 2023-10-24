@@ -6,7 +6,7 @@ import { CalendarIcon } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
 import { Suspense, useEffect, useState, useTransition } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
-
+import Link from "next/link"
 import z from 'zod'
 import { DevTool } from "@hookform/devtools"
 import type { Prisma } from '@prisma/client'
@@ -27,6 +27,13 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 import { Separator } from '@/components/ui/separator'
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
@@ -65,9 +72,10 @@ const InputSchema = makeNullablePropsOptional(PetOptionalDefaultsSchema)
 type InputType = z.infer<typeof InputSchema>
 
 
-export default function PetForm({ pet: petDirty, session }: {
+export default function PetForm({ pet: petDirty, session, kennels }: {
     pet?: Nullable<PetWithRelations>,
-    session: { user?: { id: string } }
+    session: { user?: { id: string } },
+    kennels?: { id: string, name: string }[]
 }) {
     const router = useRouter()
     const { toast } = useToast()
@@ -86,6 +94,7 @@ export default function PetForm({ pet: petDirty, session }: {
             gender: 'MALE',
             birthDate: startOfDay(new Date()),
             breed: '',
+            location: '',
             color: '',
             registration: {
                 readableId: '',
@@ -123,6 +132,7 @@ export default function PetForm({ pet: petDirty, session }: {
     // https://github.com/orgs/react-hook-form/discussions/10757
     const onSubmit: SubmitHandler<InputType> = ({ registration, kennel, ...data }) => {
         // 准备server action参数
+        console.log('onSubmit, 准备server action参数开始,', { registration, kennel, ...data })
         const isUpdate = !!petDirty?.id
         const hasOriginalImg = !isDeepEmpty(petDirty?.img)
         const hasOriginalAvatar = !isDeepEmpty(petDirty?.avatar)
@@ -132,6 +142,25 @@ export default function PetForm({ pet: petDirty, session }: {
         const createData = { ...data }
         const updateData = { ...data }
 
+
+        if (kennel?.id === 'DELETE' && petDirty?.kennel?.id) {
+            // 原有kennel被删除
+            createData.kennel = {
+                disconnect: true
+            }
+            updateData.kennel = {
+                disconnect: true
+            }
+        } else if (kennel?.id && kennel?.id !== petDirty?.kennel?.id) {
+            // 如果有kennelId，并且有变更,就创建kennel链接语句
+            const kennelConnect = {
+                connect: {
+                    id: kennel?.id
+                }
+            }
+            createData.kennel = kennelConnect
+            updateData.kennel = kennelConnect
+        }
 
         // 如果有readableId，就创建registration
         if (registration?.readableId && registration?.readableId !== petDirty?.registration?.readableId) {
@@ -338,7 +367,7 @@ export default function PetForm({ pet: petDirty, session }: {
         <Form {...hookedForm}>
             {/* <p>value: {JSON.stringify(getValues())}, error: {JSON.stringify(errors)}, isSubmitSuccessful: {isSubmitSuccessful.toString()}</p> */}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-                <p>{JSON.stringify(errors)}</p>
+                {/* <p>{JSON.stringify(errors)}</p> */}
                 <div className="flex gap-8">
                     <div id="left" className="flex-1 space-y-8 border-border pr-8 border-r">
                         <FormField
@@ -388,6 +417,38 @@ export default function PetForm({ pet: petDirty, session }: {
                         />
                         <FormField
                             control={control}
+                            name="kennel.id"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>犬舍选择</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="选择已经创建的犬舍" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent className="overflow-y-auto max-h-[10rem]">
+                                            {kennels && kennels?.length > 0 && [
+                                                { id: 'DELETE', name: '解除关联' },
+                                                ...kennels,
+                                            ].map((kennel) => (
+                                                <SelectItem key={kennel.id} value={kennel.id}>
+                                                    {kennel.name}
+                                                </SelectItem>
+                                            ))
+                                            }
+                                        </SelectContent>
+                                    </Select>
+                                    <FormDescription>
+                                        需要在{" "}
+                                        <Link className="text-blue-500" href="/dashboard/kennel">犬舍管理</Link> 中提前建好犬舍
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={control}
                             name="breed"
                             render={({ field }) => (
                                 <FormItem>
@@ -395,6 +456,20 @@ export default function PetForm({ pet: petDirty, session }: {
                                     <FormControl>
                                         {/* @ts-ignore */}
                                         <Input placeholder="犬种.." {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={control}
+                            name="location"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>地区</FormLabel>
+                                    <FormControl>
+                                        {/* @ts-ignore */}
+                                        <Input placeholder="随意输入地区.." {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -423,6 +498,20 @@ export default function PetForm({ pet: petDirty, session }: {
                                     <FormControl>
                                         {/* @ts-ignore */}
                                         <Input placeholder="拥有者名字.." {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={control}
+                            name="ownerMobile"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>拥有者电话</FormLabel>
+                                    <FormControl>
+                                        {/* @ts-ignore */}
+                                        <Input placeholder="拥有者电话.." {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

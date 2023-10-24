@@ -28,3 +28,4 @@ export const REGISTRATION_STATUS = {
 }
 
 export const DEFAULT_PET_AVATAR_URL = '/img/male-avatar.svg';
+export const DEFAULT_PET_IMG_URL = '/img/pit-bull.png';

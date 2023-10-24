@@ -87,7 +87,8 @@ export default function Page({ kennel: kennelDirty }: {
                 mobile: '',
                 instagram: '',
                 facebook: '',
-                wechat: ''
+                wechat: '',
+                email: ''
             }
         }
     console.log({ defaultValues, kennel })
@@ -289,7 +290,19 @@ export default function Page({ kennel: kennelDirty }: {
                                 </FormItem>
                             )}
                         />
-
+                        <FormField
+                            control={control}
+                            name="profile.email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>电邮</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Email.." {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                         <FormField
                             control={control}
                             name="profile.mobile"

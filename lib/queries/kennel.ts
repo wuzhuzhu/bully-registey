@@ -4,8 +4,28 @@ import { unstable_cache } from 'next/cache'
 
 export const revalidate = 3600 // revalidate the data at most every hour
 
+export const getKennelsSimple = unstable_cache(async () => {
+    const kennels = await db.kennel.findMany({
+        select: {
+            id: true,
+            name: true,
+        },
+        orderBy: {
+            createdAt: 'desc'
+        }
+    })
+    return kennels
+}, ['kennels-simple'], {
+    revalidate,
+    tags: ['kennels']
+})
+
 // get kennels with count of pets
-export const getKennelsNoCache = async ({ skip = 0, take = 50, filter }: {
+export const getKennelsNoCache = async ({
+    skip = 0,
+    take = 50,
+    filter
+}: {
     skip?: number
     take?: number
     filter?: {

@@ -67,7 +67,11 @@ export const getPetById = unstable_cache(async (id: string) => {
             id
         },
         include: {
-            kennel: true,
+            kennel: {
+                include: {
+                    profile: true,
+                }
+            },
             parents: {
                 include: {
                     avatar: {

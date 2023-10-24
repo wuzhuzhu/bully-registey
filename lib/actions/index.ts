@@ -5,7 +5,7 @@
 
 import db from '@/lib/prisma';
 import type { Prisma } from '@prisma/client';
-import type { KennelOptionalDefaults } from '@/prisma/generated/zod'
+import type { KennelOptionalDefaults, RegistrationStatusType } from '@/prisma/generated/zod'
 import {
     // KennelCreateInputSchema,
     KennelCreateOrConnectWithoutPetsInputSchema,
@@ -38,6 +38,7 @@ export async function createOrUpdateKennelWithProfileAction(
     // prisma 的upsert不支持嵌套的upsert，所以这里需要手动处理
     const data = isUpdate ? await db.kennel.update(params) : await db.kennel.create(params)
     revalidatePath('/dashboard/edit/kennel' + (kennelId ? kennelId : ''))
+    revalidateTag('pets')
     console.log('revalidate: ', '/dashboard/edit/kennel' + (kennelId ? kennelId : ''))
     console.log('createOrUpdateKennelWithProfileAction DONE', data)
     return { succeed: 'ok', kennel: data }
@@ -96,6 +97,7 @@ export async function deletePetById(petId: string) {
         }
     })
     revalidateTag('pets') // template:  revalidate cache through tag
+    revalidateTag('pet') // template:  revalidate cache through tag
     console.log('deletePet DONE', deleted)
     return { succeed: 'ok' }
 }
@@ -114,6 +116,7 @@ export async function deleteKennelById(kennelId: string) {
         }
     })
     revalidateTag('kennels') // template:  revalidate cache through tag
+    revalidateTag('pets') // template:  revalidate cache through tag
     console.log('deletePet DONE', deleted)
     return { succeed: 'ok' }
 }
@@ -221,6 +224,26 @@ export async function createFileAction(params: UploadFileResponse) {
     revalidateTag('file')
     console.log('createFileAction OK', { params })
     return { succeed: 'ok', data: file }
+}
+
+export async function changePetStatusById(petId: string, status: RegistrationStatusType) {
+    console.log('changePetStatusById', { petId, status })
+    const pet = await db.pet.update({
+        where: {
+            id: petId
+        },
+        data: {
+            registration: {
+                update: {
+                    status
+                }
+            }
+        }
+    })
+    revalidateTag('pet')
+    revalidateTag('pets')
+    console.log('changePetStatusById OK', { petId, status })
+    return { succeed: 'ok', data: pet }
 }
 
 // examples

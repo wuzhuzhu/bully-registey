@@ -10,7 +10,7 @@ const FilteredPetCard = ({
     pet: PetWithRelations
 }) => {
     return (
-        <Link href='/registry/${pet?.id}' className="flex h-20 rounded-xl border border-zinc-700 justify-center items-center inline-flex w-full gap-4 pl-4 bg-m3sysdarksurface-container-highest">
+        <Link href={`/registry/${pet?.id}`} className="flex h-20 rounded-xl border border-zinc-700 justify-center items-center inline-flex w-full gap-4 pl-4 bg-m3sysdarksurface-container-highest">
             <div className="w-10 h-10 left-0 top-0 bg-amber-300 rounded-full">
                 <GenderIcon gender={pet?.gender?.toLowerCase()}></GenderIcon>
             </div>

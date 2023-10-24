@@ -10,6 +10,13 @@ import { IconsMoreVert24Px1 } from "../../icons/IconsMoreVert24Px1";
 import { AssistiveChipDark } from "../AssistiveChipDark";
 import { IconButtonDark } from "../IconButtonDark";
 import { IconsLocalTaxi } from "../IconsLocalTaxi";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+import Image from "next/image";
+
+import { IconsMale3 } from "@/components/icons/IconsMale3";
+import { IconsFemap24Px2 } from "@/components/icons/IconsFemap24Px2";
+import { Cake, Palette, Tag } from "lucide-react";
 
 export const StackedCardDark = ({
   style,
@@ -17,7 +24,8 @@ export const StackedCardDark = ({
   cardStateLayerStateEnabledClassName,
   mediaTextContentClassName,
   headerClassName,
-  text = "中国恶霸犬血统认证",
+  text,
+  subText,
   iconButtonDarkIcon = (
     <IconsMoreVert24Px1
       className="!relative !h-[24px] !w-[24px]"
@@ -26,12 +34,12 @@ export const StackedCardDark = ({
   ),
   mediaClassName,
   titleClassName,
-  text1 = "绿巨人浩克 Hulk Smash",
+  text1,
   subheadClassName,
-  text2 = "虚拟犬类培育中心 Dizzy Camp",
+  location,
   supportingTextClassName,
   assistiveChipDark = <Icon39 className="!relative !h-[18px] !w-[18px]" />,
-  assistiveChipDarkLabelText = "欧阳锋",
+  ownerMobile,
   override = (
     <IconsLocalTaxi
       className="!h-[18px] !w-[18px]"
@@ -39,6 +47,12 @@ export const StackedCardDark = ({
       iconClassName="!h-[14px] !left-[2px] !w-[14px] !top-[2px]"
     />
   ),
+  breed,
+  birthDate,
+  color,
+  gender,
+  img,
+  avatar,
 }) => {
   return (
     <div
@@ -52,28 +66,25 @@ export const StackedCardDark = ({
             >
               <div className="relative flex h-[72px] w-full items-center self-stretch py-[12px] pl-[16px] pr-[4px]">
                 <div className="relative flex flex-1 grow items-center gap-[16px]">
-                  <div className="relative h-[40px] w-[40px] overflow-hidden rounded-[20px] bg-m-3sysdarkprimary">
-                    {style === "outlined" && (
-                      <div className="absolute -top-px left-0 h-[40px] w-[40px] text-center font-m3-title-medium text-[length:var(--m3-title-medium-font-size)] font-[number:var(--m3-title-medium-font-weight)] leading-[var(--m3-title-medium-line-height)] tracking-[var(--m3-title-medium-letter-spacing)] text-m-3sysdarksurface [font-style:var(--m3-title-medium-font-style)]">
-                        A
-                      </div>
-                    )}
-
-                    {style === "bully" && (
-                      <img
-                        className="absolute left-[12px] top-[12px] h-[16px] w-[16px]"
-                        alt="Male"
-                        src="/img/male-1364-1.svg"
-                      />
-                    )}
-                  </div>
+                  <Avatar className="relative h-10 w-10 overflow-hidden rounded-full bg-m-3sysdarkprimary">
+                    <AvatarImage src={avatar} />
+                    <AvatarFallback>Dog</AvatarFallback>
+                  </Avatar>
                   <div className="relative flex flex-1 grow flex-col items-start gap-[4px]">
                     <div
                       className={`relative mt-[-1.00px] self-stretch font-m3-title-medium text-[length:var(--m3-title-medium-font-size)] font-[number:var(--m3-title-medium-font-weight)] leading-[var(--m3-title-medium-line-height)] tracking-[var(--m3-title-medium-letter-spacing)] text-m3sysdarkon-surface [font-style:var(--m3-title-medium-font-style)] ${headerClassName}`}
                     >
                       {style === "outlined" && <>Header</>}
 
-                      {style === "bully" && <>{text}</>}
+                      {style === "bully" && (
+                        <div className="flex items-center gap-2">
+                          {text}
+                          {gender === "MALE" && <IconsMale3 color="#C1C1FF" />}
+                          {gender === "FEMALE" && (
+                            <IconsFemap24Px2 color="#BED061" />
+                          )}
+                        </div>
+                      )}
                     </div>
                     <div
                       className={`relative font-m3-body-medium text-[length:var(--m3-body-medium-font-size)] font-[number:var(--m3-body-medium-font-weight)] leading-[var(--m3-body-medium-line-height)] tracking-[var(--m3-body-medium-letter-spacing)] text-m3sysdarkon-surface [font-style:var(--m3-body-medium-font-style)] ${
@@ -84,7 +95,9 @@ export const StackedCardDark = ({
                     >
                       {style === "outlined" && <>Subhead</>}
 
-                      {style === "bully" && <>CBR No. 123321312312</>}
+                      {style === "bully" && subText && (
+                        <>{`CBR NO. ${subText}`}</>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -94,13 +107,10 @@ export const StackedCardDark = ({
                   style="standard"
                 />
               </div>
-              <div
-                className={`relative w-full flex-1 grow self-stretch bg-cover bg-[50%_50%] ${
-                  style === "bully"
-                    ? "bg-[url(/img/media-3.png)]"
-                    : "bg-[url(/img/media-1.png)]"
-                } ${mediaClassName}`}
-              />
+
+              <div className="relative w-full flex-1 grow overflow-hidden">
+                <Image className="object-cover" src={img} fill alt={text} />
+              </div>
               <div
                 className={`relative flex w-full flex-[0_0_auto] flex-col items-start self-stretch p-[16px] ${
                   style === "bully" ? "gap-[16px]" : "gap-[32px]"
@@ -142,7 +152,7 @@ export const StackedCardDark = ({
                       <div
                         className={`relative w-full font-m3-body-medium text-[length:var(--m3-body-medium-font-size)] font-[number:var(--m3-body-medium-font-weight)] leading-[var(--m3-body-medium-line-height)] tracking-[var(--m3-body-medium-letter-spacing)] text-m3sysdarkon-surface-variant [font-style:var(--m3-body-medium-font-style)] ${subheadClassName}`}
                       >
-                        {text2}
+                        {location}
                       </div>
                     </div>
                   )}
@@ -170,36 +180,46 @@ export const StackedCardDark = ({
                   <div
                     className={`no-scrollbar relative flex w-full flex-[0_0_auto] items-center gap-[10px] self-stretch overflow-x-scroll ${supportingTextClassName}`}
                   >
-                    <AssistiveChipDark
-                      className="!flex-[0_0_auto]"
-                      configuration="label-icon"
-                      labelText={assistiveChipDarkLabelText}
-                      override={assistiveChipDark}
-                      stateProp="enabled"
-                      style="outlined"
-                    />
-                    <AssistiveChipDark
-                      className="!flex-[0_0_auto]"
-                      configuration="label-only"
-                      labelText="恶霸犬"
-                      stateProp="enabled"
-                      style="outlined"
-                    />
-                    <AssistiveChipDark
-                      className="!flex-[0_0_auto]"
-                      configuration="label-icon"
-                      labelText="22.10.6"
-                      override={override}
-                      stateProp="enabled"
-                      style="outlined"
-                    />
-                    <AssistiveChipDark
-                      className="!flex-[0_0_auto]"
-                      configuration="label-only"
-                      labelText="棕"
-                      stateProp="enabled"
-                      style="outlined"
-                    />
+                    {ownerMobile && (
+                      <AssistiveChipDark
+                        className="!flex-[0_0_auto]"
+                        configuration="label-icon"
+                        labelText={ownerMobile}
+                        override={assistiveChipDark}
+                        stateProp="enabled"
+                        style="outlined"
+                      />
+                    )}
+                    {breed && (
+                      <AssistiveChipDark
+                        className="!flex-[0_0_auto]"
+                        configuration="label-icon"
+                        override={<Tag color="#F8BD48" size={18} />}
+                        labelText={breed}
+                        stateProp="enabled"
+                        style="outlined"
+                      />
+                    )}
+                    {birthDate && (
+                      <AssistiveChipDark
+                        className="!flex-[0_0_auto]"
+                        configuration="label-icon"
+                        labelText={birthDate}
+                        override={<Cake color="#F8BD48" size={18} />}
+                        stateProp="enabled"
+                        style="outlined"
+                      />
+                    )}
+                    {color && (
+                      <AssistiveChipDark
+                        className="!flex-[0_0_auto]"
+                        configuration="label-icon"
+                        labelText={color}
+                        override={<Palette color="#F8BD48" size={18} />}
+                        stateProp="enabled"
+                        style="outlined"
+                      />
+                    )}
                   </div>
                 )}
               </div>
@@ -296,6 +316,13 @@ StackedCardDark.propTypes = {
   style: PropTypes.oneOf(["filled", "bully", "outlined", "elevated"]),
   text: PropTypes.string,
   text1: PropTypes.string,
-  text2: PropTypes.string,
-  assistiveChipDarkLabelText: PropTypes.string,
+  location: PropTypes.string,
+  subText: PropTypes.string,
+  ownerMobile: PropTypes.string,
+  breed: PropTypes.string,
+  birthDate: PropTypes.string,
+  color: PropTypes.string,
+  img: PropTypes.string,
+  avatar: PropTypes.string,
+  gender: PropTypes.oneOf(["MALE", "FEMALE"]),
 };
