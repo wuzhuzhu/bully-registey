@@ -9,7 +9,7 @@ export const revalidate = 3600 // revalidate the data at most every hour
 
 export const getPetsNoCache = async ({
     skip = 0,
-    take = 10,
+    take = 3000,
     include,
     orderBy = { createdAt: 'desc' },
     ...args
@@ -88,8 +88,88 @@ export const getPetById = unstable_cache(async (id: string) => {
         }
 
     })
+    console.log('getPetById', { pet })
     return pet
 }, ['pet'], {
+    revalidate,
+    tags: ['pet', 'file', 'kennel', 'registration']
+})
+
+export const getPetWithAncestorById = unstable_cache(async (id: string) => {
+    const pet = await db.pet.findUnique({
+        where: {
+            id
+        },
+        include: {
+            kennel: {
+                include: {
+                    profile: true,
+                }
+            },
+            parents: {
+                select: {
+                    id: true,
+                    name: true,
+                    nameEn: true,
+                    gender: true,
+                    avatar: {
+                        select: {
+                            url: true
+                        }
+                    },
+                    registration: {
+                        select: {
+                            status: true,
+                        }
+                    },
+                    parents: {
+                        select: {
+                            id: true,
+                            name: true,
+                            nameEn: true,
+                            gender: true,
+                            avatar: {
+                                select: {
+                                    url: true
+                                }
+                            },
+                            registration: {
+                                select: {
+                                    status: true,
+                                }
+                            },
+                            parents: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    nameEn: true,
+                                    gender: true,
+                                    avatar: {
+                                        select: {
+                                            url: true
+                                        }
+                                    },
+                                    registration: {
+                                        select: {
+                                            status: true,
+                                        }
+                                    },
+                                }
+                            }
+                        }
+                    }
+                },
+            },
+            children: true,
+            avatar: true,
+            img: true,
+            registration: true,
+        }
+
+    })
+    console.log('getPetWithAncestorById', { pet })
+    return pet
+}, ['pet-ancestor'], {
     revalidate,
     tags: ['pet', 'file', 'kennel', 'registration']
 })

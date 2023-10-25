@@ -1,3 +1,4 @@
+import { GenderType } from '@/prisma/generated/zod';
 import { getServerSession } from 'next-auth/next';
 import ms from "ms";
 import { clsx, type ClassValue } from "clsx"
@@ -8,6 +9,7 @@ import { NextApiRequest } from 'next';
 import { find } from 'lodash-es';
 import { Pet } from '@prisma/client';
 import z from 'zod'
+import type { PetWithRelations, GenderType } from '@/prisma/generated/zod';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -115,8 +117,30 @@ export function getSearchParamsFromRequest(request: NextApiRequest, keys: string
   return keys?.map(key => url.searchParams.get(key))
 }
 
-export function getParentFromParents(parents: Pet[], gender = 'MALE') {
-  return find(parents, { 'gender': gender });
+export function getParentFromParents(parents?: PetWithRelations[], gender = 'MALE') {
+  return find(parents, { 'gender': gender }) || {};
+}
+
+// get any generation from pet 
+// usage: get grandpa: genderPath = ['MALE', 'MALE']
+export function getAncestorFromPet({ pet = {}, genderPath = [] }: {
+  pet?: PetWithRelations,
+  genderPath?: GenderType[]
+}) {
+  console.log('getAncestorFromPet', pet, genderPath)
+  if (!pet?.parents?.length) {
+    console.log('getAncestorFromPet', 'no parents')
+    return {}
+  } else if (genderPath?.length === 1) {
+    console.log('getAncestorFromPet', 'genderPath.length === 1')
+    return find(pet?.parents, { gender: genderPath[0] })
+  }
+  while (genderPath?.length > 1) {
+    console.log('enter Loop', { genderPath })
+    const parent = find(pet?.parents, { gender: genderPath.shift() })
+    console.log('getAncestorFromPet', { parent })
+    return getAncestorFromPet({ pet: parent, genderPath })
+  }
 }
 
 export async function post(url: string, body?: any) {
@@ -164,3 +188,4 @@ export function makeNullablePropsOptional<Schema extends z.AnyZodObject>(schema:
   })
   return z.object(newProps)
 }
+

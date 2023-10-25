@@ -1,13 +1,17 @@
 import Image from 'next/image'
 import React from 'react'
 import { cn } from '@/lib/utils'
+import { DEFAULT_PET_AVATAR_URL } from '@/lib/constants'
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+} from "@/components/ui/avatar"
 
 
-const Avatar = ({
-    src = '/img/avatar-3.png',
-    width, // the width is img width, not the div width(plus ring width)
+const FamilyAvatar = ({
+    src = DEFAULT_PET_AVATAR_URL,
     className = '',
-    alt = 'avatar'
 }: {
     src: string,
     width: number,
@@ -16,19 +20,14 @@ const Avatar = ({
     alt?: string
 }) => {
     return (
-        <div className='ring-2 ring-m-3sysdarkprimary rounded-full overflow-hidden'>
-            <Image
-                alt={alt}
-                width={width}
-                height={width}
-                src={src}
-                className={cn(
-                    'object-cover rounded-full',
-                    className
-                )}
-            />
-        </div>
+        <Avatar className={cn(
+            'ring-2 ring-m-3sysdarkprimary',
+            className
+        )}>
+            <AvatarImage src={src} alt="avatar" width={2} />
+            {/* <AvatarFallback>CN</AvatarFallback> */}
+        </Avatar>
     )
 }
 
-export default Avatar
+export default FamilyAvatar

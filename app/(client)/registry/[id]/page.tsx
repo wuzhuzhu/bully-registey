@@ -9,14 +9,16 @@ import { Icon39 } from "@/components/icons/Icon39";
 import { IconsMoreVert24Px1 } from "@/components/icons/IconsMoreVert24Px1";
 import FamilyMember from "@/components/shared/family-member";
 import { DEFAULT_PET_AVATAR_URL, DEFAULT_PET_IMG_URL } from "@/lib/constants";
-import { getPetById } from "@/lib/queries/pet";
-import { isEmpty, pick } from "lodash-es";
+import { getPetById, getPetWithAncestorById } from "@/lib/queries/pet";
+import { find, isEmpty, pick } from "lodash-es";
 import { Facebook, Instagram, Mail, Phone } from "lucide-react";
 import Link from "next/link";
 import { formatInTimeZone } from "date-fns-tz";
+import { getAncestorFromPet, getParentFromParents } from "@/lib/utils";
+import FamilyMembersCompact from "@/components/shared/family-members-compact";
 
 const RegistryDetailPage = async ({ params: { id } }: { params: { id: string } }) => {
-    const pet = await getPetById(id);
+    const pet = await getPetWithAncestorById(id);
     if (!id || !pet?.id) {
         return <div className="flex flex-col gap-4">
             <p className="mx-auto my-8 text-m3sysdarkon-surface">没有找到对应宠物,请检查编号</p>
@@ -116,113 +118,42 @@ const RegistryDetailPage = async ({ params: { id } }: { params: { id: string } }
                     birthDate={pet?.birthDate ? formatInTimeZone(pet?.birthDate, 'Asia/Shanghai', 'yyyy/MM/dd') : ''}
                 />
                 {/* family tree */}
-                <div className="flex px-0 py-[4px] self-stretch w-full flex-col items-center gap-[8px] relative flex-[0_0_auto]">
+                <div className="flex px-0 py-[4px] self-stretch w-full flex-col items-center gap-2 relative flex-[0_0_auto]">
                     {/* 父辈 parents */}
-                    <div className="flex">
-                        <FamilyMember></FamilyMember>
-                        <FamilyMember></FamilyMember>
-
+                    {/* <p className="text-white max-w-[100vw]">{JSON.stringify(pet?.parents)}</p> */}
+                    <div className="flex gap-4">
+                        {/* <p className="text-white">{JSON.stringify(getAncestorFromPet({ pet, genderPath: ['MALE'] })) || '没有'}</p> */}
+                        <FamilyMember generation={1} isMale={true} member={getAncestorFromPet({ pet, genderPath: ['MALE'] })} />
+                        <FamilyMember generation={1} isMale={false} member={getAncestorFromPet({ pet, genderPath: ['FEMALE'] })} />
                     </div>
                     <div className="flex items-center justify-between relative self-stretch w-full flex-[0_0_auto]">
-                        <div className="flex w-[171.33px] items-center justify-center relative">
-
-                            <div className="inline-flex p-[4px] rounded-[16px] flex-col items-center gap-[8px] relative flex-[0_0_auto]">
-                                <Image
-                                    width={60} height={60} className="relative w-[60px] h-[60px] mt-[-3.00px] mix-blend-lighten"
-                                    alt="Avatar"
-                                    src="/img/avatar-3.png"
-                                />
-                                <div className="inline-flex flex-col items-center relative flex-[0_0_auto]">
-                                    <div className="relative w-[70px] mt-[-1.00px] font-m3-label-small font-[number:var(--m3-label-small-font-weight)] text-m3sysdarkon-surface text-[length:var(--m3-label-small-font-size)] text-center tracking-[var(--m3-label-small-letter-spacing)] leading-[var(--m3-label-small-line-height)] overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:1] [-webkit-box-orient:vertical] [font-style:var(--m3-label-small-font-style)]">
-                                        超级闪电
-                                    </div>
-                                    <div className="relative w-[70px] font-m3-label-small font-[number:var(--m3-label-small-font-weight)] text-m3sysdarkon-surface text-[length:var(--m3-label-small-font-size)] text-center tracking-[var(--m3-label-small-letter-spacing)] leading-[var(--m3-label-small-line-height)] overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:1] [-webkit-box-orient:vertical] [font-style:var(--m3-label-small-font-style)]">
-                                        Hulk Smash Jr.
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="inline-flex p-[4px] rounded-[16px] flex-col items-center gap-[8px] relative flex-[0_0_auto]">
-                                <Image
-                                    width={60} height={60} className="relative w-[60px] h-[60px] mt-[-3.00px] mix-blend-lighten"
-                                    alt="Avatar"
-                                    src="/img/avatar-3.png"
-                                />
-                                <div className="inline-flex flex-col items-center relative flex-[0_0_auto]">
-                                    <div className="relative w-[70px] mt-[-1.00px] font-m3-label-small font-[number:var(--m3-label-small-font-weight)] text-m3sysdarkon-surface text-[length:var(--m3-label-small-font-size)] text-center tracking-[var(--m3-label-small-letter-spacing)] leading-[var(--m3-label-small-line-height)] overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:1] [-webkit-box-orient:vertical] [font-style:var(--m3-label-small-font-style)]">
-                                        超级闪电
-                                    </div>
-                                    <div className="relative w-[70px] font-m3-label-small font-[number:var(--m3-label-small-font-weight)] text-m3sysdarkon-surface text-[length:var(--m3-label-small-font-size)] text-center tracking-[var(--m3-label-small-letter-spacing)] leading-[var(--m3-label-small-line-height)] overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:1] [-webkit-box-orient:vertical] [font-style:var(--m3-label-small-font-style)]">
-                                        Hulk Smash Jr.
-                                    </div>
-                                </div>
-                            </div>
+                        <div className="flex gap-2 flex-1 items-center justify-center relative">
+                            <FamilyMember generation={2} isMale={true} member={getAncestorFromPet({ pet, genderPath: ['MALE', 'MALE'] })} />
+                            <FamilyMember generation={2} isMale={false} member={getAncestorFromPet({ pet, genderPath: ['MALE', 'FEMALE'] })} />
                         </div>
-                        <div className="flex w-[171.33px] items-center justify-center relative">
-                            <div className="inline-flex p-[4px] rounded-[16px] flex-col items-center gap-[8px] relative flex-[0_0_auto]">
-                                <Image
-                                    width={60} height={60} className="relative w-[60px] h-[60px] mt-[-3.00px] mix-blend-lighten"
-                                    alt="Avatar"
-                                    src="/img/avatar-3.png"
-                                />
-                                <div className="inline-flex flex-col items-center relative flex-[0_0_auto]">
-                                    <div className="relative w-[70px] mt-[-1.00px] font-m3-label-small font-[number:var(--m3-label-small-font-weight)] text-m3sysdarkon-surface text-[length:var(--m3-label-small-font-size)] text-center tracking-[var(--m3-label-small-letter-spacing)] leading-[var(--m3-label-small-line-height)] overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:1] [-webkit-box-orient:vertical] [font-style:var(--m3-label-small-font-style)]">
-                                        超级闪电
-                                    </div>
-                                    <div className="relative w-[70px] font-m3-label-small font-[number:var(--m3-label-small-font-weight)] text-m3sysdarkon-surface text-[length:var(--m3-label-small-font-size)] text-center tracking-[var(--m3-label-small-letter-spacing)] leading-[var(--m3-label-small-line-height)] overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:1] [-webkit-box-orient:vertical] [font-style:var(--m3-label-small-font-style)]">
-                                        Hulk Smash Jr.
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="inline-flex p-[4px] rounded-[16px] flex-col items-center gap-[8px] relative flex-[0_0_auto]">
-                                <Image
-                                    width={60} height={60} className="relative w-[60px] h-[60px] mt-[-3.00px] mix-blend-lighten"
-                                    alt="Avatar"
-                                    src="/img/avatar-3.png"
-                                />
-                                <div className="inline-flex flex-col items-center relative flex-[0_0_auto]">
-                                    <div className="relative w-[70px] mt-[-1.00px] font-m3-label-small font-[number:var(--m3-label-small-font-weight)] text-m3sysdarkon-surface text-[length:var(--m3-label-small-font-size)] text-center tracking-[var(--m3-label-small-letter-spacing)] leading-[var(--m3-label-small-line-height)] overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:1] [-webkit-box-orient:vertical] [font-style:var(--m3-label-small-font-style)]">
-                                        超级闪电
-                                    </div>
-                                    <div className="relative w-[70px] font-m3-label-small font-[number:var(--m3-label-small-font-weight)] text-m3sysdarkon-surface text-[length:var(--m3-label-small-font-size)] text-center tracking-[var(--m3-label-small-letter-spacing)] leading-[var(--m3-label-small-line-height)] overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:1] [-webkit-box-orient:vertical] [font-style:var(--m3-label-small-font-style)]">
-                                        Hulk Smash Jr.
-                                    </div>
-                                </div>
-                            </div>
+                        <div className="flex gap-2 flex-1 items-center justify-center relative">
+                            <FamilyMember generation={2} isMale={true} member={getAncestorFromPet({ pet, genderPath: ['FEMALE', 'MALE'] })} />
+                            <FamilyMember generation={2} isMale={false} member={getAncestorFromPet({ pet, genderPath: ['FEMALE', 'FEMALE'] })} />
                         </div>
                     </div>
-                    <div className="flex items-center justify-between relative self-stretch w-full flex-[0_0_auto]">
-                        <FamilyAvatar
-                            className="!flex-[0_0_auto]"
-                            ellipse="/img/ellipse-1-8.svg"
-                            generation="three"
-                            img="/img/ellipse-1-7.svg"
-                            isMale1
-                            state="default"
-                        />
-                        <FamilyAvatar
-                            className="!flex-[0_0_auto]"
-                            ellipse="/img/ellipse-1-6.svg"
-                            generation="three"
-                            img="/img/ellipse-1-5.svg"
-                            isMale1
-                            state="default"
-                        />
-                        <FamilyAvatar
-                            className="!flex-[0_0_auto]"
-                            ellipse="/img/ellipse-1-4.svg"
-                            generation="three"
-                            img="/img/ellipse-1-3.svg"
-                            isMale1
-                            state="default"
-                        />
-                        <FamilyAvatar
-                            className="!flex-[0_0_auto]"
-                            ellipse="/img/ellipse-1-2.svg"
-                            generation="three"
-                            img="/img/ellipse-1-1.svg"
-                            isMale1
-                            state="default"
-                        />
+                    <div className="flex items-center justify-between relative self-stretch w-full">
+                        <div className="flex flex-1 items-center justify-center relative">
+                            <div className="flex flex-1 items-center justify-center relative ">
+                                <FamilyMembersCompact members={[getAncestorFromPet({ pet, genderPath: ['MALE', 'MALE', 'MALE'] }), getAncestorFromPet({ pet, genderPath: ['MALE', 'MALE', 'FEMALE'] })]} />
+                            </div>
+
+                            <div className="flex flex-1 items-center justify-center relative">
+                                <FamilyMembersCompact members={[getAncestorFromPet({ pet, genderPath: ['MALE', 'FEMALE', 'MALE'] }), getAncestorFromPet({ pet, genderPath: ['MALE', 'FEMALE', 'FEMALE'] })]} />
+                            </div>
+                        </div>
+                        <div className="flex flex-1 items-center justify-center relative">
+                            <div className="flex flex-1 items-center justify-center relative">
+                                <FamilyMembersCompact members={[getAncestorFromPet({ pet, genderPath: ['FEMALE', 'MALE', 'MALE'] }), getAncestorFromPet({ pet, genderPath: ['FEMALE', 'MALE', 'FEMALE'] })]} />
+                            </div>
+                            <div className="flex flex-1 items-center justify-center relative">
+                                <FamilyMembersCompact members={[getAncestorFromPet({ pet, genderPath: ['FEMALE', 'FEMALE', 'MALE'] }), getAncestorFromPet({ pet, genderPath: ['FEMALE', 'FEMALE', 'FEMALE'] })]} />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </>

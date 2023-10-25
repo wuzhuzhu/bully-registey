@@ -96,7 +96,7 @@ export const StackedCardDark = ({
                       {style === "outlined" && <>Subhead</>}
 
                       {style === "bully" && subText && (
-                        <>{`CBR NO. ${subText}`}</>
+                        <p className="line-clamp-1">{`CBR NO. ${subText}`}</p>
                       )}
                     </div>
                   </div>

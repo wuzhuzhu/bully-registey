@@ -23,7 +23,7 @@ export const getKennelsSimple = unstable_cache(async () => {
 // get kennels with count of pets
 export const getKennelsNoCache = async ({
     skip = 0,
-    take = 50,
+    take = 1000,
     filter
 }: {
     skip?: number
