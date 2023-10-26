@@ -2,7 +2,6 @@ import { Analytics } from '@vercel/analytics/react';
 import cx from "classnames";
 import { getServerSession } from "next-auth";
 
-
 import { inter, sfPro } from "./fonts";
 import "./globals.css";
 
@@ -26,7 +25,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-
 
   return (
     <html lang="en">
