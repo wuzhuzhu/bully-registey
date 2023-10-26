@@ -1,6 +1,7 @@
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from '@vercel/analytics/react';
 import cx from "classnames";
 import { getServerSession } from "next-auth";
+
 
 import { inter, sfPro } from "./fonts";
 import "./globals.css";
@@ -34,7 +35,7 @@ export default async function RootLayout({
         <main>
           {children}
         </main>
-        <Analytics />
+        {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html >
   );

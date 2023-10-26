@@ -1,4 +1,5 @@
 import Image from "next/image"
+import { Analytics } from '@vercel/analytics/react';
 
 import { rockSalt } from "@/app/fonts";
 import { cn } from "@/lib/utils";
