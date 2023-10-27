@@ -12,7 +12,6 @@ export default function RegistryLayout({
     children: React.ReactNode
 }) {
     return (
-        // TODO: find out why: when add flex class back to the div, the page will be fix width
         <div className="bg-m-3sysdarksurface justify-center w-full md:px-4">
             <div className="flex flex-col items-center gap-[16px] pt-[16px] pb-0 px-0 relative min-h-screen">
                 {/* 标题栏 */}

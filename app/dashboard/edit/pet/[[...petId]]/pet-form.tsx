@@ -71,7 +71,6 @@ const InputSchema = makeNullablePropsOptional(PetOptionalDefaultsSchema)
     }))
 type InputType = z.infer<typeof InputSchema>
 
-
 export default function PetForm({ pet: petDirty, session, kennels }: {
     pet?: Nullable<PetWithRelations>,
     session: { user?: { id: string } },

@@ -50,7 +50,7 @@ type InputType = KennelOptionalDefaults & {
     profile?: Nullable<Prisma.ProfileCreateWithoutKennelInput>
 }
 // 表单输入结构为扁平的object
-
+// 赋予可空内容可选属性
 const InputSchema = z.object({
     ...KennelOptionalDefaultsSchema.shape,
     nameEn: KennelOptionalDefaultsSchema.shape.nameEn.optional(),

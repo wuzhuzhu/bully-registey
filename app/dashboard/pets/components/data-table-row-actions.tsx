@@ -72,7 +72,6 @@ export function DataTableRowActions<TData>({
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>审核</DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
-            {/* TODO: onclick */}
             <DropdownMenuRadioGroup value={pet?.registration?.status}>
               {Object.keys(REGISTRATION_STATUS).map((status) => (
                 <DropdownMenuRadioItem key={status} value={status} onClick={() => handleChangeStatus(status)}>

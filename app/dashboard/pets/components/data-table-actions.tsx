@@ -50,7 +50,6 @@ export function DataTableActions<TData>({
           </DropdownMenuSubContent>
         </DropdownMenuSub> */}
         <DropdownMenuSeparator />
-        {/* TODO: 未开发 */}
         <DropdownMenuItem disabled>
           批量删除
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
