@@ -83,7 +83,7 @@ export default function PetForm({ pet: petDirty, session, kennels }: {
 
     // const pet = omit(petDirty, ['createdById', 'kennel', 'parents', 'children', 'registration'])
     const pet = petDirty?.id ? InputSchema.strip().parse(omit(petDirty, ['kennelId', 'createdById'])) : undefined
-    console.log('!!!!更新pet', pet, petDirty)
+    // console.log('!!!!更新pet', pet, petDirty)
     const defaultValues: Partial<Nullable<Pet>> = petDirty?.id
         ? pet // 更新，使用清理过的数据
         : { // 创建，使用默认值
@@ -132,7 +132,7 @@ export default function PetForm({ pet: petDirty, session, kennels }: {
     // https://github.com/orgs/react-hook-form/discussions/10757
     const onSubmit: SubmitHandler<InputType> = ({ registration, kennel, ...data }) => {
         // 准备server action参数
-        console.log('onSubmit, 准备server action参数开始,', { registration, kennel, ...data })
+        // console.log('onSubmit, 准备server action参数开始,', { registration, kennel, ...data })
         const isUpdate = !!petDirty?.id
         const hasOriginalImg = !isDeepEmpty(petDirty?.img)
         const hasOriginalAvatar = !isDeepEmpty(petDirty?.avatar)
@@ -245,7 +245,7 @@ export default function PetForm({ pet: petDirty, session, kennels }: {
 
             // debugger
             startTransition(async () => {
-                console.log('在transition中整理好了actionParams：', { createParams })
+                // console.log('在transition中整理好了actionParams：', { createParams })
                 // debugger
                 const { succeed, data: newPet, error } = await createPetAction(createParams)
                 if (succeed === 'ok') {
@@ -335,7 +335,7 @@ export default function PetForm({ pet: petDirty, session, kennels }: {
                 },
             }
             startTransition(async () => {
-                console.log('在transition中整理好了actionParams：', { updateParams })
+                // console.log('在transition中整理好了actionParams：', { updateParams })
                 const { succeed, data: newPet } = await updatePetAction(updateParams, petDirty?.id)
                 if (succeed === 'ok') {
                     toast({

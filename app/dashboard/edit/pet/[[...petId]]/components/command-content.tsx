@@ -70,7 +70,7 @@ const CommandContent = (props: PetSwitcherProps & {
     const deletePetOption = { value: 'DELETE', label: '删除关联' }
 
     useEffect(() => {
-        console.log('#######3 重新过滤', { pets, search })
+        // console.log('#######3 重新过滤', { pets, search })
         // console.log({ search }, search === '')
         if (pets?.length) {
             const newListPets = pets

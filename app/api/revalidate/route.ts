@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     // }
 
     if (path) {
-        console.log('revalidating path', path)
+        // console.log('revalidating path', path)
         revalidatePath(path)
         return Response.json({ revalidated: true, path, now: Date.now() })
     }

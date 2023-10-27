@@ -127,18 +127,18 @@ export function getAncestorFromPet({ pet = {}, genderPath = [] }: {
   pet?: PetWithRelations,
   genderPath?: GenderType[]
 }) {
-  console.log('getAncestorFromPet', pet, genderPath)
+  // console.log('getAncestorFromPet', pet, genderPath)
   if (!pet?.parents?.length) {
-    console.log('getAncestorFromPet', 'no parents')
+    // console.log('getAncestorFromPet', 'no parents')
     return {}
   } else if (genderPath?.length === 1) {
-    console.log('getAncestorFromPet', 'genderPath.length === 1')
+    // console.log('getAncestorFromPet', 'genderPath.length === 1')
     return find(pet?.parents, { gender: genderPath[0] })
   }
   while (genderPath?.length > 1) {
-    console.log('enter Loop', { genderPath })
+    // console.log('enter Loop', { genderPath })
     const parent = find(pet?.parents, { gender: genderPath.shift() })
-    console.log('getAncestorFromPet', { parent })
+    // console.log('getAncestorFromPet', { parent })
     return getAncestorFromPet({ pet: parent, genderPath })
   }
 }

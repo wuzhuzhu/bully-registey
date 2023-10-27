@@ -91,7 +91,7 @@ export default function Page({ kennel: kennelDirty }: {
                 email: ''
             }
         }
-    console.log({ defaultValues, kennel })
+    // console.log({ defaultValues, kennel })
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
@@ -190,7 +190,7 @@ export default function Page({ kennel: kennelDirty }: {
             // if (isDeepEmpty(data.profile)) delete actionParams.create.profile
             // if (isDeepEmpty(data.img)) delete actionParams.img
 
-            console.log('在transition中整理好了actionParams：', { actionParams })
+            // console.log('在transition中整理好了actionParams：', { actionParams })
 
             const { succeed, kennel: newKennel, error } = await createOrUpdateKennelWithProfileAction(actionParams, kennelDirty?.id)
             if (succeed === 'ok') {
@@ -199,7 +199,7 @@ export default function Page({ kennel: kennelDirty }: {
                 // router.refresh()
                 // setTimeout(() => { location.reload() }, 1000)
                 toast({
-                    title: `${isUpdate ? '更新' : '创建'}成功}`,
+                    title: `${isUpdate ? '更新' : '创建'}成功`,
                     description: "犬舍名为：" + newKennel?.name,
                 })
             } else {
@@ -413,10 +413,10 @@ export default function Page({ kennel: kennelDirty }: {
                             endpoint="imageUploader"
                             onClientUploadComplete={(res: UploadFileResponse) => {
                                 setUploadedImg(get(res, '0', {}))
-                                console.log({
-                                    title: "上传成功",
-                                    res,
-                                })
+                                // console.log({
+                                //     title: "上传成功",
+                                //     res,
+                                // })
                             }}
                             onUploadError={(error: Error) => {
                                 console.error({

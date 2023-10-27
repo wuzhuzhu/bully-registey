@@ -39,8 +39,8 @@ export async function createOrUpdateKennelWithProfileAction(
     const data = isUpdate ? await db.kennel.update(params) : await db.kennel.create(params)
     revalidatePath('/dashboard/edit/kennel' + (kennelId ? kennelId : ''))
     revalidateTag('pets')
-    console.log('revalidate: ', '/dashboard/edit/kennel' + (kennelId ? kennelId : ''))
-    console.log('createOrUpdateKennelWithProfileAction DONE', data)
+    // console.log('revalidate: ', '/dashboard/edit/kennel' + (kennelId ? kennelId : ''))
+    // console.log('createOrUpdateKennelWithProfileAction DONE', data)
     return { succeed: 'ok', kennel: data }
 }
 
@@ -49,7 +49,7 @@ export async function createPetAction(
     params: Prisma.PetCreateArgs,
     petId: string = ''
 ) {
-    console.log('createPetAction', params)
+    // console.log('createPetAction', params)
     const session = await getServerSessionWithOption()
     if (!session) {
         throw new Error('Not Authorized')
@@ -62,8 +62,8 @@ export async function createPetAction(
     params.data.createdBy = createBy
     const data = await db.pet.create(params)
     revalidatePath('/dashboard/edit/pet', 'layout')
-    console.log('revalidate: ', '/dashboard/edit/kennel')
-    console.log('createPetAction DONE', data)
+    // console.log('revalidate: ', '/dashboard/edit/kennel')
+    // console.log('createPetAction DONE', data)
     return { succeed: 'ok', data }
 }
 
@@ -71,13 +71,13 @@ export async function updatePetAction(
     params: Prisma.PetUpdateArgs,
     petId: string
 ) {
-    console.log('updatePetAction', params)
+    // console.log('updatePetAction', params)
     const data = await db.pet.update(params)
     revalidatePath('/dashboard/edit/pet' + (petId ? petId : ''))
     revalidateTag('pet')
     revalidateTag('pets')
-    console.log('revalidate: ', '/dashboard/edit/kennel' + (petId ? petId : ''))
-    console.log('createOrUpdateKennelWithProfileAction DONE', data)
+    // console.log('revalidate: ', '/dashboard/edit/kennel' + (petId ? petId : ''))
+    // console.log('createOrUpdateKennelWithProfileAction DONE', data)
     return { succeed: 'ok', data }
 }
 
@@ -98,7 +98,7 @@ export async function deletePetById(petId: string) {
     })
     revalidateTag('pets') // template:  revalidate cache through tag
     revalidateTag('pet') // template:  revalidate cache through tag
-    console.log('deletePet DONE', deleted)
+    // console.log('deletePet DONE', deleted)
     return { succeed: 'ok' }
 }
 
@@ -117,7 +117,7 @@ export async function deleteKennelById(kennelId: string) {
     })
     revalidateTag('kennels') // template:  revalidate cache through tag
     revalidateTag('pets') // template:  revalidate cache through tag
-    console.log('deletePet DONE', deleted)
+    // console.log('deletePet DONE', deleted)
     return { succeed: 'ok' }
 }
 
@@ -147,7 +147,7 @@ export async function deleteUploadedKennelImg({ kennelId, uploadedImg }: {
         revalidateTag('files')
     }
 
-    console.log('deleteUploadedFile DONE')
+    // console.log('deleteUploadedFile DONE')
     return { succeed: 'ok' }
 }
 
@@ -177,7 +177,7 @@ export async function deleteUploadedPetAvatar({ petId, uploadedImg }: {
         revalidateTag('files')
     }
 
-    console.log('deleteUploadedPetAvatar DONE')
+    // console.log('deleteUploadedPetAvatar DONE')
     return { succeed: 'ok' }
 }
 
@@ -207,27 +207,27 @@ export async function deleteUploadedPetImg({ petId, uploadedImg }: {
         revalidateTag('files')
     }
 
-    console.log('deleteUploadedPetImg DONE')
+    // console.log('deleteUploadedPetImg DONE')
     return { succeed: 'ok' }
 }
 
 export async function revalidatePathByPathname(pathname: string) {
-    console.log('revalidatePathByPathname', pathname)
+    // console.log('revalidatePathByPathname', pathname)
     revalidatePath('/')
 }
 
 export async function createFileAction(params: UploadFileResponse) {
-    console.log('createFileAction', { params })
+    // console.log('createFileAction', { params })
     const file = await db.file.create({
         data: params
     })
     revalidateTag('file')
-    console.log('createFileAction OK', { params })
+    // console.log('createFileAction OK', { params })
     return { succeed: 'ok', data: file }
 }
 
 export async function changePetStatusById(petId: string, status: RegistrationStatusType) {
-    console.log('changePetStatusById', { petId, status })
+    // console.log('changePetStatusById', { petId, status })
     const pet = await db.pet.update({
         where: {
             id: petId
@@ -242,7 +242,7 @@ export async function changePetStatusById(petId: string, status: RegistrationSta
     })
     revalidateTag('pet')
     revalidateTag('pets')
-    console.log('changePetStatusById OK', { petId, status })
+    // console.log('changePetStatusById OK', { petId, status })
     return { succeed: 'ok', data: pet }
 }
 
@@ -256,8 +256,8 @@ export async function whoAmI() {
 export async function sampleDelayedServerAction(
     params: any
 ) {
-    console.log('sample Delayed Server Action', params)
+    // console.log('sample Delayed Server Action', params)
     await new Promise(resolve => setTimeout(resolve, 1000))
-    console.log('sampleDelayedServerAction DONE')
+    // console.log('sampleDelayedServerAction DONE')
     return { created: 'ok' }
 }

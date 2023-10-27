@@ -40,9 +40,9 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
 
-  console.log(
-    '在客户端表格里面的Kennels', { data }
-  )
+  // console.log(
+  //   '在客户端表格里面的Kennels', { data }
+  // )
 
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =

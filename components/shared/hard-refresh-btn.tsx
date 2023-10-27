@@ -15,7 +15,7 @@ const HardRefreshBtn = () => {
             onClick={() => {
                 fetch(`/api/revalidate?path=${pathname}`)
                     .then(res => res.json())
-                    .then(res => console.log(res))
+                // .then(res => console.log(res))
             }}
         >
             <RefreshCcw size={16} />

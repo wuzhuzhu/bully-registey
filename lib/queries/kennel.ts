@@ -51,7 +51,7 @@ export const getKennelsNoCache = async ({
             createdAt: 'desc'
         }
     })
-    console.log('getKennelsNoCache', kennels)
+    // console.log('getKennelsNoCache', kennels)
     return kennels
 }
 
@@ -63,7 +63,7 @@ export const getKennels = unstable_cache(getKennelsNoCache,
     })
 
 export const getKennelById = unstable_cache(async (id: string) => {
-    console.log('getKennelById', id)
+    // console.log('getKennelById', id)
     const kennel = await db.kennel.findUnique({
         where: {
             id

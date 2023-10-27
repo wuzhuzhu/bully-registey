@@ -49,7 +49,7 @@ export function DataTableRowActions<TData>({
   const handleChangeStatus = (status: keyof typeof REGISTRATION_STATUS) => {
     startTransition(async () => {
       const changeRes = await changePetStatusById(row?.original?.id, status)
-      console.log('changeRes', changeRes)
+      // console.log('changeRes', changeRes)
     })
   }
 

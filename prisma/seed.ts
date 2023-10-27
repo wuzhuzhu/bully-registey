@@ -148,7 +148,7 @@ function generateBasicPetData({ adminUserId, kennelId, avatarId, img1Id, img2Id,
     generationDepth: number
     totalGenerations: number
 }) {
-    // console.log('creating pet basic data', { generationDepth })
+    console.log('creating pet basic data', { generationDepth })
     const isRoot = totalGenerations === generationDepth
     const res: any = {
         name: `${isRoot ? '绿巨人浩克' : '浩克长辈' + (3 - generationDepth) + '代'}`,

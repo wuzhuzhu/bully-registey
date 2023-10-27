@@ -35,7 +35,6 @@ const SearchPage = async ({ searchParams, mode = "name" }: PageProps & { mode: '
     async function onSubmit(formData: FormData) {
         'use server'
         // we just use form behavior to get the value of the input
-        console.log({ formData })
     }
     return (
         <>

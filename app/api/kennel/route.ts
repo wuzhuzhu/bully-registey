@@ -11,7 +11,6 @@ export async function GET(request: NextApiRequest, response: NextApiResponse) {
         const data = await getKennelsSimple()
         return NextResponse.json(data)
     } catch (error) {
-        console.log(error)
         // return http error code and reason
         return new Response('Internal Server Error', { status: 500 })
     }

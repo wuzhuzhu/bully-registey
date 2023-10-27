@@ -8,7 +8,7 @@ export async function POST(request: Request, ctx: { params: { petId: string } })
     // console.log('use parent updating petId', ctx?.params?.petId, { request })
     const petId = ctx?.params?.petId
     const { parent } = await request.json()
-    console.log('use parent updating petId parents', { parent, petId })
+    // console.log('use parent updating petId parents', { parent, petId })
 
     const pet = await db.pet.findUnique({
         where: {
@@ -24,7 +24,7 @@ export async function POST(request: Request, ctx: { params: { petId: string } })
         .map((p) => pick(p, ['id']))
         .splice(0, 1) // only keep one parent or none
     keepedParents.push({ id: parent?.id })
-    console.log({ preParents, keepedParents })
+    // console.log({ preParents, keepedParents })
     // use keepedParentId and parent.id update pet.parents
     const update = await db.pet.update({
         where: {
@@ -39,7 +39,7 @@ export async function POST(request: Request, ctx: { params: { petId: string } })
             parents: true,
         }
     })
-    console.log('变更后的父母', update.parents.length, update.parents[0], update.parents[1])
+    // console.log('变更后的父母', update.parents.length, update.parents[0], update.parents[1])
     revalidatePath(`/dashboard/edit/pet/${petId}`, 'page')
     return NextResponse.json({ succeed: 'ok', pet: update }, { status: 200 })
 }

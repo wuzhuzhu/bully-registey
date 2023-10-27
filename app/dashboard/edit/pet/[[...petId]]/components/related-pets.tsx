@@ -57,7 +57,7 @@ const RelatedPets = ({ pet }: {
             newParentOption: petOption,
             gender: GenderType
         }) => {
-            console.log('connectMutation', { newParentOption, gender })
+            // console.log('connectMutation', { newParentOption, gender })
             return post(`/api/pets/${pet?.id}/connect`, {
                 parent: {
                     id: newParentOption.value,

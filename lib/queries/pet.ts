@@ -88,7 +88,7 @@ export const getPetById = unstable_cache(async (id: string) => {
         }
 
     })
-    console.log('getPetById', { pet })
+    // console.log('getPetById', { pet })
     return pet
 }, ['pet'], {
     revalidate,
@@ -167,7 +167,7 @@ export const getPetWithAncestorById = unstable_cache(async (id: string) => {
         }
 
     })
-    console.log('getPetWithAncestorById', { pet })
+    // console.log('getPetWithAncestorById', { pet })
     return pet
 }, ['pet-ancestor'], {
     revalidate,
