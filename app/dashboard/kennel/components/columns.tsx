@@ -61,7 +61,7 @@ export const columns: ColumnDef<KennelWithPetsCount>[] = [
     accessorKey: "petsCount",
     accessorFn: (originalRow, _index) => { return originalRow?._count?.pets },
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="犬舍名" />
+      <DataTableColumnHeader column={column} title="计数" />
     ),
     cell: ({ row, column }) => {
       return <div className="w-[60px]">{row.getValue('petsCount')}</div>
@@ -73,7 +73,7 @@ export const columns: ColumnDef<KennelWithPetsCount>[] = [
   {
     accessorKey: "description",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="犬舍名" />
+      <DataTableColumnHeader column={column} title="简介" />
     ),
     cell: ({ row, column }) => {
       return <div className="w-full">{row.getValue('description')}</div>

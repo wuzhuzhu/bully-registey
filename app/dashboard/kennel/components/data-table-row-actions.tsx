@@ -16,6 +16,7 @@ import { deleteKennelById } from "@/lib/actions"
 import { KennelSchema } from "@/prisma/generated/zod"
 import { startTransition, useMemo } from "react"
 import { z } from "zod"
+import Link from "next/link"
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -39,7 +40,10 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>编辑</DropdownMenuItem>
+        <Link href={`/dashboard/edit/kennel/${row?.original?.id}`}>
+          <DropdownMenuItem>编辑</DropdownMenuItem>
+        </Link>
+
         <DropdownMenuItem disabled>复制</DropdownMenuItem>
         <DropdownMenuItem disabled>收藏</DropdownMenuItem>
         <DropdownMenuSeparator />
