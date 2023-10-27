@@ -18,12 +18,8 @@ import { useToast } from "@/components/ui/use-toast"
 async function getPets(gender: GenderType) {
     // get current host and combine with api path
     // const res = await fetch(`${window.location.origin}/api/pets`)
-    let base_url =
-        process.env.NODE_ENV === "development"
-            ? "http://localhost:3000"
-            : "https://bullyregistry.cn";
 
-    return (await fetch(`${base_url}/api/pets?gender=${gender}&scene=parent-list`).then(
+    return (await fetch(`/api/pets?gender=${gender}&scene=parent-list`).then(
         (res) => res.json()
     )) as Pet[];
 

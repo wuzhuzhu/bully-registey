@@ -1,6 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async headers() {
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination:
+          process.env.NODE_ENV === "development"
+            ? "http://localhost:3000/:path*"
+            : "https://bullyregistry.cn/:path*",
+      },
+    ];
+  },
+  /* async headers() {
     return [
       {
         // Routes this applies to
@@ -27,7 +38,7 @@ const nextConfig = {
         ],
       },
     ];
-  },
+  }, */
   typescript: {
     // !! WARN !!
     // lint在build的时候超级慢 只能关掉
