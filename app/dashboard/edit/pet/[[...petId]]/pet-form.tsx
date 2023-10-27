@@ -50,6 +50,7 @@ import { Pet, PetCreateInputSchema, PetOptionalDefaultsSchema, PetCreateManyCrea
 import type { PetWithRelations } from '@/prisma/generated/zod'
 import FileUpload from './components/file-upload'
 import { Skeleton } from "@/components/ui/skeleton"
+import { ErrorBoundary } from "react-error-boundary"
 
 const InputSchema = makeNullablePropsOptional(PetOptionalDefaultsSchema)
     .omit({
@@ -631,7 +632,7 @@ export default function PetForm({ pet: petDirty, session, kennels }: {
                         <div className="space-y-4">
                             <h4 className="text-sm font-medium">{petDirty?.id ? '父母' : '未保存无法选择父母'}</h4>
                             {
-                                petDirty?.id && <Suspense fallback={<div className="flex items-center space-x-4">
+                                petDirty?.id && <ErrorBoundary fallback={<div>拉取父母列表出错</div>}><Suspense fallback={<div className="flex items-center space-x-4">
                                     <Skeleton className="h-12 w-12 rounded-full" />
                                     <div className="space-y-2">
                                         <Skeleton className="h-4 w-[250px]" />
@@ -639,7 +640,7 @@ export default function PetForm({ pet: petDirty, session, kennels }: {
                                     </div>
                                 </div>}>
                                     <RelatedPets pet={petDirty} />
-                                </Suspense>
+                                </Suspense></ ErrorBoundary>
                             }
 
                         </div>
