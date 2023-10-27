@@ -73,7 +73,7 @@ export async function createPetAction(
     params: Prisma.PetCreateArgs,
     petId: string = ''
 ) {
-    // console.log('createPetAction', params)
+    // console.log('createPetAction', { params, kennel: params?.data?.kennel })
     const session = await getServerSessionWithOption()
     if (!session) {
         throw new Error('Not Authorized')

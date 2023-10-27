@@ -94,11 +94,12 @@ export default function PetForm({ pet: petDirty, session, kennels }: {
             breed: '',
             location: '',
             color: '',
+            ownerMobile: '',
             registration: {
                 readableId: '',
             },
             kennel: {
-                id: ''
+                id: 'BLANK'
             },
         }
     // console.log({ petDirty })
@@ -135,7 +136,7 @@ export default function PetForm({ pet: petDirty, session, kennels }: {
         const updateData = { ...data }
 
 
-        if (kennel?.id === 'DELETE' && petDirty?.kennel?.id) {
+        if (kennel?.id === 'DELETE' && petDirty?.kennel?.id && petDirty?.id) { // 不是新建,有kennelId,并且选择了删除
             // 原有kennel被删除
             createData.kennel = {
                 disconnect: true
@@ -143,8 +144,8 @@ export default function PetForm({ pet: petDirty, session, kennels }: {
             updateData.kennel = {
                 disconnect: true
             }
-        } else if (kennel?.id && kennel?.id !== petDirty?.kennel?.id) {
-            // 如果有kennelId，并且有变更,就创建kennel链接语句
+        } else if (kennel?.id && kennel?.id !== 'BLANK' && kennel?.id !== petDirty?.kennel?.id) { // 有非空的填入的kennelid,并且和原来的不一样
+            // 有变更
             const kennelConnect = {
                 connect: {
                     id: kennel?.id
@@ -245,6 +246,8 @@ export default function PetForm({ pet: petDirty, session, kennels }: {
                         title: '创建成功',
                         description: "犬名为：" + newPet?.name,
                     })
+                    // radix - shadcn select component can't handle null value refresh
+                    window.location.reload()
                 } else {
                     toast({
                         title: '创建失败',
@@ -413,10 +416,11 @@ export default function PetForm({ pet: petDirty, session, kennels }: {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>犬舍选择</FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    {/* <p>{JSON.stringify(getValues('kennel.id'))}</p> */}
+                                    <Select onValueChange={field.onChange}>
                                         <FormControl>
                                             <SelectTrigger>
-                                                <SelectValue placeholder="选择已经创建的犬舍" />
+                                                <SelectValue placeholder="选择已有犬舍" />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent className="overflow-y-auto max-h-[10rem]">
