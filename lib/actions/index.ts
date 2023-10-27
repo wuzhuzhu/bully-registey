@@ -29,7 +29,8 @@ export async function createKennelAction(
     }
     const data = await db.kennel.create(params)
     revalidatePath('/dashboard/edit/pet', 'layout')
-    revalidatePath('/dashboard/kennel')
+    revalidateTag('kennel')
+    revalidateTag('kennels')
     return { succeed: 'ok', data }
 }
 
