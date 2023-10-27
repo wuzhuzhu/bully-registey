@@ -86,7 +86,8 @@ export async function createPetAction(
     }
     params.data.createdBy = createBy
     const data = await db.pet.create(params)
-    revalidatePath('/dashboard/edit/pet', 'layout')
+    revalidateTag('pets')
+    revalidateTag('pet')
     // console.log('revalidate: ', '/dashboard/edit/kennel')
     // console.log('createPetAction DONE', data)
     return { succeed: 'ok', data }
