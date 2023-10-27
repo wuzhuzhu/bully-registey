@@ -46,11 +46,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import RelatedPets from './components/related-pets'
 
 import { createPetAction, deleteUploadedPetAvatar, deleteUploadedPetImg, updatePetAction } from '@/lib/actions'
-// import {
-//     ProfileCreateWithoutKennelInputSchema, // 用以合并扁平的profile字段
-//     KennelOptionalDefaultsSchema, // 没有关联关系，且自动字段为可选的schema，手动合并profile字段
-//     KennelCreateOrConnectWithoutPetsInputSchema // 最终的输出到action的结构，在这个页面创建kennel只不创建pets
-// } from '@/prisma/generated/zod'
 import { Pet, PetCreateInputSchema, PetOptionalDefaultsSchema, PetCreateManyCreatedByInputSchema, PetOptionalDefaultsWithRelationsSchema, PetWithRelationsSchema } from '@/prisma/generated/zod'
 import type { PetWithRelations } from '@/prisma/generated/zod'
 import FileUpload from './components/file-upload'
@@ -63,10 +58,10 @@ const InputSchema = makeNullablePropsOptional(PetOptionalDefaultsSchema)
     })
     .merge(z.object({
         registration: z.object({
-            readableId: z.string().optional(),
+            readableId: z.string().optional().nullish(),
         }).optional().nullable(),
         kennel: z.object({
-            id: z.string().optional(),
+            id: z.string().optional().nullish(),
         }).optional().nullable(),
     }))
 type InputType = z.infer<typeof InputSchema>
@@ -76,12 +71,16 @@ export default function PetForm({ pet: petDirty, session, kennels }: {
     session: { user?: { id: string } },
     kennels?: { id: string, name: string }[]
 }) {
+    const pet = petDirty?.id ? InputSchema.strip().parse(omit(petDirty, ['kennelId', 'createdById'])) : undefined
+
     const router = useRouter()
     const { toast } = useToast()
     const pathname = usePathname()
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
+    // upload img
+    const [uploadedImg, setUploadedImg] = useState<UploadFileResponse>(petDirty?.img || {})
+    const [uploadedAvatar, setUploadedAvatar] = useState<UploadFileResponse>(petDirty?.avatar || {})
 
-    // const pet = omit(petDirty, ['createdById', 'kennel', 'parents', 'children', 'registration'])
-    const pet = petDirty?.id ? InputSchema.strip().parse(omit(petDirty, ['kennelId', 'createdById'])) : undefined
     // console.log('!!!!更新pet', pet, petDirty)
     const defaultValues: Partial<Nullable<Pet>> = petDirty?.id
         ? pet // 更新，使用清理过的数据
@@ -103,12 +102,6 @@ export default function PetForm({ pet: petDirty, session, kennels }: {
             },
         }
     // console.log({ petDirty })
-
-    const [isDialogOpen, setIsDialogOpen] = useState(false)
-
-    // upload img
-    const [uploadedImg, setUploadedImg] = useState<UploadFileResponse>(petDirty?.img || {})
-    const [uploadedAvatar, setUploadedAvatar] = useState<UploadFileResponse>(petDirty?.avatar || {})
 
     const hookedForm = useForm<InputType>({
         defaultValues,

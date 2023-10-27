@@ -20,6 +20,30 @@ import { revalidateTag, revalidatePath } from 'next/cache';
 import { revalidate } from '../queries/kennel';
 
 
+export async function createKennelAction(
+    params: Prisma.KennelCreateArgs,
+) {
+    const session = await getServerSessionWithOption()
+    if (!session) {
+        throw new Error('Not Authorized')
+    }
+    const data = await db.kennel.create(params)
+    revalidatePath('/dashboard/edit/pet', 'layout')
+    revalidatePath('/dashboard/kennel')
+    return { succeed: 'ok', data }
+}
+
+export async function updateKennelAction(
+    params: Prisma.KennelUpdateArgs,
+    kennelId: string
+) {
+    const data = await db.kennel.update(params)
+    revalidatePath('/dashboard/edit/kennel' + (kennelId ? kennelId : ''))
+    revalidateTag('kennel')
+    revalidateTag('kennels')
+    return { succeed: 'ok', data }
+}
+
 // 创建犬舍 Create Kennel
 export async function createOrUpdateKennelWithProfileAction(
     params: Prisma.KennelCreateArgs | Prisma.KennelUpdateArgs,

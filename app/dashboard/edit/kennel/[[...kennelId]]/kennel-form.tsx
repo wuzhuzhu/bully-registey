@@ -32,7 +32,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from "@/components/ui/use-toast"
-import { createOrUpdateKennelWithProfileAction, deleteUploadedKennelImg } from '@/lib/actions'
+import { createKennelAction, updateKennelAction } from '@/lib/actions'
 import { isDeepEmpty } from '@/lib/utils'
 import { zodResolver } from "@hookform/resolvers/zod"
 
@@ -43,39 +43,34 @@ import {
     KennelCreateOrConnectWithoutPetsInputSchema // 最终的输出到action的结构，在这个页面创建kennel只不创建pets
 } from '@/prisma/generated/zod'
 import type { KennelOptionalDefaults } from '@/prisma/generated/zod'
-// import { KennelCreateActionSchema, revalidatePathByPathname } from '@/lib/actions'
+import { makeNullablePropsOptional } from '@/lib/utils'
+import FileUpload from './components/file-upload'
 
-// 表单输入结构为扁平的object类型声明
-type InputType = KennelOptionalDefaults & {
-    profile?: Nullable<Prisma.ProfileCreateWithoutKennelInput>
-}
-// 表单输入结构为扁平的object
-
-const InputSchema = z.object({
-    ...KennelOptionalDefaultsSchema.shape,
-    nameEn: KennelOptionalDefaultsSchema.shape.nameEn.optional(),
-    description: KennelOptionalDefaultsSchema.shape.nameEn.optional(),
-})
+const InputSchema = makeNullablePropsOptional(KennelOptionalDefaultsSchema)
     .merge(z.object({
-        profile: ProfileCreateWithoutKennelInputSchema
+        profile: z.object({
+            kennelId: z.string().optional().nullish(),
+            email: z.string().optional().nullish(),
+            mobile: z.string().optional().nullish(),
+            instagram: z.string().optional().nullish(),
+            facebook: z.string().optional().nullish(),
+            wechat: z.string().optional().nullish(),
+        }).optional().nullable()
     }))
 
-function omitKennelDirty(kennel) {
-    return omit(kennel, ['profile.kennelId', 'profile.userId'])
-}
-
-// 为了最大程度复用server action，提交给server action前，整理结构为prisma的结构，并且区分创建/更新
-
-// TODO: handle the profile fields, just migrate the schema, maybe needs new seed data
+type InputType = z.infer<typeof InputSchema>
 
 export default function Page({ kennel: kennelDirty }: {
     kennel?: Nullable<InputType>
 }) {
+    const kennel = kennelDirty?.id ? omit(kennelDirty, ['profile.kennelId']) : kennelDirty
+
     const router = useRouter()
     const { toast } = useToast()
     const pathname = usePathname()
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [uploadedImg, setUploadedImg] = useState<UploadFileResponse>(kennel?.img || {})
 
-    const kennel = omitKennelDirty(kennelDirty)
     const defaultValues: InputType = kennelDirty?.id
         ? kennel // 更新，使用清理过的数据
         : { // 创建，使用默认值
@@ -91,11 +86,6 @@ export default function Page({ kennel: kennelDirty }: {
             }
         }
     // console.log({ defaultValues, kennel })
-
-    const [isDialogOpen, setIsDialogOpen] = useState(false)
-
-    // upload img
-    const [uploadedImg, setUploadedImg] = useState<UploadFileResponse>(kennel?.img || {})
 
     const hookedForm = useForm<InputType>({
         defaultValues,
@@ -114,102 +104,123 @@ export default function Page({ kennel: kennelDirty }: {
 
     const [isPending, startTransition] = useTransition();
 
-    // https://scastiel.dev/server-components-actions-react-nextjs
-    // https://github.com/orgs/react-hook-form/discussions/10757
-    const onSubmit: SubmitHandler<InputType> = (data) => {
+    const onSubmit: SubmitHandler<InputType> = ({ profile, ...data }) => {
         // 准备server action参数
-        const { profile, ...kennel } = data
-
+        // console.log('onSubmit, 准备server action参数开始,', { registration, kennel, ...data })
+        const isUpdate = !!kennelDirty?.id
+        const hasOriginalImg = !isDeepEmpty(kennelDirty?.img)
         const hasImg = !isEmpty(uploadedImg)
-        const img = hasImg
-            // 有图像
-            ? pick(uploadedImg, ['key', 'url', 'name', 'size'])
-            // 没有图像
-            : kennelDirty?.img?.id
-                // 原来有图像现在没有了，删除
-                ? { delete: true }
-                // 没有到没有，不变
-                : undefined
-        const profileUpsertInput = !isDeepEmpty(profile) ? {
-            upsert: {
-                create: profile,
-                update: profile,
-                where: {
-                    kennelId: kennel?.id
+        // prepare create data
+        const createData = { ...data }
+        const updateData = { ...data }
+
+        if (!isUpdate) { // 新建犬舍
+            createData.img = hasImg ? {
+                connectOrCreate: {
+                    create: uploadedImg,
+                    where: {
+                        key: uploadedImg?.key
+                    }
                 }
-            },
-        } : undefined
-        const imgUpsertInput = hasImg ? {
-            upsert: {
-                create: img,
-                update: {
-                    ...img,
-                    updatedAt: new Date().toISOString()
-                },
-                where: {
-                    kennelId: kennelDirty?.id
+            } : undefined
+            if (!isDeepEmpty(profile)) {
+                createData.profile = {
+                    create: {
+                        ...profile,
+                    }
                 }
             }
-        } : img
-        // 使用server action操作DB
-        const actionParams: Prisma.KennelUpdateOneWithoutImgNestedInput | KennelCreateWithoutImgInput = kennel?.id
-            ? { // 有现有犬舍id，更新
+            const createParams = {
+                data: createData,
+                include: {
+                    profile: true,
+                    img: true,
+                }
+            }
+
+            // debugger
+            startTransition(async () => {
+                // console.log('在transition中整理好了actionParams：', { createParams })
+                // debugger
+                const { succeed, data: newKennel } = await createKennelAction(createParams)
+                if (succeed === 'ok') {
+                    toast({
+                        title: '创建成功',
+                        description: "犬舍名为：" + newKennel?.name,
+                    })
+                } else {
+                    toast({
+                        title: '创建失败',
+                        description: '请检查输入是否正确',
+                    })
+                }
+            });
+        } else { // 更新犬舍
+            const imgInput = hasOriginalImg
+                ? hasImg
+                    ? kennelDirty?.img?.key === uploadedImg?.key
+                        ? undefined // 上传的图片和原来的一样，不更新
+                        : {
+                            upsert: {
+                                create: uploadedImg,
+                                update: {
+                                    ...uploadedImg,
+                                },
+                                where: {
+                                    petId: kennelDirty?.id
+                                }
+                            }
+                        }
+                    : {
+                        delete: true
+                    }
+                : hasImg
+                    ? {
+                        create: uploadedImg
+                    }
+                    : undefined
+            const profileInput = kennelDirty?.profile?.id
+                ? { // 原有profile,更新内容
+                    update: {
+                        ...profile,
+                    },
+                } : { // 新建profile
+                    create: {
+                        ...profile,
+                    }
+                }
+            const updateParams = {
                 where: {
-                    id: kennel.id
+                    id: kennelDirty?.id
                 },
                 data: {
-                    ...kennel,
-                    profile: profileUpsertInput,
-                    img: imgUpsertInput
+                    ...updateData,
+                    img: imgInput,
+                    profile: profileInput
                 },
                 include: {
                     profile: true,
-                    img: true
-                }
-            } : { // 创建新的犬舍
-                data: {
-                    ...kennel,
-                    profile: !isDeepEmpty(profile) ? {
-                        create: profile
-                    } : undefined,
-                    img: hasImg ? {
-                        create: img
-                    } : undefined
-                },
-                include: {
-                    profile: true,
-                    img: true
+                    img: true,
                 }
             }
-        const isUpdate = !!kennel?.id
-        startTransition(async () => {
-            // 融合上传图片的数据
-            // if (!isEmpty(uploadedImg)) data.img = pick(uploadedImg, ['key', 'url', 'name', 'size'])
-            // 去掉默认值带来的空关系 避免无效创建
-            // if (isDeepEmpty(data.profile)) delete actionParams.create.profile
-            // if (isDeepEmpty(data.img)) delete actionParams.img
-
-            // console.log('在transition中整理好了actionParams：', { actionParams })
-
-            const { succeed, kennel: newKennel, error } = await createOrUpdateKennelWithProfileAction(actionParams, kennelDirty?.id)
-            if (succeed === 'ok') {
-                // 刷新表单kennel数据
-                // await revalidatePathByPathname(pathname)
-                // router.refresh()
-                // setTimeout(() => { location.reload() }, 1000)
-                toast({
-                    title: `${isUpdate ? '更新' : '创建'}成功`,
-                    description: "犬舍名为：" + newKennel?.name,
-                })
-            } else {
-                toast({
-                    title: `${isUpdate ? '更新' : '创建'}失败`,
-                    description: error,
-                })
-            }
-
-        });
+            startTransition(async () => {
+                // console.log('在transition中整理好了actionParams：', { updateParams })
+                const { succeed, data: newKennel } = await updateKennelAction(updateParams, kennelDirty?.id)
+                if (succeed === 'ok') {
+                    toast({
+                        title: '更新成功',
+                        description: "犬舍名为：" + newKennel?.name,
+                    })
+                } else {
+                    toast({
+                        title: '更新失败',
+                        description: '请检查输入是否正确',
+                    })
+                }
+            });
+        }
     };
+
 
     // use this to reset the form after submission succeeds
     useEffect(() => {
@@ -220,18 +231,6 @@ export default function Page({ kennel: kennelDirty }: {
             reset(defaultValues)
         }
     }, [isSubmitSuccessful])
-
-    // use this to reset the form after submission succeeds
-    // useEffect(() => {
-    //     console.log('isSubmitSuccessful变化导致useeffect', { defaultValues, kennelDirty })
-    //     if (!isEmpty(errors) || !isSubmitSuccessful) { return }
-    //     setIsDialogOpen(false)
-
-    //     if (!kennelDirty?.id) {
-    //         setUploadedImg({})
-    //         reset(defaultValues)
-    //     }
-    // }, [isSubmitSuccessful])
 
     return (
         <Form {...hookedForm}>
@@ -362,80 +361,14 @@ export default function Page({ kennel: kennelDirty }: {
                         />
                     </div>
                     <div id="right" className="flex flex-col items-center gap-4 lg:w-1/6">
-                        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                            {(!isEmpty(uploadedImg)) ? (
-                                <DialogTrigger>
-                                    <div className="flex group pt-4 relative">
-                                        <X className="absolute -right-2 top-2 text-slate-600/0 group-hover:text-slate-600/90 transition-all" size={20} />
-                                        <Avatar className='w-[80px] h-[80px] ring-2 ring-slate-200'>
-                                            <AvatarImage src={uploadedImg?.url || '/img/male-avatar.svg'} alt="avatar" />
-                                            <AvatarFallback>图</AvatarFallback>
-                                        </Avatar>
-                                    </div>
-                                </DialogTrigger>
-                            ) : (
-                                <div className="flex group pt-4 relative">
-                                    <Avatar className='w-[80px] h-[80px] ring-2 ring-slate-200'>
-                                        <AvatarImage src='/img/male-avatar.svg' alt="avatar" />
-                                        <AvatarFallback>图</AvatarFallback>
-                                    </Avatar>
-                                </div>
-                            )}
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>确认删除已经上传的图片吗？</DialogTitle>
-                                    <DialogDescription>
-                                        <div className="flex w-full justify-end mt-8">
-                                            <Button onClick={async (e) => { // client component
-                                                e.preventDefault()
-                                                // console.log('uploadedImg?.name', uploadedImg)
-                                                try {
-                                                    const { succeed } = await deleteUploadedKennelImg({ id: kennelDirty?.id, uploadedImg })
-                                                    if (succeed === 'ok') {
-                                                        setUploadedImg({})
-                                                        // update the kennel
-                                                        onSubmit(getValues())
-                                                        setUploadedImg({})
-                                                    }
-                                                } finally {
-                                                    setIsDialogOpen(false)
-                                                }
-                                            }}>确认</Button>
-                                        </div>
-
-                                    </DialogDescription>
-                                </DialogHeader>
-                            </DialogContent>
-                        </Dialog>
-
-                        <UploadButton
-                            endpoint="imageUploader"
-                            onClientUploadComplete={(res: UploadFileResponse) => {
-                                setUploadedImg(get(res, '0', {}))
-                                // console.log({
-                                //     title: "上传成功",
-                                //     res,
-                                // })
-                            }}
-                            onUploadError={(error: Error) => {
-                                console.error({
-                                    title: "上传失败",
-                                    error: error.message,
-                                })
-                            }}
-                            content={{
-                                button({ ready }) {
-                                    if (ready) return '上传文件';
-
-                                    return "Getting ready...";
-                                },
-                                allowedContent({ ready, fileTypes, isUploading }) {
-                                    if (!ready) return "文件不符合要求";
-                                    if (isUploading) return "上传中..";
-                                    return '你可以上传最大4MB的图片';
-                                },
-                            }}
-                        />
+                        <FileUpload
+                            {...{
+                                uploadedImg,
+                                setUploadedImg,
+                                kennelDirty,
+                                getValues,
+                                submit: handleSubmit(onSubmit),
+                            }} />
                     </div>
                 </div>
                 <Button
