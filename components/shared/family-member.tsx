@@ -2,6 +2,7 @@ import React from 'react'
 import Image from 'next/image'
 import Avatar from './avatar'
 import { PetWithRelations } from '@/prisma/generated/zod'
+import Link from 'next/link'
 
 const GENERATION_MAP = [
     null,
@@ -27,7 +28,7 @@ const FamilyMember = ({
     member?: Partial<PetWithRelations> | {}
 }) => {
     return (
-        <div className='inline-flex rounded-[16px] flex-col items-center gap-2 relative flex-[0_0_auto] flex-1'>
+        <Link href={`/registry/${member?.id}`} className='inline-flex rounded-[16px] flex-col items-center gap-2 relative flex-[0_0_auto] flex-1'>
             {/* <p className='text-white'>{JSON.stringify(member)}</p> */}
             <Avatar
                 src={member?.avatar?.url || (isMale ? '/img/male-avatar.svg' : '/img/female-avatar.svg')}
@@ -42,7 +43,7 @@ const FamilyMember = ({
                     {member?.nameEn || 'Unknown'}
                 </div>
             </div>
-        </div>
+        </Link>
     )
 }
 

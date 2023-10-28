@@ -14,10 +14,10 @@ const FamilyAvatar = ({
     className = '',
 }: {
     src: string,
-    width: number,
+    // width: number,
     // add tailwind class name type to classname prop
     className?: string
-    alt?: string
+    // alt?: string
 }) => {
     return (
         <Avatar className={cn(
