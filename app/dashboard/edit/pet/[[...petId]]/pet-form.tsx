@@ -89,6 +89,7 @@ export default function PetForm({ pet: petDirty, session, kennels }: {
             name: '',
             nameEn: '',
             ownerName: '',
+            breeder: "",
             type: 'DOG',
             gender: 'MALE',
             birthDate: startOfDay(new Date()),
@@ -481,6 +482,20 @@ export default function PetForm({ pet: petDirty, session, kennels }: {
                                     <FormControl>
                                         {/* @ts-ignore */}
                                         <Input placeholder="输入文字描述.." {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={control}
+                            name="breeder"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>繁育人</FormLabel>
+                                    <FormControl>
+                                        {/* @ts-ignore */}
+                                        <Input placeholder="繁育人.." {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

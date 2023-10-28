@@ -43,7 +43,7 @@ const RegistryDetailPage = async ({ params: { id } }: { params: { id: string } }
             <>
                 {/* main title */}
                 <div className="flex flex-col items-start justify-center gap-[8px] relative self-stretch w-full flex-[0_0_auto]">
-                    {/* <p className='text-white'>{JSON.stringify(pet)}</p> */}
+                    {/* <p className='text-white max-w-[300px]'>{JSON.stringify(pet)}</p> */}
                     {kennel && <>
                         <div className="inline-flex items-center gap-[8px] px-[4px] py-0 relative flex-[0_0_auto]">
                             <div className="relative w-[24px] h-[24px] bg-m-3sysdarkprimary rounded-[12px]">
@@ -55,22 +55,6 @@ const RegistryDetailPage = async ({ params: { id } }: { params: { id: string } }
                         </div>
                         {!isEmpty(kennel?.profile) &&
                             <div className="w-full inline-flex items-center gap-1 relative flex-[0_0_auto] overflow-x-scroll no-scrollbar">
-                                {kennel.profile.email && <AssistiveChipDark
-                                    className="!flex-[0_0_auto]"
-                                    configuration="label-icon"
-                                    labelText={pet?.kennel?.profile?.email}
-                                    override={<Mail className="!relative !w-[18px] !h-[18px]" color="#F8BD48" />}
-                                    stateProp="enabled"
-                                    style="elevated"
-                                />}
-                                {pet?.kennel?.profile?.mobile && <AssistiveChipDark
-                                    className="!flex-[0_0_auto]"
-                                    configuration="label-icon"
-                                    labelText={pet?.kennel?.profile?.mobile}
-                                    override={<Phone className="!relative !w-[18px] !h-[18px]" color="#F8BD48" />}
-                                    stateProp="enabled"
-                                    style="elevated"
-                                />}
                                 {pet?.kennel?.profile?.wechat && <AssistiveChipDark
                                     className="!flex-[0_0_auto]"
                                     configuration="label-icon"
@@ -96,6 +80,14 @@ const RegistryDetailPage = async ({ params: { id } }: { params: { id: string } }
                                     stateProp="enabled"
                                     style="elevated"
                                 />}
+                                {pet?.kennel?.profile?.mobile && <AssistiveChipDark
+                                    className="!flex-[0_0_auto]"
+                                    configuration="label-icon"
+                                    labelText={pet?.kennel?.profile?.mobile}
+                                    override={<Phone className="!relative !w-[18px] !h-[18px]" color="#F8BD48" />}
+                                    stateProp="enabled"
+                                    style="elevated"
+                                />}
                             </div>
                         }
                     </>}
@@ -115,11 +107,13 @@ const RegistryDetailPage = async ({ params: { id } }: { params: { id: string } }
                     text={`${pet?.name} ${pet?.nameEn}`}
                     subText={`${pet?.registration?.readableId}`}
                     text1={pet?.ownerName ? `主人：${pet?.ownerName}` : ''}
+                    breeder={pet?.breeder ? `繁育人：${pet?.breeder}` : ''}
                     titleClassName="!mr-[-2.00px] !tracking-[var(--m3-body-medium-letter-spacing)] !text-[length:var(--m3-body-medium-font-size)] ![font-style:var(--m3-body-medium-font-style)] !font-[number:var(--m3-body-medium-font-weight)] !font-m3-body-medium !leading-[var(--m3-body-medium-line-height)]"
                     {...pick(pet, ['breed', 'ownerMobile', 'ownerName', 'location', 'color', 'gender'])}
                     avatar={pet?.avatar?.url || DEFAULT_PET_AVATAR_URL}
                     img={pet?.img?.url || DEFAULT_PET_IMG_URL}
                     birthDate={pet?.birthDate ? formatInTimeZone(pet?.birthDate, 'Asia/Shanghai', 'yyyy/MM/dd') : ''}
+                    createdAt={pet?.createdAt ? formatInTimeZone(pet?.createdAt, 'Asia/Shanghai', 'yyyy/MM/dd') : ''}
                 />
                 {/* family tree */}
                 <div className="flex px-0 py-[4px] self-stretch w-full flex-col items-center gap-2 relative flex-[0_0_auto]">

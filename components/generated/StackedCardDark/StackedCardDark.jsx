@@ -16,7 +16,7 @@ import Image from "next/image";
 
 import { IconsMale3 } from "@/components/icons/IconsMale3";
 import { IconsFemap24Px2 } from "@/components/icons/IconsFemap24Px2";
-import { Cake, Palette, Tag } from "lucide-react";
+import { Cake, Palette, ShieldCheck, Tag } from "lucide-react";
 
 export const StackedCardDark = ({
   style,
@@ -53,6 +53,8 @@ export const StackedCardDark = ({
   gender,
   img,
   avatar,
+  createdAt,
+  breeder,
 }) => {
   return (
     <div
@@ -147,12 +149,12 @@ export const StackedCardDark = ({
                       <div
                         className={`relative mt-[-1.00px] w-full font-m3-body-large text-[length:var(--m3-body-large-font-size)] font-[number:var(--m3-body-large-font-weight)] leading-[var(--m3-body-large-line-height)] tracking-[var(--m3-body-large-letter-spacing)] text-m3sysdarkon-surface [font-style:var(--m3-body-large-font-style)] ${titleClassName}`}
                       >
-                        {text1}
+                        {text1} {location ? `@ ${location}` : ""}
                       </div>
                       <div
                         className={`relative w-full font-m3-body-medium text-[length:var(--m3-body-medium-font-size)] font-[number:var(--m3-body-medium-font-weight)] leading-[var(--m3-body-medium-line-height)] tracking-[var(--m3-body-medium-letter-spacing)] text-m3sysdarkon-surface-variant [font-style:var(--m3-body-medium-font-style)] ${subheadClassName}`}
                       >
-                        {location}
+                        {breeder}
                       </div>
                     </div>
                   )}
@@ -180,7 +182,7 @@ export const StackedCardDark = ({
                   <div
                     className={`no-scrollbar relative flex w-full flex-[0_0_auto] items-center gap-[10px] self-stretch overflow-x-scroll ${supportingTextClassName}`}
                   >
-                    {ownerMobile && (
+                    {/* {ownerMobile && (
                       <AssistiveChipDark
                         className="!flex-[0_0_auto]"
                         configuration="label-icon"
@@ -189,13 +191,23 @@ export const StackedCardDark = ({
                         stateProp="enabled"
                         style="outlined"
                       />
-                    )}
+                    )} */}
                     {breed && (
                       <AssistiveChipDark
                         className="!flex-[0_0_auto]"
                         configuration="label-icon"
                         override={<Tag color="#F8BD48" size={18} />}
                         labelText={breed}
+                        stateProp="enabled"
+                        style="outlined"
+                      />
+                    )}
+                    {color && (
+                      <AssistiveChipDark
+                        className="!flex-[0_0_auto]"
+                        configuration="label-icon"
+                        labelText={color}
+                        override={<Palette color="#F8BD48" size={18} />}
                         stateProp="enabled"
                         style="outlined"
                       />
@@ -210,12 +222,12 @@ export const StackedCardDark = ({
                         style="outlined"
                       />
                     )}
-                    {color && (
+                    {createdAt && (
                       <AssistiveChipDark
                         className="!flex-[0_0_auto]"
                         configuration="label-icon"
-                        labelText={color}
-                        override={<Palette color="#F8BD48" size={18} />}
+                        labelText={createdAt}
+                        override={<ShieldCheck color="#F8BD48" size={18} />}
                         stateProp="enabled"
                         style="outlined"
                       />
@@ -316,11 +328,13 @@ StackedCardDark.propTypes = {
   style: PropTypes.oneOf(["filled", "bully", "outlined", "elevated"]),
   text: PropTypes.string,
   text1: PropTypes.string,
+  breeder: PropTypes.string,
   location: PropTypes.string,
   subText: PropTypes.string,
   ownerMobile: PropTypes.string,
   breed: PropTypes.string,
   birthDate: PropTypes.string,
+  createdAt: PropTypes.string,
   color: PropTypes.string,
   img: PropTypes.string,
   avatar: PropTypes.string,
