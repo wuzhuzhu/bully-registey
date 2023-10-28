@@ -10,6 +10,7 @@ import { CircleDashed } from "lucide-react"
 import { DataTableColumnHeader } from "./data-table-column-header"
 import { DataTableRowActions } from "./data-table-row-actions"
 import Link from "next/link"
+import { ExternalLink } from "lucide-react"
 
 export const columns: ColumnDef<PetWithRelations>[] = [
   // 第一列 选择框
@@ -43,7 +44,7 @@ export const columns: ColumnDef<PetWithRelations>[] = [
       <DataTableColumnHeader column={column} title="犬名" />
     ),
     cell: ({ row, column }) => {
-      return <Link href={`/dashboard/edit/pet/${row.original.id}`}>
+      return <Link href={`/dashboard/edit/pet/${row.original.id}`} className="flex-1 text-m-3refsecondarysecondary-20">
         {`${row.original.name} / ${row.original.nameEn}`}
       </Link>
     },
@@ -72,7 +73,10 @@ export const columns: ColumnDef<PetWithRelations>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <div className="flex w-[130px] items-center">
+        <div className="flex flex-1 items-center gap-2">
+          <Link href={`/registry/${row?.original?.id}`} target="_blank">
+            <ExternalLink size={16} />
+          </Link>
           <span>{row.original.registration?.readableId ?? '-'}</span>
         </div>
       )
@@ -89,7 +93,7 @@ export const columns: ColumnDef<PetWithRelations>[] = [
     cell: ({ row }) => {
       const kennelId = row.getValue('kennelId')
       return (
-        <div className="flex w-[60px] items-center">
+        <div className="flex items-center flex-1">
           <Link href={kennelId ? `/dashboard/edit/kennel/${row.getValue('kennelId')}` : '#'}>
             <span>{row.original.kennel?.name || '-'}</span>
           </Link>
