@@ -19,7 +19,7 @@ export default async function NavBar() {
       >
         <div className="mx-5 flex h-16 items-center justify-between w-full">
           <div className="flex gap-4">
-            <Link href="/" className="flex items-center font-display text-2xl">
+            <Link href="/dashboard" className="flex items-center font-display text-2xl">
               <Image
                 src="/img/logo.png"
                 alt="CBR logo"
