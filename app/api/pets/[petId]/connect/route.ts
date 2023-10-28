@@ -1,6 +1,6 @@
 import db from '@/lib/prisma'
 import { pick } from 'lodash-es'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { NextResponse } from 'next/server'
 
 // e.g a webhook to `your-website.com/api/revalidate?tag=collection&secret=<token>`
@@ -39,7 +39,10 @@ export async function POST(request: Request, ctx: { params: { petId: string } })
             parents: true,
         }
     })
-    // console.log('变更后的父母', update.parents.length, update.parents[0], update.parents[1])
+    console.log('变更后的父母', update.parents.length, update.parents[0], update.parents[1])
+
+    revalidateTag('pet')
+    revalidatePath(`/registry/${petId}`)
     revalidatePath(`/dashboard/edit/pet/${petId}`, 'page')
     return NextResponse.json({ succeed: 'ok', pet: update }, { status: 200 })
 }

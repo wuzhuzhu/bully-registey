@@ -100,6 +100,7 @@ export async function updatePetAction(
     // console.log('updatePetAction', params)
     const data = await db.pet.update(params)
     revalidatePath('/dashboard/edit/pet' + (petId ? petId : ''))
+    revalidatePath('/registry/' + (petId ? petId : ''))
     revalidateTag('pet')
     revalidateTag('pets')
     // console.log('revalidate: ', '/dashboard/edit/kennel' + (petId ? petId : ''))
@@ -124,6 +125,7 @@ export async function deletePetById(petId: string) {
     })
     revalidateTag('pets') // template:  revalidate cache through tag
     revalidateTag('pet') // template:  revalidate cache through tag
+    revalidatePath('/registry/' + (petId ? petId : ''))
     // console.log('deletePet DONE', deleted)
     return { succeed: 'ok' }
 }

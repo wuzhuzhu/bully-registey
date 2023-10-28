@@ -36,7 +36,7 @@ export async function POST(request: Request, ctx: { params: { petId: string } })
     })
     // console.log('变更后的父母', update.parents.length, update.parents[0], update.parents[1])
     revalidatePath(`/dashboard/edit/pet/${petId}`, 'page')
-    // revalidateTag('pet')
+    revalidateTag('pet')
     // revalidateTag('pets')
     return NextResponse.json({ succeed: 'ok', pet: update }, { status: 200 })
 }

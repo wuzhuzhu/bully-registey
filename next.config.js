@@ -6,8 +6,8 @@ const nextConfig = {
         source: "/api/:path*",
         destination:
           process.env.NODE_ENV === "development"
-            ? "http://localhost:3000/:path*"
-            : "https://bullyregistry.cn/:path*",
+            ? "http://localhost:3000/api/:path*"
+            : "https://bullyregistry.cn/api/:path*",
       },
     ];
   },
