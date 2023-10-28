@@ -22,16 +22,20 @@ const RegistryDetailPage = async ({ params: { id } }: { params: { id: string } }
     if (!id || !pet?.id) {
         return <div className="flex flex-col gap-4">
             <p className="mx-auto my-8 text-m3sysdarkon-surface">没有找到对应宠物,请检查编号</p>
-            <Button variant='outline'>
-                <Link href="/">回到首页</Link>
-            </Button>
+            <Link href='/' className="flex justify-center">
+                <Button variant='outline'>
+                    回到首页
+                </Button>
+            </Link>
         </div>
     } else if (pet?.registration?.status !== 'APPROVED') {
         return <div className="flex flex-col gap-4">
             <p className="mx-auto my-8 text-m3sysdarkon-surface">此ID尚未经过注册,请联系系统管理员</p>
-            <Button variant='outline'>
-                <Link href="/">回到首页</Link>
-            </Button>
+            <Link href='/' className="flex justify-center">
+                <Button variant='outline'>
+                    回到首页
+                </Button>
+            </Link>
         </div>
     } else {
         const kennel = pet?.kennel;
