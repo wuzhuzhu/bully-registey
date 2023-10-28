@@ -1,16 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async rewrites() {
-    return [
-      {
-        source: "/api/:path*",
-        destination:
-          process.env.NODE_ENV === "development"
-            ? "http://localhost:3000/api/:path*"
-            : "https://bullyregistry.cn/api/:path*",
-      },
-    ];
-  },
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: "/api/:path*",
+  //       destination:
+  //         process.env.NODE_ENV === "development"
+  //           ? "http://localhost:3000/api/:path*"
+  //           : "https://bullyregistry.cn/api/:path*",
+  //     },
+  //   ];
+  // },
   /* async headers() {
     return [
       {

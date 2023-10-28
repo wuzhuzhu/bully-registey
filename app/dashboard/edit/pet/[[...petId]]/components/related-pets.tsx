@@ -1,6 +1,6 @@
 'use client'
 // import { useQuery } from '@tanstack/react-query'
-
+import React, { useEffect } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import type { GenderType } from '@/prisma/generated/zod'
 import { PetWithRelations } from '@/prisma/generated/zod'
@@ -33,20 +33,32 @@ const RelatedPets = ({ pet }: {
     const router = useRouter()
     const { toast } = useToast()
 
-    const { data: malePets } = useQuery<Pet[]>({
-        queryKey: ["pets/male"],
-        queryFn: () => getPets('MALE'),
-        // @ts-ignore
-        suspense: true,
-        staleTime: 5 * 1000,
-    });
-    const { data: femalePets } = useQuery<Pet[]>({
-        queryKey: ["pets/female"],
-        queryFn: () => getPets('FEMALE'),
-        // @ts-ignore
-        suspense: true,
-        staleTime: 5 * 1000,
-    });
+    const [malePets, setMalePets] = React.useState([{ a: 1 }])
+    const [femalePets, setFemalePets] = React.useState([])
+    useEffect(() => {
+        fetch('/api/pets?gender=MALE&scene=parent-list')
+            .then(res => res.json())
+            .then(res => {
+                setMalePets(res)
+            })
+        fetch('/api/pets?gender=FEMALE&scene=parent-list')
+            .then(res => res.json())
+            .then(res => setFemalePets(res))
+    }, [])
+    /*  const { data: malePets } = useQuery<Pet[]>({
+         queryKey: ["pets/male"],
+         queryFn: () => getPets('MALE'),
+         // @ts-ignore
+         suspense: true,
+         staleTime: 5 * 1000,
+     });
+     const { data: femalePets } = useQuery<Pet[]>({
+         queryKey: ["pets/female"],
+         queryFn: () => getPets('FEMALE'),
+         // @ts-ignore
+         suspense: true,
+         staleTime: 5 * 1000,
+     }); */
     type petOption = { value: string, label: string }
     const connectMutation = useMutation({
         mutationFn: async ({ newParentOption, gender }: {
