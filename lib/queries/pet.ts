@@ -104,6 +104,7 @@ export const getPetWithAncestorById = unstable_cache(async (id: string) => {
             kennel: {
                 include: {
                     profile: true,
+                    img: true,
                 }
             },
             parents: {

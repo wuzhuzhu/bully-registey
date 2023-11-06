@@ -132,7 +132,7 @@ const FileUpload = ({ uploadedImg, setUploadedImg, kennelDirty, submit, getValue
                     allowedContent({ ready, fileTypes, isUploading }) {
                         if (!ready) return "文件不符合要求";
                         if (isUploading) return "上传中..";
-                        return '你可以上传最大4MB的图片';
+                        return '最大4MB 50x50 jpg/png';
                     },
                 }}
             />

@@ -14,8 +14,9 @@ import { find, isEmpty, pick } from "lodash-es";
 import { Facebook, Instagram, Mail, Phone } from "lucide-react";
 import Link from "next/link";
 import { formatInTimeZone } from "date-fns-tz";
-import { getAncestorFromPet, getParentFromParents } from "@/lib/utils";
+import { cn, getAncestorFromPet, getParentFromParents } from "@/lib/utils";
 import FamilyMembersCompact from "@/components/shared/family-members-compact";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const RegistryDetailPage = async ({ params: { id } }: { params: { id: string } }) => {
     const pet = await getPetWithAncestorById(id);
@@ -43,14 +44,14 @@ const RegistryDetailPage = async ({ params: { id } }: { params: { id: string } }
             <>
                 {/* main title */}
                 <div className="flex flex-col items-start justify-center gap-[8px] relative self-stretch w-full flex-[0_0_auto]">
-                    {/* <p className='text-white max-w-[300px]'>{JSON.stringify(pet)}</p> */}
+                    {/* <p className='text-white max-w-[300px]'>{JSON.stringify(kennel)}</p> */}
                     {kennel && <>
                         <div className="inline-flex items-center gap-[8px] px-[4px] py-0 relative flex-[0_0_auto]">
-                            <div className="relative w-[24px] h-[24px] bg-m-3sysdarkprimary rounded-[12px]">
-                                <div className="relative w-[22px] h-[22px] top-px left-px bg-[#d9d9d9] rounded-[11.25px] bg-[url(/img/dog-company-logo-icon.svg)] bg-[100%_100%]" />
-                            </div>
-                            <div className="relative w-fit mt-[-1.00px] font-m3-title-medium font-[number:var(--m3-title-medium-font-weight)] text-m3sysdarkon-surface text-[length:var(--m3-title-medium-font-size)] tracking-[var(--m3-title-medium-letter-spacing)] leading-[var(--m3-title-medium-line-height)] whitespace-nowrap [font-style:var(--m3-title-medium-font-style)]">
-                                {pet?.kennel?.name}
+                            <Avatar className="relative h-6 w-6 overflow-hidden rounded-full bg-m-3sysdarkprimary">
+                                <AvatarImage src={kennel?.img?.url || '/img/dog-company-logo-icon.svg'} />
+                            </Avatar>
+                            <div className="line-clamp-1 relative mt-[-1.00px] font-m3-title-medium font-[number:var(--m3-title-medium-font-weight)] text-m3sysdarkon-surface text-[length:var(--m3-title-medium-font-size)] tracking-[var(--m3-title-medium-letter-spacing)] leading-[var(--m3-title-medium-line-height)] [font-style:var(--m3-title-medium-font-style)]">
+                                {pet?.kennel?.name} {pet?.kennel?.nameEn}
                             </div>
                         </div>
                         {!isEmpty(kennel?.profile) &&
@@ -59,7 +60,8 @@ const RegistryDetailPage = async ({ params: { id } }: { params: { id: string } }
                                     className="!flex-[0_0_auto]"
                                     configuration="label-icon"
                                     labelText={pet?.kennel?.profile?.wechat}
-                                    override={<Image width={18} height={18} src='/icon/wechat.svg' className="!relative" color="#F8BD48" />}
+                                    override={<Image width={18} height={18} src='/icon/wechat.svg'
+                                        alt="wechat" className="!relative" color="#F8BD48" />}
                                     stateProp="enabled"
                                     style="elevated"
                                 />}
@@ -106,8 +108,8 @@ const RegistryDetailPage = async ({ params: { id } }: { params: { id: string } }
                     supportingTextClassName=""
                     text={`${pet?.name} ${pet?.nameEn}`}
                     subText={`${pet?.registration?.readableId}`}
-                    text1={pet?.ownerName ? `主人：${pet?.ownerName}` : ''}
-                    breeder={pet?.breeder ? `繁育人：${pet?.breeder}` : ''}
+                    text1={pet?.ownerName ? `主人 Owner：${pet?.ownerName}` : ''}
+                    breeder={pet?.breeder ? `繁育人 Breeder：${pet?.breeder}` : ''}
                     titleClassName="!mr-[-2.00px] !tracking-[var(--m3-body-medium-letter-spacing)] !text-[length:var(--m3-body-medium-font-size)] ![font-style:var(--m3-body-medium-font-style)] !font-[number:var(--m3-body-medium-font-weight)] !font-m3-body-medium !leading-[var(--m3-body-medium-line-height)]"
                     {...pick(pet, ['breed', 'ownerMobile', 'ownerName', 'location', 'color', 'gender'])}
                     avatar={pet?.avatar?.url || DEFAULT_PET_AVATAR_URL}

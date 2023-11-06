@@ -79,8 +79,8 @@ export const StackedCardDark = ({
                       {style === "outlined" && <>Header</>}
 
                       {style === "bully" && (
-                        <div className="flex items-center gap-2">
-                          {text}
+                        <div className="flex items-center gap-1">
+                          <p className="line-clamp-1">{text}</p>
                           {gender === "MALE" && <IconsMale3 color="#C1C1FF" />}
                           {gender === "FEMALE" && (
                             <IconsFemap24Px2 color="#BED061" />
@@ -146,16 +146,27 @@ export const StackedCardDark = ({
                 >
                   {style === "bully" && (
                     <div className="relative flex flex-1 grow flex-col items-start">
-                      <div
-                        className={`relative mt-[-1.00px] w-full font-m3-body-large text-[length:var(--m3-body-large-font-size)] font-[number:var(--m3-body-large-font-weight)] leading-[var(--m3-body-large-line-height)] tracking-[var(--m3-body-large-letter-spacing)] text-m3sysdarkon-surface [font-style:var(--m3-body-large-font-style)] ${titleClassName}`}
-                      >
-                        {text1} {location ? `@ ${location}` : ""}
-                      </div>
-                      <div
-                        className={`relative w-full font-m3-body-medium text-[length:var(--m3-body-medium-font-size)] font-[number:var(--m3-body-medium-font-weight)] leading-[var(--m3-body-medium-line-height)] tracking-[var(--m3-body-medium-letter-spacing)] text-m3sysdarkon-surface-variant [font-style:var(--m3-body-medium-font-style)] ${subheadClassName}`}
-                      >
-                        {breeder}
-                      </div>
+                      {text1 && (
+                        <div
+                          className={`relative mt-[-1.00px] w-full font-m3-body-large text-[length:var(--m3-body-large-font-size)] font-[number:var(--m3-body-large-font-weight)] leading-[var(--m3-body-large-line-height)] tracking-[var(--m3-body-large-letter-spacing)] text-m3sysdarkon-surface [font-style:var(--m3-body-large-font-style)] ${titleClassName}`}
+                        >
+                          {text1}
+                        </div>
+                      )}
+                      {location && (
+                        <div
+                          className={`relative mt-[-1.00px] w-full font-m3-body-large text-[length:var(--m3-body-large-font-size)] font-[number:var(--m3-body-large-font-weight)] leading-[var(--m3-body-large-line-height)] tracking-[var(--m3-body-large-letter-spacing)] text-m3sysdarkon-surface [font-style:var(--m3-body-large-font-style)] ${titleClassName}`}
+                        >
+                          位置 City：{location}
+                        </div>
+                      )}
+                      {breeder && (
+                        <div
+                          className={`relative w-full font-m3-body-medium text-[length:var(--m3-body-medium-font-size)] font-[number:var(--m3-body-medium-font-weight)] leading-[var(--m3-body-medium-line-height)] tracking-[var(--m3-body-medium-letter-spacing)] text-m3sysdarkon-surface-variant [font-style:var(--m3-body-medium-font-style)] ${subheadClassName}`}
+                        >
+                          {breeder}
+                        </div>
+                      )}
                     </div>
                   )}
 
