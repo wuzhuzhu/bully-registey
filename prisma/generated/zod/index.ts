@@ -232,7 +232,7 @@ export const UserOptionalDefaultsWithRelationsSchema: z.ZodType<UserOptionalDefa
 
 export const KennelSchema = z.object({
   id: z.string().cuid(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().nullable(),
   description: z.string().nullable(),
   createdAt: z.coerce.date(),
@@ -370,7 +370,7 @@ export const PetSchema = z.object({
   type: PetTypeSchema,
   gender: GenderSchema,
   id: z.string().cuid(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().nullable(),
   breeder: z.string().nullable(),
   ownerName: z.string().nullable(),
@@ -1141,7 +1141,7 @@ export const KennelWhereUniqueInputSchema: z.ZodType<Prisma.KennelWhereUniqueInp
   AND: z.union([ z.lazy(() => KennelWhereInputSchema),z.lazy(() => KennelWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => KennelWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => KennelWhereInputSchema),z.lazy(() => KennelWhereInputSchema).array() ]).optional(),
-  name: z.union([ z.lazy(() => StringFilterSchema),z.string().min(2).max(12) ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string().min(2).max(30) ]).optional(),
   nameEn: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   description: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
@@ -1394,7 +1394,7 @@ export const PetWhereUniqueInputSchema: z.ZodType<Prisma.PetWhereUniqueInput> = 
   AND: z.union([ z.lazy(() => PetWhereInputSchema),z.lazy(() => PetWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => PetWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => PetWhereInputSchema),z.lazy(() => PetWhereInputSchema).array() ]).optional(),
-  name: z.union([ z.lazy(() => StringFilterSchema),z.string().min(2).max(12) ]).optional(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string().min(2).max(30) ]).optional(),
   nameEn: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   breeder: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   ownerName: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
@@ -2040,7 +2040,7 @@ export const UserUncheckedUpdateManyInputSchema: z.ZodType<Prisma.UserUncheckedU
 
 export const KennelCreateInputSchema: z.ZodType<Prisma.KennelCreateInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
@@ -2052,7 +2052,7 @@ export const KennelCreateInputSchema: z.ZodType<Prisma.KennelCreateInput> = z.ob
 
 export const KennelUncheckedCreateInputSchema: z.ZodType<Prisma.KennelUncheckedCreateInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
@@ -2064,7 +2064,7 @@ export const KennelUncheckedCreateInputSchema: z.ZodType<Prisma.KennelUncheckedC
 
 export const KennelUpdateInputSchema: z.ZodType<Prisma.KennelUpdateInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2076,7 +2076,7 @@ export const KennelUpdateInputSchema: z.ZodType<Prisma.KennelUpdateInput> = z.ob
 
 export const KennelUncheckedUpdateInputSchema: z.ZodType<Prisma.KennelUncheckedUpdateInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2088,7 +2088,7 @@ export const KennelUncheckedUpdateInputSchema: z.ZodType<Prisma.KennelUncheckedU
 
 export const KennelCreateManyInputSchema: z.ZodType<Prisma.KennelCreateManyInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
@@ -2097,7 +2097,7 @@ export const KennelCreateManyInputSchema: z.ZodType<Prisma.KennelCreateManyInput
 
 export const KennelUpdateManyMutationInputSchema: z.ZodType<Prisma.KennelUpdateManyMutationInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2106,7 +2106,7 @@ export const KennelUpdateManyMutationInputSchema: z.ZodType<Prisma.KennelUpdateM
 
 export const KennelUncheckedUpdateManyInputSchema: z.ZodType<Prisma.KennelUncheckedUpdateManyInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2232,7 +2232,7 @@ export const VerificationTokenUncheckedUpdateManyInputSchema: z.ZodType<Prisma.V
 
 export const PetCreateInputSchema: z.ZodType<Prisma.PetCreateInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   breeder: z.string().optional().nullable(),
   ownerName: z.string().optional().nullable(),
@@ -2256,7 +2256,7 @@ export const PetCreateInputSchema: z.ZodType<Prisma.PetCreateInput> = z.object({
 
 export const PetUncheckedCreateInputSchema: z.ZodType<Prisma.PetUncheckedCreateInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   breeder: z.string().optional().nullable(),
   ownerName: z.string().optional().nullable(),
@@ -2280,7 +2280,7 @@ export const PetUncheckedCreateInputSchema: z.ZodType<Prisma.PetUncheckedCreateI
 
 export const PetUpdateInputSchema: z.ZodType<Prisma.PetUpdateInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   breeder: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -2304,7 +2304,7 @@ export const PetUpdateInputSchema: z.ZodType<Prisma.PetUpdateInput> = z.object({
 
 export const PetUncheckedUpdateInputSchema: z.ZodType<Prisma.PetUncheckedUpdateInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   breeder: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -2328,7 +2328,7 @@ export const PetUncheckedUpdateInputSchema: z.ZodType<Prisma.PetUncheckedUpdateI
 
 export const PetCreateManyInputSchema: z.ZodType<Prisma.PetCreateManyInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   breeder: z.string().optional().nullable(),
   ownerName: z.string().optional().nullable(),
@@ -2347,7 +2347,7 @@ export const PetCreateManyInputSchema: z.ZodType<Prisma.PetCreateManyInput> = z.
 
 export const PetUpdateManyMutationInputSchema: z.ZodType<Prisma.PetUpdateManyMutationInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   breeder: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -2364,7 +2364,7 @@ export const PetUpdateManyMutationInputSchema: z.ZodType<Prisma.PetUpdateManyMut
 
 export const PetUncheckedUpdateManyInputSchema: z.ZodType<Prisma.PetUncheckedUpdateManyInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   breeder: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -4416,7 +4416,7 @@ export const ProfileCreateOrConnectWithoutUserInputSchema: z.ZodType<Prisma.Prof
 
 export const PetCreateWithoutCreatedByInputSchema: z.ZodType<Prisma.PetCreateWithoutCreatedByInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   breeder: z.string().optional().nullable(),
   ownerName: z.string().optional().nullable(),
@@ -4439,7 +4439,7 @@ export const PetCreateWithoutCreatedByInputSchema: z.ZodType<Prisma.PetCreateWit
 
 export const PetUncheckedCreateWithoutCreatedByInputSchema: z.ZodType<Prisma.PetUncheckedCreateWithoutCreatedByInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   breeder: z.string().optional().nullable(),
   ownerName: z.string().optional().nullable(),
@@ -4633,7 +4633,7 @@ export const PetScalarWhereInputSchema: z.ZodType<Prisma.PetScalarWhereInput> = 
 
 export const PetCreateWithoutKennelInputSchema: z.ZodType<Prisma.PetCreateWithoutKennelInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   breeder: z.string().optional().nullable(),
   ownerName: z.string().optional().nullable(),
@@ -4656,7 +4656,7 @@ export const PetCreateWithoutKennelInputSchema: z.ZodType<Prisma.PetCreateWithou
 
 export const PetUncheckedCreateWithoutKennelInputSchema: z.ZodType<Prisma.PetUncheckedCreateWithoutKennelInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   breeder: z.string().optional().nullable(),
   ownerName: z.string().optional().nullable(),
@@ -4858,7 +4858,7 @@ export const UserCreateOrConnectWithoutProfileInputSchema: z.ZodType<Prisma.User
 
 export const KennelCreateWithoutProfileInputSchema: z.ZodType<Prisma.KennelCreateWithoutProfileInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
@@ -4869,7 +4869,7 @@ export const KennelCreateWithoutProfileInputSchema: z.ZodType<Prisma.KennelCreat
 
 export const KennelUncheckedCreateWithoutProfileInputSchema: z.ZodType<Prisma.KennelUncheckedCreateWithoutProfileInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
@@ -4931,7 +4931,7 @@ export const KennelUpdateToOneWithWhereWithoutProfileInputSchema: z.ZodType<Pris
 
 export const KennelUpdateWithoutProfileInputSchema: z.ZodType<Prisma.KennelUpdateWithoutProfileInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -4942,7 +4942,7 @@ export const KennelUpdateWithoutProfileInputSchema: z.ZodType<Prisma.KennelUpdat
 
 export const KennelUncheckedUpdateWithoutProfileInputSchema: z.ZodType<Prisma.KennelUncheckedUpdateWithoutProfileInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5011,7 +5011,7 @@ export const RegistrationCreateOrConnectWithoutPetInputSchema: z.ZodType<Prisma.
 
 export const KennelCreateWithoutPetsInputSchema: z.ZodType<Prisma.KennelCreateWithoutPetsInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
@@ -5022,7 +5022,7 @@ export const KennelCreateWithoutPetsInputSchema: z.ZodType<Prisma.KennelCreateWi
 
 export const KennelUncheckedCreateWithoutPetsInputSchema: z.ZodType<Prisma.KennelUncheckedCreateWithoutPetsInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
@@ -5038,7 +5038,7 @@ export const KennelCreateOrConnectWithoutPetsInputSchema: z.ZodType<Prisma.Kenne
 
 export const PetCreateWithoutChildrenInputSchema: z.ZodType<Prisma.PetCreateWithoutChildrenInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   breeder: z.string().optional().nullable(),
   ownerName: z.string().optional().nullable(),
@@ -5061,7 +5061,7 @@ export const PetCreateWithoutChildrenInputSchema: z.ZodType<Prisma.PetCreateWith
 
 export const PetUncheckedCreateWithoutChildrenInputSchema: z.ZodType<Prisma.PetUncheckedCreateWithoutChildrenInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   breeder: z.string().optional().nullable(),
   ownerName: z.string().optional().nullable(),
@@ -5089,7 +5089,7 @@ export const PetCreateOrConnectWithoutChildrenInputSchema: z.ZodType<Prisma.PetC
 
 export const PetCreateWithoutParentsInputSchema: z.ZodType<Prisma.PetCreateWithoutParentsInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   breeder: z.string().optional().nullable(),
   ownerName: z.string().optional().nullable(),
@@ -5112,7 +5112,7 @@ export const PetCreateWithoutParentsInputSchema: z.ZodType<Prisma.PetCreateWitho
 
 export const PetUncheckedCreateWithoutParentsInputSchema: z.ZodType<Prisma.PetUncheckedCreateWithoutParentsInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   breeder: z.string().optional().nullable(),
   ownerName: z.string().optional().nullable(),
@@ -5283,7 +5283,7 @@ export const KennelUpdateToOneWithWhereWithoutPetsInputSchema: z.ZodType<Prisma.
 
 export const KennelUpdateWithoutPetsInputSchema: z.ZodType<Prisma.KennelUpdateWithoutPetsInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5294,7 +5294,7 @@ export const KennelUpdateWithoutPetsInputSchema: z.ZodType<Prisma.KennelUpdateWi
 
 export const KennelUncheckedUpdateWithoutPetsInputSchema: z.ZodType<Prisma.KennelUncheckedUpdateWithoutPetsInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5440,7 +5440,7 @@ export const UserCreateOrConnectWithoutRegistrationInputSchema: z.ZodType<Prisma
 
 export const PetCreateWithoutRegistrationInputSchema: z.ZodType<Prisma.PetCreateWithoutRegistrationInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   breeder: z.string().optional().nullable(),
   ownerName: z.string().optional().nullable(),
@@ -5463,7 +5463,7 @@ export const PetCreateWithoutRegistrationInputSchema: z.ZodType<Prisma.PetCreate
 
 export const PetUncheckedCreateWithoutRegistrationInputSchema: z.ZodType<Prisma.PetUncheckedCreateWithoutRegistrationInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   breeder: z.string().optional().nullable(),
   ownerName: z.string().optional().nullable(),
@@ -5537,7 +5537,7 @@ export const PetUpdateToOneWithWhereWithoutRegistrationInputSchema: z.ZodType<Pr
 
 export const PetUpdateWithoutRegistrationInputSchema: z.ZodType<Prisma.PetUpdateWithoutRegistrationInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   breeder: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -5560,7 +5560,7 @@ export const PetUpdateWithoutRegistrationInputSchema: z.ZodType<Prisma.PetUpdate
 
 export const PetUncheckedUpdateWithoutRegistrationInputSchema: z.ZodType<Prisma.PetUncheckedUpdateWithoutRegistrationInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   breeder: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -5583,7 +5583,7 @@ export const PetUncheckedUpdateWithoutRegistrationInputSchema: z.ZodType<Prisma.
 
 export const KennelCreateWithoutImgInputSchema: z.ZodType<Prisma.KennelCreateWithoutImgInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
@@ -5594,7 +5594,7 @@ export const KennelCreateWithoutImgInputSchema: z.ZodType<Prisma.KennelCreateWit
 
 export const KennelUncheckedCreateWithoutImgInputSchema: z.ZodType<Prisma.KennelUncheckedCreateWithoutImgInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
@@ -5610,7 +5610,7 @@ export const KennelCreateOrConnectWithoutImgInputSchema: z.ZodType<Prisma.Kennel
 
 export const PetCreateWithoutImgInputSchema: z.ZodType<Prisma.PetCreateWithoutImgInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   breeder: z.string().optional().nullable(),
   ownerName: z.string().optional().nullable(),
@@ -5633,7 +5633,7 @@ export const PetCreateWithoutImgInputSchema: z.ZodType<Prisma.PetCreateWithoutIm
 
 export const PetUncheckedCreateWithoutImgInputSchema: z.ZodType<Prisma.PetUncheckedCreateWithoutImgInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   breeder: z.string().optional().nullable(),
   ownerName: z.string().optional().nullable(),
@@ -5661,7 +5661,7 @@ export const PetCreateOrConnectWithoutImgInputSchema: z.ZodType<Prisma.PetCreate
 
 export const PetCreateWithoutAvatarInputSchema: z.ZodType<Prisma.PetCreateWithoutAvatarInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   breeder: z.string().optional().nullable(),
   ownerName: z.string().optional().nullable(),
@@ -5684,7 +5684,7 @@ export const PetCreateWithoutAvatarInputSchema: z.ZodType<Prisma.PetCreateWithou
 
 export const PetUncheckedCreateWithoutAvatarInputSchema: z.ZodType<Prisma.PetUncheckedCreateWithoutAvatarInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   breeder: z.string().optional().nullable(),
   ownerName: z.string().optional().nullable(),
@@ -5723,7 +5723,7 @@ export const KennelUpdateToOneWithWhereWithoutImgInputSchema: z.ZodType<Prisma.K
 
 export const KennelUpdateWithoutImgInputSchema: z.ZodType<Prisma.KennelUpdateWithoutImgInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5734,7 +5734,7 @@ export const KennelUpdateWithoutImgInputSchema: z.ZodType<Prisma.KennelUpdateWit
 
 export const KennelUncheckedUpdateWithoutImgInputSchema: z.ZodType<Prisma.KennelUncheckedUpdateWithoutImgInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   description: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5756,7 +5756,7 @@ export const PetUpdateToOneWithWhereWithoutImgInputSchema: z.ZodType<Prisma.PetU
 
 export const PetUpdateWithoutImgInputSchema: z.ZodType<Prisma.PetUpdateWithoutImgInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   breeder: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -5779,7 +5779,7 @@ export const PetUpdateWithoutImgInputSchema: z.ZodType<Prisma.PetUpdateWithoutIm
 
 export const PetUncheckedUpdateWithoutImgInputSchema: z.ZodType<Prisma.PetUncheckedUpdateWithoutImgInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   breeder: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -5813,7 +5813,7 @@ export const PetUpdateToOneWithWhereWithoutAvatarInputSchema: z.ZodType<Prisma.P
 
 export const PetUpdateWithoutAvatarInputSchema: z.ZodType<Prisma.PetUpdateWithoutAvatarInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   breeder: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -5836,7 +5836,7 @@ export const PetUpdateWithoutAvatarInputSchema: z.ZodType<Prisma.PetUpdateWithou
 
 export const PetUncheckedUpdateWithoutAvatarInputSchema: z.ZodType<Prisma.PetUncheckedUpdateWithoutAvatarInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   breeder: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -5891,7 +5891,7 @@ export const RegistrationCreateManyReviewedByInputSchema: z.ZodType<Prisma.Regis
 
 export const PetCreateManyCreatedByInputSchema: z.ZodType<Prisma.PetCreateManyCreatedByInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   breeder: z.string().optional().nullable(),
   ownerName: z.string().optional().nullable(),
@@ -6005,7 +6005,7 @@ export const RegistrationUncheckedUpdateManyWithoutReviewedByInputSchema: z.ZodT
 
 export const PetUpdateWithoutCreatedByInputSchema: z.ZodType<Prisma.PetUpdateWithoutCreatedByInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   breeder: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -6028,7 +6028,7 @@ export const PetUpdateWithoutCreatedByInputSchema: z.ZodType<Prisma.PetUpdateWit
 
 export const PetUncheckedUpdateWithoutCreatedByInputSchema: z.ZodType<Prisma.PetUncheckedUpdateWithoutCreatedByInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   breeder: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -6051,7 +6051,7 @@ export const PetUncheckedUpdateWithoutCreatedByInputSchema: z.ZodType<Prisma.Pet
 
 export const PetUncheckedUpdateManyWithoutCreatedByInputSchema: z.ZodType<Prisma.PetUncheckedUpdateManyWithoutCreatedByInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   breeder: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -6069,7 +6069,7 @@ export const PetUncheckedUpdateManyWithoutCreatedByInputSchema: z.ZodType<Prisma
 
 export const PetCreateManyKennelInputSchema: z.ZodType<Prisma.PetCreateManyKennelInput> = z.object({
   id: z.string().cuid().optional(),
-  name: z.string().min(2).max(12),
+  name: z.string().min(2).max(30),
   nameEn: z.string().optional().nullable(),
   breeder: z.string().optional().nullable(),
   ownerName: z.string().optional().nullable(),
@@ -6087,7 +6087,7 @@ export const PetCreateManyKennelInputSchema: z.ZodType<Prisma.PetCreateManyKenne
 
 export const PetUpdateWithoutKennelInputSchema: z.ZodType<Prisma.PetUpdateWithoutKennelInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   breeder: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -6110,7 +6110,7 @@ export const PetUpdateWithoutKennelInputSchema: z.ZodType<Prisma.PetUpdateWithou
 
 export const PetUncheckedUpdateWithoutKennelInputSchema: z.ZodType<Prisma.PetUncheckedUpdateWithoutKennelInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   breeder: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -6133,7 +6133,7 @@ export const PetUncheckedUpdateWithoutKennelInputSchema: z.ZodType<Prisma.PetUnc
 
 export const PetUncheckedUpdateManyWithoutKennelInputSchema: z.ZodType<Prisma.PetUncheckedUpdateManyWithoutKennelInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   breeder: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -6151,7 +6151,7 @@ export const PetUncheckedUpdateManyWithoutKennelInputSchema: z.ZodType<Prisma.Pe
 
 export const PetUpdateWithoutChildrenInputSchema: z.ZodType<Prisma.PetUpdateWithoutChildrenInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   breeder: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -6174,7 +6174,7 @@ export const PetUpdateWithoutChildrenInputSchema: z.ZodType<Prisma.PetUpdateWith
 
 export const PetUncheckedUpdateWithoutChildrenInputSchema: z.ZodType<Prisma.PetUncheckedUpdateWithoutChildrenInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   breeder: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -6197,7 +6197,7 @@ export const PetUncheckedUpdateWithoutChildrenInputSchema: z.ZodType<Prisma.PetU
 
 export const PetUncheckedUpdateManyWithoutChildrenInputSchema: z.ZodType<Prisma.PetUncheckedUpdateManyWithoutChildrenInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   breeder: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -6216,7 +6216,7 @@ export const PetUncheckedUpdateManyWithoutChildrenInputSchema: z.ZodType<Prisma.
 
 export const PetUpdateWithoutParentsInputSchema: z.ZodType<Prisma.PetUpdateWithoutParentsInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   breeder: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -6239,7 +6239,7 @@ export const PetUpdateWithoutParentsInputSchema: z.ZodType<Prisma.PetUpdateWitho
 
 export const PetUncheckedUpdateWithoutParentsInputSchema: z.ZodType<Prisma.PetUncheckedUpdateWithoutParentsInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   breeder: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -6262,7 +6262,7 @@ export const PetUncheckedUpdateWithoutParentsInputSchema: z.ZodType<Prisma.PetUn
 
 export const PetUncheckedUpdateManyWithoutParentsInputSchema: z.ZodType<Prisma.PetUncheckedUpdateManyWithoutParentsInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  name: z.union([ z.string().min(2).max(12),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string().min(2).max(30),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nameEn: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   breeder: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   ownerName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),

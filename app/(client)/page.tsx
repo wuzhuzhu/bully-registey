@@ -16,7 +16,16 @@ const SearchPage = async ({ searchParams, mode = "name" }: PageProps & { mode: '
         // get all pets that match the keyword name and whom registration status approved
         pets = await getPets({
             where: {
-                name: mode === 'name' ? searchParams.keyword : undefined,
+                OR: mode === 'name'
+                    ? [
+                        {
+                            name: searchParams.keyword
+                        },
+                        {
+                            nameEn: searchParams.keyword
+                        }
+                    ]
+                    : undefined,
                 // 模糊搜索需要分页 暂时不做
                 // name: {
                 //     contains: searchParams.keyword 
