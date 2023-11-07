@@ -44,7 +44,7 @@ export default function RegistryLayout({
                     {children}
                     <div className="inline-flex flex-col items-center relative flex-[0_0_auto] mt-4 relative overflow-x-hidden">
                         <div className="flex flex-row h-6 my-2 gap-1">
-                            {[...Array(11)].map((_, i) => <Image
+                            {[...Array(10)].map((_, i) => <Image
                                 key={'partner-logo-' + i}
                                 height={22}
                                 width={22}
