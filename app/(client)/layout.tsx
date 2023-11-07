@@ -42,16 +42,26 @@ export default function RegistryLayout({
                 {/* 纹理背景容器 */}
                 <main className="flex flex-1 flex-col items-center justify-between pt-[16px] pb-[24px] px-[16px] relative self-stretch w-full rounded-[16px_16px_0px_0px] overflow-hidden shadow-m3-elevation-dark-1 mix-blend-lighten bg-[url(/img/main-content.png)] bg-cover bg-[50%_50%] gap-4">
                     {children}
-                    <div className="inline-flex flex-col items-center relative flex-[0_0_auto] mt-4">
-                        <img className="relative flex-[0_0_auto]" alt="Partners" src="/img/partners.svg" />
+                    <div className="inline-flex flex-col items-center relative flex-[0_0_auto] mt-4 relative overflow-x-hidden">
+                        <div className="flex flex-row h-6 my-2 gap-1">
+                            {[...Array(11)].map((_, i) => <Image
+                                key={'partner-logo-' + i}
+                                height={22}
+                                width={22}
+                                className="relative object-cover"
+                                alt="partners"
+                                src={`/img/partners/${i + 1}.png`}
+                            />
+                            )}
+                        </div>
                         <HorizontalDarkWith
                             className="!flex-[0_0_auto]"
                             divider="/img/divider.svg"
                             text={
                                 <>
-                                    中国恶霸犬注册协会
+                                    中国恶霸犬注册协会 China Bully Registry
                                     <br />
-                                    2023 版权所有（自定义配置）
+                                    2023 © All Rights Reserved
                                 </>
                             }
                         />
