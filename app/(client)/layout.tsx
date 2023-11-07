@@ -43,12 +43,12 @@ export default function RegistryLayout({
                 <main className="flex flex-1 flex-col items-center justify-between pt-[16px] pb-[24px] px-[16px] relative self-stretch w-full rounded-[16px_16px_0px_0px] overflow-hidden shadow-m3-elevation-dark-1 mix-blend-lighten bg-[url(/img/main-content.png)] bg-cover bg-[50%_50%] gap-4">
                     {children}
                     <div className="inline-flex flex-col items-center relative flex-[0_0_auto] mt-4 relative overflow-x-hidden">
-                        <div className="flex flex-row h-6 my-2 gap-1">
+                        <div className="flex flex-row h-6 my-2 gap-2">
                             {[...Array(10)].map((_, i) => <Image
                                 key={'partner-logo-' + i}
                                 height={22}
                                 width={22}
-                                className="relative object-cover"
+                                className="relative object-contain"
                                 alt="partners"
                                 src={`/img/partners/${i + 1}.png`}
                             />
