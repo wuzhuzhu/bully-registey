@@ -190,7 +190,7 @@ const FileUpload = ({ uploadedImg, setUploadedImg, petDirty, submit, getValues, 
                     allowedContent({ ready, fileTypes, isUploading }) {
                         if (!ready) return "文件不符合要求";
                         if (isUploading) return "上传中..";
-                        return `最大4MB, ${type === 'avatar' ? '150x150' : '600x450'}px, 格式jpg/png/svg`;
+                        return `最大4MB, ${type === 'avatar' ? '150x150' : '600x350'}px, 格式jpg/png/svg`;
                     },
                 }}
             />
