@@ -9,9 +9,7 @@ const PetEditPage = async ({ params }: { params: { petId?: string[] } }) => {
     if (params && params?.petId! && params?.petId[0]) {
         pet = await getPetById(params?.petId[0])
     }
-    const kennels = await getKennelsSimple()
-
-    const session = await getServerSessionWithOption()
+    const [kennels, session] = await Promise.all([getKennelsSimple(), getServerSessionWithOption()])
 
     return (
         <div className="space-y-4">
