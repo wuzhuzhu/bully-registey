@@ -373,6 +373,7 @@ export default function Page({ kennel: kennelDirty }: {
                 </div>
                 <Button
                     // disabled={!isEmpty(errors)}
+                    disabled={isSubmitting}
                     type="submit"
                 >
                     {

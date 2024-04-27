@@ -664,6 +664,7 @@ export default function PetForm({ pet: petDirty, session, kennels }: {
                 </div>
                 <Button
                     // disabled={!isEmpty(errors)}
+                    disabled={isSubmitting}
                     type="submit"
                 >
                     {
